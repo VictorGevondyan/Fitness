@@ -2,6 +2,16 @@
     <string name="app_name">Jason Fit</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    
+    <string name="info_disclaimer_title">disclaimer</string>
+    <string name="info_disclaimer_content">We give our best to show you with this system how to achieve good results for your body.
+                Results can not be guaranteed, they also highly depend on the eating and training habits of the user. Generally we recommend for every new
+                kind of sport or workout, please firstly consult your doctor.</string>
+    <string name="info_ideas_title">ideas</string>
+    <string name="info_ideas_content">Please send your ideas to ###fitapps@gmail.com</string>
+    <string name="info_faq_title">faq</string>
+    <string name="info_faq_content">How long should I use this program?\n As many other programs, we recommend at least 12 weeks to obtain very good body results.
+                How can I cancel the subscription? Go to your App Stores Settings > view the APPLE-ID > view „Subscriptions“ > change the settings.</string>
 
     <string name="workouts">Workouts</string>
     <string name="meals">Meals</string>
