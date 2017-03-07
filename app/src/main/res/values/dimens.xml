@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="title_text_size">25dp</dimen>
+    <dimen name="header_text_size">20dp</dimen>
+    <dimen name="radio_text_size">16dp</dimen>
+
+    <dimen name="common_margin">16dp</dimen>
+
+
+</resources>

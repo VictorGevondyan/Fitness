@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnD
         setContentView(R.layout.activity_main);
 
 
-
         processDrawer();
     }
 
