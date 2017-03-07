@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="@string/search"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,9 +15,9 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
-            android:background="@color/colorBlack"
+            android:background="@color/colorGrayLight"
             android:textColor="@color/colorWhite"
-            android:text="@string/foods_food"/>
+            tools:text="@string/foods_food"/>
 
         <View
             android:layout_width="2dp"
@@ -35,9 +28,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@color/colorBlack"
+            android:background="@color/colorGrayLight"
             android:textColor="@color/colorWhite"
-            android:text="@string/foods_energy"/>
+            tools:text="@string/foods_energy"/>
 
         <View
             android:layout_width="2dp"
@@ -48,9 +41,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@color/colorBlack"
+            android:background="@color/colorGrayLight"
             android:textColor="@color/colorWhite"
-            android:text="@string/foods_fat"/>
+            tools:text="@string/foods_fat"/>
 
         <View
             android:layout_width="2dp"
@@ -61,9 +54,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@color/colorBlack"
+            android:background="@color/colorGrayLight"
             android:textColor="@color/colorWhite"
-            android:text="@string/foods_protein"/>
+            tools:text="@string/foods_protein"/>
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"/>
@@ -73,17 +66,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="@color/colorBlack"
+            android:background="@color/colorGrayLight"
             android:textColor="@color/colorWhite"
-            android:text="@string/foods_carb"/>
+            tools:text="@string/foods_carb"/>
 
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/foods_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/colorWhite"
-        android:diviiderHeight="2dp"/>
 
 </LinearLayout>
