@@ -84,6 +84,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/colorWhite"
-        android:diviiderHeight="2dp"/>
+        android:dividerHeight="2dp"/>
 
 </LinearLayout>
