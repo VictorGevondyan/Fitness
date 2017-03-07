@@ -8,23 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.activity.adapter.DrawerAdapter;
+import com.flycode.jasonfit.activity.adapter.SideMenuAdapter;
 import com.flycode.jasonfit.activity.fragment.FoodsFragment;
 import com.flycode.jasonfit.activity.fragment.InfoFragment;
 import com.flycode.jasonfit.activity.fragment.MealsFragment;
 import com.flycode.jasonfit.activity.fragment.StatsFragment;
 import com.flycode.jasonfit.activity.fragment.WorkoutsFragment;
 
-import butterknife.BindView;
-
-public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnDrawerItemClickListener {
-
-    @BindView(R.id.container) FrameLayout container;
-
+public class MainActivity extends AppCompatActivity implements SideMenuAdapter.OnSideMenuClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnD
     }
 
     @Override
-    public void onDrawerItemClick(DrawerAdapter.DrawerItems drawerItems) {
-        switch (drawerItems) {
+    public void onSideMenuItemClick(SideMenuAdapter.SideMenuItem sideMenuItem) {
+        switch (sideMenuItem) {
             case WORKOUTS:
                 WorkoutsFragment workoutsFragment = new WorkoutsFragment();
 
@@ -88,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnD
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.parent_drawer);
         RecyclerView drawerRecycler = (RecyclerView) findViewById(R.id.drawer_recycler);
 
@@ -97,14 +90,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnD
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        drawerRecycler.setAdapter(new DrawerAdapter(new DrawerAdapter.DrawerItemData[] {
-                new DrawerAdapter.DrawerItemData(R.string.workouts),
-                new DrawerAdapter.DrawerItemData(R.string.meals),
-                new DrawerAdapter.DrawerItemData(R.string.stats),
-                new DrawerAdapter.DrawerItemData(R.string.foods),
-                new DrawerAdapter.DrawerItemData(R.string.settings),
-                new DrawerAdapter.DrawerItemData(R.string.info),
-        }, this));
+        drawerRecycler.setAdapter(new SideMenuAdapter(this));
 
         drawerRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
