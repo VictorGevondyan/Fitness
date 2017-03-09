@@ -38,6 +38,7 @@
                 android:gravity="center_vertical"/>
 
             <EditText
+                android:id="@+id/height"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -57,6 +58,7 @@
             android:weightSum="2">
 
             <TextView
+                android:id="@+id/weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,51 +114,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_margin"
-            android:orientation="vertical">
+            android:layout_marginStart="@dimen/common_margin"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginEnd="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/gender"
-                android:textSize="@dimen/header_text_size"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="@dimen/radio_text_size"
+                android:textColor="@color/colorBlack"
+                android:gravity="center_vertical"/>
 
-            <RadioGroup
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/gender"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <RadioButton
-                        android:id="@+id/male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/male"/>
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <RadioButton
-                        android:id="@+id/female"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/female"/>
-
-                </FrameLayout>
-
-            </RadioGroup>
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textStyle="normal"
+                android:gravity="center_horizontal"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:cursorVisible="false"/>
 
         </LinearLayout>
 

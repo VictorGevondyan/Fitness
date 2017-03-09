@@ -48,5 +48,13 @@
     <string name="foods_fat">FAT\ng</string>
     <string name="foods_protein">PROTEIN\ng</string>
     <string name="foods_carb">CARB\ng</string>
+    <string name="error">Error</string>
+    <string name="please_enter_valid_height">Please, enter valid height.</string>
+    <string name="please_enter_valid_weight">Please, enter valid weight.</string>
+
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 
 </resources>

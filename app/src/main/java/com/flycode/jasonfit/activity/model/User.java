@@ -44,7 +44,7 @@ public abstract class User {
     @Property(key = "weight", defValue = "-1")
     public abstract int weight();
 
-    @Property(key = "birthday", defValue = "768510000000")
+    @Property(key = "birthday", defValue = "-1395374400000")
     public abstract long birthday();
 
     @Property(key = "gender", defValue = GENDER.MALE)
