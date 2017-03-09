@@ -3,7 +3,7 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="search">... Search</string>
-    
+
     <string name="info_disclaimer_title">disclaimer</string>
     <string name="info_disclaimer_content">We give our best to show you with this system how to achieve good results for your body.
                 Results can not be guaranteed, they also highly depend on the eating and training habits of the user. Generally we recommend for every new
@@ -43,7 +43,14 @@
     <string name="foot">foot</string>
     <string name="kg">kg</string>
     <string name="pound">pound</string>
-    
+
+    <!-- End of strings for Settings screen -->
+
+    <!-- Strings for Start screen -->
+
+    <string name="try_for_free">OK! TRY THIS APP\nFREE FOR 7 DAYS</string>
+    <string name="one_month">1 MONTH € 9,99</string>
+
     <string name="foods_food">FOOD</string>
     <string name="foods_energy">ENERGY\nkcal</string>
     <string name="foods_fat">FAT\ng</string>

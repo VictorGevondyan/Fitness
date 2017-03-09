@@ -10,4 +10,11 @@
     <color name="colorGrayLight">#ECECEC</color>
     <color name="colorBlack">#333333</color>
     <color name="colorBlue">#4c4cff</color>
+
+    <color name="text_grey">#C4CDE0</color>
+    <color name="text_dark_grey">#BDBBC1</color>
+    <color name="text_semidark_grey">#6d6d6d</color>
+    <color name="text_darker_grey">#606060</color>
+    <color name="text_black_grey">#404040</color>
+
 </resources>
