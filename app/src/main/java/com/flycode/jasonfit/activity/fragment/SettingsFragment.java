@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
@@ -21,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.SimpleFormatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,11 +32,12 @@ import butterknife.Unbinder;
  */
 
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+    @BindView(R.id.nutrition) EditText nutritionEditText;
     @BindView(R.id.birthday) EditText birthdayEditText;
     @BindView(R.id.gender) EditText genderEditText;
     @BindView(R.id.language) EditText languageEditText;
-    @BindView(R.id.cm) EditText cmEditText;
-    @BindView(R.id.kg) EditText kgEditText;
+    @BindView(R.id.height_measurement) EditText heightMeasurementEditText;
+    @BindView(R.id.width_measurement) EditText weightMeasurementEditText;
 
     private UserPreferences userPreferences;
     private Unbinder unbinder;
@@ -53,6 +52,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
         birthdayEditText.setText(formattedBirthday());
         genderEditText.setText(formattedGender());
+        languageEditText.setText(formattedLanguage());
+        heightMeasurementEditText.setText(formattedHeightMeasurement());
+        weightMeasurementEditText.setText(formattedWeightMeasurement());
 
         return settingsView;
     }
@@ -62,6 +64,20 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         super.onDestroyView();
 
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.birthday)
+    public void onSetBirthday() {
+        Calendar initialTime = Calendar.getInstance();
+        initialTime.setTimeInMillis(userPreferences.getBirthday());
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                this,
+                initialTime.get(Calendar.YEAR),
+                initialTime.get(Calendar.MONTH),
+                initialTime.get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.showYearPickerFirst(true);
+        datePickerDialog.show(getFragmentManager(), "datePicker");
     }
 
     @OnClick(R.id.gender)
@@ -87,36 +103,68 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .show();
     }
 
-    @OnClick(R.id.birthday)
-    public void onSetBirthday() {
-        Calendar initialTime = Calendar.getInstance();
-        initialTime.setTimeInMillis(userPreferences.getBirthday());
-        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                this,
-                initialTime.get(Calendar.YEAR),
-                initialTime.get(Calendar.MONTH),
-                initialTime.get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.showYearPickerFirst(true);
-        datePickerDialog.show(getFragmentManager(), "datePicker");
-    }
-
     @OnClick(R.id.language)
     public void onSetLanguage() {
-        int selectedIndex = userPreferences.getGender().equals(User.GENDER.MALE) ? 0 : 1;
+        int selectedIndex = userPreferences.getGender().equals(User.LANGUAGE.ENGLISH) ? 0 : 1;
 
         new MaterialDialog.Builder(getActivity())
-                .title(R.string.gender)
-                .items(R.array.gender)
+                .title(R.string.language)
+                .items(R.array.language)
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         userPreferences
                                 .edit()
-                                .putGender(which == 0 ? User.GENDER.MALE : User.GENDER.FEMALE)
+                                .putGender(which == 0 ? User.LANGUAGE.ENGLISH : User.LANGUAGE.DEUTSCH)
                                 .apply();
 
-                        genderEditText.setText(formattedGender());
+                        languageEditText.setText(formattedLanguage());
+
+                        return false;
+                    }
+                })
+                .show();
+    }
+
+    @OnClick(R.id.height_measurement)
+    public void onSetHeightMeasurement() {
+        int selectedIndex = userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? 0 : 1;
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.measurement)
+                .items(R.array.height_measurement)
+                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        userPreferences
+                                .edit()
+                                .putHeightMeasurement(which == 0 ? User.MEASUREMENTS.CM : User.MEASUREMENTS.FOOT)
+                                .apply();
+
+                        heightMeasurementEditText.setText(formattedHeightMeasurement());
+
+                        return false;
+                    }
+                })
+                .show();
+    }
+
+    @OnClick(R.id.height_measurement)
+    public void onSetWeightMeasurement() {
+        int selectedIndex = userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? 0 : 1;
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.measurement)
+                .items(R.array.weight_measurement)
+                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        userPreferences
+                                .edit()
+                                .putHeightMeasurement(which == 0 ? User.MEASUREMENTS.KG : User.MEASUREMENTS.POUND)
+                                .apply();
+
+                        weightMeasurementEditText.setText(formattedWeightMeasurement());
 
                         return false;
                     }
@@ -210,4 +258,15 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         return userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female;
     }
 
+    private int formattedLanguage() {
+        return userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? R.string.english : R.string.deutsch;
+    }
+
+    private int formattedHeightMeasurement() {
+        return userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? R.string.cm: R.string.foot;
+    }
+
+    private int formattedWeightMeasurement() {
+        return userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? R.string.kg: R.string.pound;
+    }
 }

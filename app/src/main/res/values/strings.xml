@@ -64,4 +64,19 @@
         <item>Female</item>
     </string-array>
 
+    <string-array name="language">
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+
+    <string-array name="height_measurement">
+        <item>cm</item>
+        <item>foot</item>
+    </string-array>
+
+    <string-array name="weight_measurement">
+        <item>kg</item>
+        <item>pound</item>
+    </string-array>
+
 </resources>
