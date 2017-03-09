@@ -36,6 +36,9 @@ import butterknife.Unbinder;
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     @BindView(R.id.birthday) EditText birthdayEditText;
     @BindView(R.id.gender) EditText genderEditText;
+    @BindView(R.id.language) EditText languageEditText;
+    @BindView(R.id.cm) EditText cmEditText;
+    @BindView(R.id.kg) EditText kgEditText;
 
     private UserPreferences userPreferences;
     private Unbinder unbinder;
@@ -96,6 +99,29 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         );
         datePickerDialog.showYearPickerFirst(true);
         datePickerDialog.show(getFragmentManager(), "datePicker");
+    }
+
+    @OnClick(R.id.language)
+    public void onSetLanguage() {
+        int selectedIndex = userPreferences.getGender().equals(User.GENDER.MALE) ? 0 : 1;
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.gender)
+                .items(R.array.gender)
+                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        userPreferences
+                                .edit()
+                                .putGender(which == 0 ? User.GENDER.MALE : User.GENDER.FEMALE)
+                                .apply();
+
+                        genderEditText.setText(formattedGender());
+
+                        return false;
+                    }
+                })
+                .show();
     }
 
     @OnTextChanged(R.id.height)
@@ -183,4 +209,5 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     private int formattedGender() {
         return userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female;
     }
+
 }
