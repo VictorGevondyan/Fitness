@@ -3,6 +3,7 @@ package com.flycode.jasonfit.activity.activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         settingsTransaction.replace(R.id.container, fragment);
         settingsTransaction.commit();
 
-        drawerLayout.closeDrawer(Gravity.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     private void processDrawer() {

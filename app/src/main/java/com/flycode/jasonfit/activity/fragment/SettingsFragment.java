@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.JasonFitApplication;
 import com.flycode.jasonfit.activity.model.User;
@@ -25,6 +26,7 @@ import java.util.logging.SimpleFormatter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 /**
@@ -33,18 +35,7 @@ import butterknife.Unbinder;
 
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     @BindView(R.id.birthday) EditText birthdayEditText;
-
-    @BindView(R.id.male) RadioButton maleRadioButton;
-    @BindView(R.id.female) RadioButton femaleRadioButton;
-
-    @BindView(R.id.english) RadioButton englishRadioButton;
-    @BindView(R.id.deutsch) RadioButton deutschRadioButton;
-
-    @BindView(R.id.cm) RadioButton cmRadioButton;
-    @BindView(R.id.foot) RadioButton footRadioButton;
-
-    @BindView(R.id.kg) RadioButton kgRadioButton;
-    @BindView(R.id.pound) RadioButton poundRadioButton;
+    @BindView(R.id.gender) EditText genderEditText;
 
     private UserPreferences userPreferences;
     private Unbinder unbinder;
@@ -58,6 +49,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         userPreferences = User.sharedPreferences(JasonFitApplication.sharedApplication());
 
         birthdayEditText.setText(formattedBirthday());
+        genderEditText.setText(formattedGender());
 
         return settingsView;
     }
@@ -69,66 +61,33 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         unbinder.unbind();
     }
 
-    @OnClick({R.id.male, R.id.female})
-    public void onGenderChecked(View view) {
-        if (view.getId() == R.id.male) {
-            if (maleRadioButton.isChecked()) {
-                femaleRadioButton.setChecked(false);
-            }
-        } else if (view.getId() == R.id.female) {
-            if (femaleRadioButton.isChecked()) {
-                maleRadioButton.setChecked(false);
-            }
-        }
+    @OnClick(R.id.gender)
+    public void onSetGender() {
+        int selectedIndex = userPreferences.getGender().equals(User.GENDER.MALE) ? 0 : 1;
 
-    }
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.gender)
+                .items(R.array.gender)
+                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        userPreferences
+                                .edit()
+                                .putGender(which == 0 ? User.GENDER.MALE : User.GENDER.FEMALE)
+                                .apply();
 
-    @OnClick({R.id.english, R.id.deutsch})
-    public void onLanguageChecked(View view) {
-        if (view.getId() == R.id.english) {
-            if (englishRadioButton.isChecked()) {
-                deutschRadioButton.setChecked(false);
-            }
-        } else if (view.getId() == R.id.female) {
-            if (deutschRadioButton.isChecked()) {
-                englishRadioButton.setChecked(false);
-            }
-        }
-    }
+                        genderEditText.setText(formattedGender());
 
-    @OnClick({R.id.cm, R.id.foot})
-    public void onMeasurementChecked(View view) {
-        if (view.getId() == R.id.male) {
-            if (cmRadioButton.isChecked()) {
-                footRadioButton.setChecked(false);
-            }
-        } else if (view.getId() == R.id.female) {
-            if (footRadioButton.isChecked()) {
-                cmRadioButton.setChecked(false);
-            }
-        }
-
-    }
-
-    @OnClick({R.id.kg, R.id.pound})
-    public void onWeightChecked(View view) {
-        if (view.getId() == R.id.male) {
-            if (kgRadioButton.isChecked()) {
-                poundRadioButton.setChecked(false);
-            }
-        } else if (view.getId() == R.id.female) {
-            if (poundRadioButton.isChecked()) {
-                kgRadioButton.setChecked(false);
-            }
-        }
+                        return false;
+                    }
+                })
+                .show();
     }
 
     @OnClick(R.id.birthday)
     public void onSetBirthday() {
         Calendar initialTime = Calendar.getInstance();
-        initialTime.set(Calendar.YEAR, 1994);
-        initialTime.set(Calendar.MONTH, Calendar.MAY);
-        initialTime.set(Calendar.DAY_OF_MONTH, 10);
+        initialTime.setTimeInMillis(userPreferences.getBirthday());
         DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
                 this,
                 initialTime.get(Calendar.YEAR),
@@ -137,6 +96,68 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         );
         datePickerDialog.showYearPickerFirst(true);
         datePickerDialog.show(getFragmentManager(), "datePicker");
+    }
+
+    @OnTextChanged(R.id.height)
+    public void onHeightChanged(CharSequence input, int start, int count, int after) {
+        if (input.length() == 0) {
+            return;
+        }
+
+        try {
+            int height = Integer.valueOf(input.toString());
+
+            if (height <= 0) {
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.error)
+                        .content(R.string.please_enter_valid_height)
+                        .show();
+                return;
+            }
+
+            userPreferences
+                    .edit()
+                    .putHeight(height)
+                    .apply();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.error)
+                    .content(R.string.please_enter_valid_height)
+                    .show();
+        }
+    }
+
+    @OnTextChanged(R.id.weight)
+    public void onWeightChanged(CharSequence input, int start, int count, int after) {
+        if (input.length() == 0) {
+            return;
+        }
+
+        try {
+            int weight = Integer.valueOf(input.toString());
+
+            if (weight <= 0) {
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.error)
+                        .content(R.string.please_enter_valid_weight)
+                        .show();
+                return;
+            }
+
+            userPreferences
+                    .edit()
+                    .putWeight(weight)
+                    .apply();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.error)
+                    .content(R.string.please_enter_valid_weight)
+                    .show();
+        }
     }
 
     @Override
@@ -157,5 +178,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     private String formattedBirthday() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         return dateFormat.format(new Date(userPreferences.getBirthday()));
+    }
+
+    private int formattedGender() {
+        return userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female;
     }
 }
