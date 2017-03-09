@@ -26,8 +26,7 @@
     <string name="current_weight">Current Weight</string>
     <string name="set_weight">Set Weight</string>
     <string name="height">Height</string>
-    <string name="born">Born</string>
-    <string name="set_birth_date">Set Birth Date</string>
+    <string name="birthday">Birthday</string>
     <string name="gender">Gender</string>
     <string name="language">Language</string>
     <string name="measurement">Measurement</string>
@@ -38,7 +37,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="english">English</string>
-    <string name="deutche">Deutche</string>
+    <string name="deutsch">Deutsch</string>
     <string name="cm">cm</string>
     <string name="foot">foot</string>
     <string name="kg">kg</string>

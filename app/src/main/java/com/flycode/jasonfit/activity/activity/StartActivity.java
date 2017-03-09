@@ -26,7 +26,7 @@ public class StartActivity extends AppCompatActivity {
     @BindView(R.id.female) RadioButton femaleRadioButton;
 
     @BindView(R.id.english) RadioButton englishRadioButton;
-    @BindView(R.id.deutch) RadioButton deutchRadioButton;
+    @BindView(R.id.deutsch) RadioButton deutchRadioButton;
 
     @BindView(R.id.cm) RadioButton cmRadioButton;
     @BindView(R.id.foot) RadioButton footRadioButton;
@@ -71,7 +71,7 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.english, R.id.deutch})
+    @OnClick({R.id.english, R.id.deutsch})
     public void onLanguageChecked(View view) {
         if (view.getId() == R.id.english) {
             if (englishRadioButton.isChecked()) {
