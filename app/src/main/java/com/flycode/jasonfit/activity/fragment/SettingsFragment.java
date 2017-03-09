@@ -219,7 +219,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putHeight(height)
                                     .apply();
 
-                            heightEditText.setText(formattedHeight());
+                            heightEditText.setText("formattedHeight()");
 
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -263,7 +263,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putWeight(weight)
                                     .apply();
 
-                            weightEditText.setText(formattedWeight());
+                            weightEditText.setText("formattedWeight()");
 
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
