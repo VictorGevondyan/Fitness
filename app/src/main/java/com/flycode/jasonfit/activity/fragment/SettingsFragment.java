@@ -3,6 +3,7 @@ package com.flycode.jasonfit.activity.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,22 @@ import butterknife.Unbinder;
  */
 
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
-    @BindView(R.id.nutrition) EditText nutritionEditText;
-    @BindView(R.id.birthday) EditText birthdayEditText;
-    @BindView(R.id.gender) EditText genderEditText;
-    @BindView(R.id.language) EditText languageEditText;
-    @BindView(R.id.height_measurement) EditText heightMeasurementEditText;
-    @BindView(R.id.width_measurement) EditText weightMeasurementEditText;
+    @BindView(R.id.nutrition)
+    EditText nutritionEditText;
+    @BindView(R.id.birthday)
+    EditText birthdayEditText;
+    @BindView(R.id.gender)
+    EditText genderEditText;
+    @BindView(R.id.language)
+    EditText languageEditText;
+    @BindView(R.id.height_measurement)
+    EditText heightMeasurementEditText;
+    @BindView(R.id.width_measurement)
+    EditText weightMeasurementEditText;
+    @BindView(R.id.height)
+    EditText heightEditText;
+    @BindView(R.id.weight)
+    EditText weightEditText;
 
     private UserPreferences userPreferences;
     private Unbinder unbinder;
@@ -88,6 +99,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .title(R.string.gender)
                 .items(R.array.gender)
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
+
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         userPreferences
@@ -99,6 +111,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
                         return false;
                     }
+
                 })
                 .show();
     }
@@ -172,67 +185,117 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .show();
     }
 
-    @OnTextChanged(R.id.height)
-    public void onHeightChanged(CharSequence input, int start, int count, int after) {
-        if (input.length() == 0) {
-            return;
-        }
+    @OnClick(R.id.height)
+    public void onSetHeight() {
 
-        try {
-            int height = Integer.valueOf(input.toString());
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.height)
+                .content(R.string.app_name)
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input(R.string.height_hint, R.string.height_prefill, new MaterialDialog.InputCallback() {
 
-            if (height <= 0) {
-                new MaterialDialog.Builder(getActivity())
-                        .title(R.string.error)
-                        .content(R.string.please_enter_valid_height)
-                        .show();
-                return;
-            }
 
-            userPreferences
-                    .edit()
-                    .putHeight(height)
-                    .apply();
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
 
-            new MaterialDialog.Builder(getActivity())
-                    .title(R.string.error)
-                    .content(R.string.please_enter_valid_height)
-                    .show();
-        }
+                        if (input.length() == 0) {
+                            return;
+                        }
+
+                        try {
+
+                            int height = Integer.valueOf(input.toString());
+
+                            if (height <= 0) {
+                                new MaterialDialog.Builder(getActivity())
+                                        .title(R.string.error)
+                                        .content(R.string.please_enter_valid_height)
+                                        .show();
+                                return;
+                            }
+
+                            userPreferences
+                                    .edit()
+                                    .putHeight(height)
+                                    .apply();
+
+                            heightEditText.setText(formattedHeight());
+
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }).show();
+
     }
 
-    @OnTextChanged(R.id.weight)
-    public void onWeightChanged(CharSequence input, int start, int count, int after) {
-        if (input.length() == 0) {
-            return;
-        }
+    @OnClick(R.id.weight)
+    public void onSetCurrentWeight() {
 
-        try {
-            int weight = Integer.valueOf(input.toString());
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.height)
+                .content(R.string.app_name)
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input(R.string.height_hint, R.string.height_prefill, new MaterialDialog.InputCallback() {
 
-            if (weight <= 0) {
-                new MaterialDialog.Builder(getActivity())
-                        .title(R.string.error)
-                        .content(R.string.please_enter_valid_weight)
-                        .show();
-                return;
-            }
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
 
-            userPreferences
-                    .edit()
-                    .putWeight(weight)
-                    .apply();
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+                        if (input.length() == 0) {
+                            return;
+                        }
 
-            new MaterialDialog.Builder(getActivity())
-                    .title(R.string.error)
-                    .content(R.string.please_enter_valid_weight)
-                    .show();
-        }
+                        try {
+                            int weight = Integer.valueOf(input.toString());
+
+                            if (weight <= 0) {
+                                new MaterialDialog.Builder(getActivity())
+                                        .title(R.string.error)
+                                        .content(R.string.please_enter_valid_weight)
+                                        .show();
+                                return;
+                            }
+
+                            userPreferences
+                                    .edit()
+                                    .putWeight(weight)
+                                    .apply();
+
+                            weightEditText.setText(formattedWeight());
+
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+
+                        }
+
+                    }
+
+                }).show();
+
     }
+
+//    @OnTextChanged(R.id.height)
+//    public void onHeightChanged(CharSequence input, int start, int count, int after) {
+//
+//            new MaterialDialog.Builder(getActivity())
+//                    .title(R.string.error)
+//                    .content(R.string.please_enter_valid_height)
+//                    .show();
+//        }
+//    }
+//
+//    @OnTextChanged(R.id.weight)
+//    public void onWeightChanged(CharSequence input, int start, int count, int after) {
+
+//
+//            new MaterialDialog.Builder(getActivity())
+//                    .title(R.string.error)
+//                    .content(R.string.please_enter_valid_weight)
+//                    .show();
+//        }
+//    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -263,10 +326,11 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     }
 
     private int formattedHeightMeasurement() {
-        return userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? R.string.cm: R.string.foot;
+        return userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? R.string.cm : R.string.foot;
     }
 
     private int formattedWeightMeasurement() {
-        return userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? R.string.kg: R.string.pound;
+        return userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? R.string.kg : R.string.pound;
     }
+
 }
