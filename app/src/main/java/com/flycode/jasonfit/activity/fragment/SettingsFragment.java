@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.JasonFitApplication;
@@ -33,22 +34,14 @@ import butterknife.Unbinder;
  */
 
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
-    @BindView(R.id.nutrition)
-    EditText nutritionEditText;
-    @BindView(R.id.birthday)
-    EditText birthdayEditText;
-    @BindView(R.id.gender)
-    EditText genderEditText;
-    @BindView(R.id.language)
-    EditText languageEditText;
-    @BindView(R.id.height_measurement)
-    EditText heightMeasurementEditText;
-    @BindView(R.id.width_measurement)
-    EditText weightMeasurementEditText;
-    @BindView(R.id.height)
-    EditText heightEditText;
-    @BindView(R.id.weight)
-    EditText weightEditText;
+    @BindView(R.id.nutrition) EditText nutritionEditText;
+    @BindView(R.id.birthday) EditText birthdayEditText;
+    @BindView(R.id.gender) EditText genderEditText;
+    @BindView(R.id.language) EditText languageEditText;
+    @BindView(R.id.height_measurement) EditText heightMeasurementEditText;
+    @BindView(R.id.width_measurement) EditText weightMeasurementEditText;
+    @BindView(R.id.height) EditText heightEditText;
+    @BindView(R.id.weight) EditText weightEditText;
 
     private UserPreferences userPreferences;
     private Unbinder unbinder;
@@ -190,27 +183,24 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.height)
-                .content(R.string.app_name)
                 .inputType(InputType.TYPE_CLASS_NUMBER)
-                .input(R.string.height_hint, R.string.height_prefill, new MaterialDialog.InputCallback() {
-
+                .alwaysCallInputCallback()
+                .input("", String.valueOf(userPreferences.getHeight()), new MaterialDialog.InputCallback() {
 
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
-
                         if (input.length() == 0) {
+                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
                             return;
                         }
 
                         try {
-
                             int height = Integer.valueOf(input.toString());
 
-                            if (height <= 0) {
-                                new MaterialDialog.Builder(getActivity())
-                                        .title(R.string.error)
-                                        .content(R.string.please_enter_valid_height)
-                                        .show();
+                            if (height < 20 || height > 200) {
+                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                                 return;
                             }
 
@@ -219,12 +209,14 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putHeight(height)
                                     .apply();
 
-                            heightEditText.setText("formattedHeight()");
+                            heightEditText.setText(input);
 
+                            dialog.getInputEditText().setError(null);
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                         } catch (NumberFormatException e) {
-                            e.printStackTrace();
+                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
                         }
-
                     }
 
                 }).show();
@@ -235,10 +227,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     public void onSetCurrentWeight() {
 
         new MaterialDialog.Builder(getActivity())
-                .title(R.string.height)
-                .content(R.string.app_name)
+                .title(R.string.weight)
                 .inputType(InputType.TYPE_CLASS_NUMBER)
-                .input(R.string.height_hint, R.string.height_prefill, new MaterialDialog.InputCallback() {
+                .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
 
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -263,7 +254,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putWeight(weight)
                                     .apply();
 
-                            weightEditText.setText("formattedWeight()");
+                            weightEditText.setText("100");
 
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
@@ -273,29 +264,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                     }
 
                 }).show();
-
     }
-
-//    @OnTextChanged(R.id.height)
-//    public void onHeightChanged(CharSequence input, int start, int count, int after) {
-//
-//            new MaterialDialog.Builder(getActivity())
-//                    .title(R.string.error)
-//                    .content(R.string.please_enter_valid_height)
-//                    .show();
-//        }
-//    }
-//
-//    @OnTextChanged(R.id.weight)
-//    public void onWeightChanged(CharSequence input, int start, int count, int after) {
-
-//
-//            new MaterialDialog.Builder(getActivity())
-//                    .title(R.string.error)
-//                    .content(R.string.please_enter_valid_weight)
-//                    .show();
-//        }
-//    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
