@@ -64,6 +64,12 @@
         <item>Female</item>
     </string-array>
 
+    <string-array name="nutrition">
+        <item>All Foods</item>
+        <item>Vegetarian</item>
+        <item>Vegan</item>
+    </string-array>
+
     <string-array name="language">
         <item>English</item>
         <item>Deutsch</item>

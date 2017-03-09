@@ -28,6 +28,12 @@ public abstract class User {
         public static final String POUND = "pount";
     }
 
+    public static final class NUTRITION {
+        public static final String ALL = "all";
+        public static final String VEGETARIAN = "vegetarian";
+        public static final String VEGAN = "vegan";
+    }
+
     private static UserPreferences userPreferences;
 
     public static UserPreferences sharedPreferences(Context context) {
@@ -38,10 +44,10 @@ public abstract class User {
         return userPreferences;
     }
 
-    @Property(key = "height", defValue = "-1")
+    @Property(key = "height")
     public abstract int height();
 
-    @Property(key = "weight", defValue = "-1")
+    @Property(key = "weight")
     public abstract int weight();
 
     @Property(key = "birthday", defValue = "-1395374400000")
@@ -50,7 +56,7 @@ public abstract class User {
     @Property(key = "gender", defValue = GENDER.MALE)
     public abstract String gender();
 
-    @Property(key = "nutrition", defValue = "vegan")
+    @Property(key = "nutrition", defValue = NUTRITION.ALL)
     public abstract String nutrition();
 
     @Property(key = "language", defValue = LANGUAGE.ENGLISH)
