@@ -3,7 +3,7 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="search">... Search</string>
-    
+
     <string name="info_disclaimer_title">disclaimer</string>
     <string name="info_disclaimer_content">We give our best to show you with this system how to achieve good results for your body.
                 Results can not be guaranteed, they also highly depend on the eating and training habits of the user. Generally we recommend for every new
@@ -26,8 +26,7 @@
     <string name="current_weight">Current Weight</string>
     <string name="set_weight">Set Weight</string>
     <string name="height">Height</string>
-    <string name="born">Born</string>
-    <string name="set_birth_date">Set Birth Date</string>
+    <string name="birthday">Birthday</string>
     <string name="gender">Gender</string>
     <string name="language">Language</string>
     <string name="measurement">Measurement</string>
@@ -38,16 +37,46 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="english">English</string>
-    <string name="deutche">Deutche</string>
+    <string name="deutsch">Deutsch</string>
     <string name="cm">cm</string>
     <string name="foot">foot</string>
     <string name="kg">kg</string>
     <string name="pound">pound</string>
-    
+
+    <!-- End of strings for Settings screen -->
+
+    <!-- Strings for Start screen -->
+
+    <string name="try_for_free">OK! TRY THIS APP\nFREE FOR 7 DAYS</string>
+    <string name="one_month">1 MONTH € 9,99</string>
+
     <string name="foods_food">FOOD</string>
     <string name="foods_energy">ENERGY\nkcal</string>
     <string name="foods_fat">FAT\ng</string>
     <string name="foods_protein">PROTEIN\ng</string>
     <string name="foods_carb">CARB\ng</string>
+    <string name="error">Error</string>
+    <string name="please_enter_valid_height">Please, enter valid height.</string>
+    <string name="please_enter_valid_weight">Please, enter valid weight.</string>
+
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="language">
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+
+    <string-array name="height_measurement">
+        <item>cm</item>
+        <item>foot</item>
+    </string-array>
+
+    <string-array name="weight_measurement">
+        <item>kg</item>
+        <item>pound</item>
+    </string-array>
 
 </resources>
