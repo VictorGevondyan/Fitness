@@ -43,6 +43,10 @@
     <string name="kg">kg</string>
     <string name="pound">pound</string>
 
+    <string name="height_hint">Enter Height</string>
+    <string name="height_prefill">Height Prefill</string>
+
+
     <!-- End of strings for Settings screen -->
 
     <!-- Strings for Start screen -->
