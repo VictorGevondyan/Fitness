@@ -198,7 +198,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                         try {
                             int height = Integer.valueOf(input.toString());
 
-                            if (height < 20 || height > 200) {
+                            if (height < 135 || height > 210) {
                                 dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
                                 dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                                 return;
@@ -229,41 +229,51 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.weight)
                 .inputType(InputType.TYPE_CLASS_NUMBER)
+                .alwaysCallInputCallback()
                 .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
 
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
 
                         if (input.length() == 0) {
+
+                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
                             return;
+
                         }
 
                         try {
+
                             int weight = Integer.valueOf(input.toString());
 
-                            if (weight <= 0) {
-                                new MaterialDialog.Builder(getActivity())
-                                        .title(R.string.error)
-                                        .content(R.string.please_enter_valid_weight)
-                                        .show();
+                            if ( weight < 20 || weight > 200) {
+                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                                 return;
                             }
 
                             userPreferences
                                     .edit()
-                                    .putWeight(weight)
+                                    .putHeight(weight)
                                     .apply();
 
-                            weightEditText.setText("100");
+                            weightEditText.setText(input);
+
+                            dialog.getInputEditText().setError(null);
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
 
                         } catch (NumberFormatException e) {
-                            e.printStackTrace();
+
+                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 
                         }
 
                     }
 
                 }).show();
+
     }
 
     @Override
