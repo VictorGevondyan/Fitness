@@ -17,7 +17,7 @@ import com.flycode.jasonfit.activity.fragment.FoodsFragment;
 import com.flycode.jasonfit.activity.fragment.InfoFragment;
 import com.flycode.jasonfit.activity.fragment.MealsFragment;
 import com.flycode.jasonfit.activity.fragment.StatsFragment;
-import com.flycode.jasonfit.activity.fragment.WorkoutsFragment;
+import com.flycode.jasonfit.activity.fragment.WorkoutListFragment;
 import com.flycode.jasonfit.activity.fragment.SettingsFragment;
 
 import butterknife.BindView;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         processDrawer();
 
         FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
-        settingsTransaction.replace(R.id.container, new WorkoutsFragment());
+        settingsTransaction.replace(R.id.container, new WorkoutListFragment());
         settingsTransaction.commit();
     }
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
         switch (sideMenuItem) {
             case WORKOUTS:
-                fragment = new WorkoutsFragment();
+                fragment = new WorkoutListFragment();
                 break;
             case MEALS:
                 fragment = new MealsFragment();
