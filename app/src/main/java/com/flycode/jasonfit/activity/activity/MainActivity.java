@@ -25,9 +25,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements SideMenuAdapter.OnSideMenuClickListener {
+    private static final String EXTRA_MENU_ITEM = "extraMenuItem";
+
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
     @BindView(R.id.side_menu) RecyclerView sideMenuRecyclerView;
+
+    private SideMenuAdapter.SideMenuItem currentMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,41 +42,55 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
         processDrawer();
 
+        currentMenuItem = SideMenuAdapter.SideMenuItem.WORKOUTS;
+
+        if (savedInstanceState != null) {
+            String currentMenuItemName = savedInstanceState.getString(EXTRA_MENU_ITEM, SideMenuAdapter.SideMenuItem.WORKOUTS.name());
+            currentMenuItem = SideMenuAdapter.SideMenuItem.valueOf(currentMenuItemName);
+        }
+
         FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
-        settingsTransaction.replace(R.id.container, new WorkoutListFragment());
+        settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
         settingsTransaction.commit();
     }
 
     @Override
-    public void onSideMenuItemClick(SideMenuAdapter.SideMenuItem sideMenuItem) {
-        Fragment fragment = null;
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        switch (sideMenuItem) {
-            case WORKOUTS:
-                fragment = new WorkoutListFragment();
-                break;
-            case MEALS:
-                fragment = new MealsFragment();
-                break;
-            case STATS:
-                fragment = new StatsFragment();
-                break;
-            case FOODS:
-                fragment = new FoodsFragment();
-                break;
-            case SETTINGS:
-                fragment = new SettingsFragment();
-                break;
-            case INFO:
-                fragment = new InfoFragment();
-                break;
-        }
+        outState.putString(EXTRA_MENU_ITEM, currentMenuItem.name());
+    }
+
+    @Override
+    public void onSideMenuItemClick(SideMenuAdapter.SideMenuItem sideMenuItem) {
+        currentMenuItem = sideMenuItem;
+
+        Fragment fragment = getFragmentForSideMenuItem(sideMenuItem);
 
         FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
         settingsTransaction.replace(R.id.container, fragment);
         settingsTransaction.commit();
 
         drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    private Fragment getFragmentForSideMenuItem(SideMenuAdapter.SideMenuItem sideMenuItem) {
+        switch (sideMenuItem) {
+            case WORKOUTS:
+                return new WorkoutListFragment();
+            case MEALS:
+                return new MealsFragment();
+            case STATS:
+                return new StatsFragment();
+            case FOODS:
+                return new FoodsFragment();
+            case SETTINGS:
+                return new SettingsFragment();
+            case INFO:
+                return new InfoFragment();
+            default:
+                return new WorkoutListFragment();
+        }
     }
 
     private void processDrawer() {
