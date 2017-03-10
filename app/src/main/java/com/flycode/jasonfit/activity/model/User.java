@@ -11,6 +11,7 @@ import io.t28.shade.annotation.Property;
 
 @Preferences("com.flycode.jasonfit.user")
 public abstract class User {
+
     public static final class GENDER {
         public static final String MALE = "male";
         public static final String FEMALE = "female";
