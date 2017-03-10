@@ -38,10 +38,11 @@
                 android:gravity="center_vertical"/>
 
             <EditText
-                android:id="@+id/height"
+                android:id="@+id/weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:inputType="none"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
@@ -64,16 +65,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/weight"
+                android:text="@string/height"
                 android:textSize="@dimen/radio_text_size"
                 android:textColor="@color/colorBlack"
                 android:gravity="center_vertical"/>
 
             <EditText
-                android:id="@+id/weight"
+                android:id="@+id/height"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:inputType="none"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
@@ -257,7 +259,7 @@
                 android:cursorVisible="false"/>
 
             <EditText
-                android:id="@+id/width_measurement"
+                android:id="@+id/weight_measurement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
