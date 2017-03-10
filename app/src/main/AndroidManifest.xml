@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.activity.WorkoutActivity"/>
+
+        <service android:name=".activity.model.WorkoutTimerService"
+            android:exported="false"/>
     </application>
 
 </manifest>

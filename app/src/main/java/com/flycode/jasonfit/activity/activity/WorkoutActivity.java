@@ -1,7 +1,12 @@
 package com.flycode.jasonfit.activity.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,12 +14,15 @@ import android.widget.TextView;
 
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.model.Workout;
-
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.Timer;
+import com.flycode.jasonfit.activity.model.WorkoutTimerService;
+import com.flycode.jasonfit.activity.model.WorkoutTrack;
+import com.flycode.jasonfit.activity.model.WorkoutTrackPreferences;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.flycode.jasonfit.activity.model.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
 
 public class WorkoutActivity extends AppCompatActivity {
     @BindView(R.id.workout_title) TextView workoutTitle;
@@ -24,20 +32,71 @@ public class WorkoutActivity extends AppCompatActivity {
     @BindView(R.id.workout_time_estimated) TextView workoutTimeEstimated;
     @BindView(R.id.workout_rounded_button) Button workoutRoundedButton;
 
+    private WorkoutTrackPreferences preferences;
+    private IntentFilter intentFilter;
+    private int setSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        Workout workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
+        ButterKnife.bind(this);
 
-        //setupView(workout);
+        preferences = WorkoutTrack.sharedPreferences(this);
+        intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
+
+        startService(new Intent(this, WorkoutTimerService.class));
+        preferences.edit().putStatus("started").apply();
+
+        Workout workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
+        //setSize = workout.getSetName().size();
+        setSize = 4;
+
+        setupView(workout);
+    }
+
+    @OnClick(R.id.workout_rounded_button)
+    public void startStopTimerClick() {
+
+        if (preferences.get().status().equals("started")) {
+            stopService(new Intent(this, WorkoutTimerService.class));
+            preferences.edit().putStatus("stopped").apply();
+        } else if (preferences.get().status().equals("stopped")) {
+            startService(new Intent(this, WorkoutTimerService.class));
+            preferences.edit().putStatus("started").apply();
+        }
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("TAGG", "broadcast");
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onPause();
     }
 
     private void setupView(Workout workout) {
         workoutTitle.setText(workout.getName());
+        //processWorkoutTimeEstimated(workout);
 
-        int setSize = workout.getSetName().size();
+        for (int i = 0; i <= setSize; i++) {
+           // Timer timer = new Timer()
+        }
+    }
+
+    private void processWorkoutTimeEstimated(Workout workout) {
         String estimatedTime = "";
 
         int estimatedTimeMins = 0;
@@ -46,9 +105,6 @@ public class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i <= setSize; i++) {
 
             String time = workout.getSetTiming().get(i);
-
-//            estimatedTimeMins += Integer.getInteger(time.substring(0,1));
-//            estimatedTimeSecs += Integer.getInteger(time.substring(Math.max(time.length() - 2, 0)));
 
             String[] split = time.split(":");
             estimatedTimeMins += Integer.getInteger(split[0]);
@@ -60,13 +116,5 @@ public class WorkoutActivity extends AppCompatActivity {
         estimatedTime = estimatedTimeMins + ":" + estimatedTimeSecs;
 
         workoutTimeEstimated.setText(estimatedTime);
-
-
-        //workout.getSetTiming()
-
-
-        for (int i = 0; i <= setSize; i++) {
-           // Timer timer = new Timer()
-        }
     }
 }
