@@ -1,8 +1,11 @@
 package com.flycode.jasonfit.activity.adapter.viewHolder;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flycode.jasonfit.R;
@@ -10,6 +13,9 @@ import com.flycode.jasonfit.activity.adapter.OnItemClickListener;
 import com.flycode.jasonfit.activity.model.Workout;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +26,8 @@ import butterknife.OnClick;
  */
 
 public class WorkoutItemViewHolder extends SectioningAdapter.ItemViewHolder {
-    @BindView(R.id.workout_title) TextView titleTextView;
+    @BindView(R.id.title) TextView titleTextView;
+    @BindView(R.id.image) ImageView imageView;
 
     private OnItemClickListener listener;
 
@@ -44,5 +51,14 @@ public class WorkoutItemViewHolder extends SectioningAdapter.ItemViewHolder {
 
     public void setupItem(Workout workout) {
         titleTextView.setText(workout.getName());
+
+        try {
+            InputStream inputStream = imageView.getContext().getAssets().open(workout.getPicture());
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageBitmap(bitmap);
+        }
+        catch(IOException ex) {
+            return;
+        }
     }
 }

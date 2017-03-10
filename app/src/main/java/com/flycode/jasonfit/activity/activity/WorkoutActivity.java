@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import static com.flycode.jasonfit.activity.model.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
 
 public class WorkoutActivity extends AppCompatActivity {
-    @BindView(R.id.workout_title) TextView workoutTitle;
+    @BindView(R.id.title) TextView workoutTitle;
     @BindView(R.id.workout_species_title) TextView workoutSpeciesTitle;
     @BindView(R.id.workout_image_view) ImageView workoutImageView;
     @BindView(R.id.workout_time_current) TextView workoutTimeCurrent;

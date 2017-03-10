@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite">
 
     <TextView
         android:id="@+id/workout_header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGrayLight"
+        android:gravity="center_horizontal"
         android:textStyle="bold"
-        android:textSize="20sp"
+        android:textSize="@dimen/title_text_size"
         tools:text="dolorem ipsum"/>
 
 </LinearLayout>

@@ -62,8 +62,9 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
         ArrayList<Workout> todayWorkouts = new ArrayList<>();
 
         Workout hulk = new Workout();
-        hulk.setName("hulk");
+        hulk.setName("HULK HITS");
         hulk.setId(1);
+        hulk.setPicture("hulk.jpg");
         hulk.setSetTiming(new ArrayList<String>(Arrays.asList("1:30",
                 "01:30",
                 "02: 40",
@@ -72,22 +73,25 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
         todayWorkouts.add(hulk);
 
         Workout haunt = new Workout();
-        haunt.setName("haunt");
+        haunt.setName("THE HAUNT");
         haunt.setId(2);
+        haunt.setPicture("haunt.jpg");
 
         todayWorkouts.add(haunt);
 
         ArrayList<Workout> otherWorkouts = new ArrayList<>();
 
         Workout gladiator = new Workout();
-        gladiator.setName("gladiator");
+        gladiator.setName("Gladiator CHASE");
         gladiator.setId(1);
+        gladiator.setPicture("gladiator.jpg");
 
         otherWorkouts.add(gladiator);
 
         Workout outpark = new Workout();
-        outpark.setName("outpark");
+        outpark.setName("OUTPARK WILD");
         outpark.setId(2);
+        outpark.setPicture("outdoor.jpg");
 
         otherWorkouts.add(outpark);
 
