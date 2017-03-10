@@ -7,7 +7,6 @@
 
     <dimen name="common_margin">16dp</dimen>
 
-
     <dimen name="common_padding">16dp</dimen>
 
     <dimen name="button_lateral_padding">40dp</dimen>
