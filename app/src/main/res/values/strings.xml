@@ -2,6 +2,20 @@
     <string name="app_name">Jason Fit</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
+    <!-- Strings for Workout(s) screen's -->
+
+    <string name="current">Current</string>
+    <string name="estimated">Estimated</string>
+
+    <!-- temporary -->
+
+    <string name="current_time">02:40</string>
+    <string name="estimated_time">28:14</string>
+
+    <!-- End of Strings for Workout(s) screen's -->
+
+    <!-- Strings for Info screen -->
     <string name="search">... Search</string>
 
     <string name="info_disclaimer_title">disclaimer</string>
@@ -14,12 +28,18 @@
     <string name="info_faq_content">How long should I use this program?\n As many other programs, we recommend at least 12 weeks to obtain very good body results.
                 How can I cancel the subscription? Go to your App Stores Settings > view the APPLE-ID > view „Subscriptions“ > change the settings.</string>
 
+    <!-- End of Strings for Info screen -->
+
+    <!-- Strings for sideMenu -->
+
     <string name="workouts">Workouts</string>
     <string name="meals">Meals</string>
     <string name="stats">Stats</string>
     <string name="foods">Foods</string>
     <string name="settings">Settings</string>
     <string name="info">Info</string>
+
+    <!-- End of  Strings for sideMenu -->
 
     <!-- Strings for Settings screen -->
 
@@ -62,6 +82,12 @@
     <string-array name="gender">
         <item>Male</item>
         <item>Female</item>
+    </string-array>
+
+    <string-array name="nutrition">
+        <item>All Foods</item>
+        <item>Vegetarian</item>
+        <item>Vegan</item>
     </string-array>
 
     <string-array name="language">

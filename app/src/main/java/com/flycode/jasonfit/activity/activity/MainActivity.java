@@ -18,7 +18,7 @@ import com.flycode.jasonfit.activity.fragment.FoodsFragment;
 import com.flycode.jasonfit.activity.fragment.InfoFragment;
 import com.flycode.jasonfit.activity.fragment.MealsFragment;
 import com.flycode.jasonfit.activity.fragment.StatsFragment;
-import com.flycode.jasonfit.activity.fragment.WorkoutsFragment;
+import com.flycode.jasonfit.activity.fragment.WorkoutListFragment;
 import com.flycode.jasonfit.activity.fragment.SettingsFragment;
 
 import butterknife.BindView;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
     private Fragment getFragmentForSideMenuItem(SideMenuAdapter.SideMenuItem sideMenuItem) {
         switch (sideMenuItem) {
             case WORKOUTS:
-                return new WorkoutsFragment();
+                return new WorkoutListFragment();
             case MEALS:
                 return new MealsFragment();
             case STATS:
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             case INFO:
                 return new InfoFragment();
             default:
-                return new WorkoutsFragment();
+                return new WorkoutListFragment();
         }
     }
 
