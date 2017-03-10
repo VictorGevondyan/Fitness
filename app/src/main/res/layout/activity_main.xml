@@ -33,9 +33,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/side_menu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:divider="@color/colorGray"
-            android:dividerHeight="0dp"/>
+            android:dividerHeight="0dp"
+            android:layout_centerVertical="true"
+            />
 
     </RelativeLayout>
 

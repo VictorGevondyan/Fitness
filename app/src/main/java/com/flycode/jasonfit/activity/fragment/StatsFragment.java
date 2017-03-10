@@ -3,9 +3,11 @@ package com.flycode.jasonfit.activity.fragment;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.model.ProgressData;
@@ -18,18 +20,42 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Schumakher on 3/7/17.
  */
 
 public class StatsFragment extends Fragment {
 
+    @BindView(R.id.chart) LineChart lineChart;
+
+    private Unbinder unbinder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View statsView = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        LineChart lineChart = (LineChart) statsView.findViewById(R.id.chart);
+        unbinder = ButterKnife.bind(this, statsView);
+
+        createChart();
+
+        return statsView;
+
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        super.onDestroyView();
+
+        unbinder.unbind();
+    }
+
+    private void createChart(){
 
         ArrayList<ProgressData> progressDataArrayList = new ArrayList<>();
 
@@ -59,7 +85,6 @@ public class StatsFragment extends Fragment {
         lineChart.setData(lineData);
         lineChart.invalidate(); // refresh
 
-        return statsView;
-
     }
+
 }

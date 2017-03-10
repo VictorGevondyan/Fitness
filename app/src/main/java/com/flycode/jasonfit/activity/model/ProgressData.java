@@ -34,4 +34,5 @@ public class ProgressData {
     public void setWeight(int weight) {
         this.weight = weight;
     }
+
 }

@@ -5,16 +5,21 @@
     android:id="@+id/container"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_marginTop="@dimen/common_margin"
+    >
 
     <TextView
         android:id="@+id/menu_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:textSize="20sp"
+        android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
         android:textAllCaps="true"
-        tools:text="dolorem ipsum"/>
+        tools:text="dolorem ipsum"
+        android:gravity="center"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
