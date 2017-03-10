@@ -15,7 +15,6 @@ import com.flycode.jasonfit.activity.model.Workout;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
