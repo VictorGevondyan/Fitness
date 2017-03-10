@@ -7,6 +7,7 @@
 
     <string name="current">Current</string>
     <string name="estimated">Estimated</string>
+    <string name="workout_time_null">00:00</string>
 
     <!-- temporary -->
 
