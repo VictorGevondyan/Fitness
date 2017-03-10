@@ -3,31 +3,19 @@ package com.flycode.jasonfit.activity.model;
 import android.content.Context;
 
 import io.t28.shade.annotation.Preferences;
+import io.t28.shade.annotation.Property;
 
 /**
  * Created - Schumakher on  3/10/17.
  */
 @Preferences("com.flycode.jasonfit.workouttrack")
 public abstract class WorkoutTrack {
-    public static final class WorkoutInfo {
-        public static final int workoutId = 0;
-        public static final int Number = 0;
-    }
+    @Property(key = "workoutId")
+    public abstract int workoutId();
 
-    public static final class workoutTime {
-        public static final long totalWorkoutTime = 0;
-        public static final long currentWorkoutTime = 0;
-    }
+    @Property(key = "workoutNumber")
+    public abstract int workoutNumber();
 
-    public static final class state {
-        public static final String state = "state";
-    }
-
-    private static UserPreferences userPreferences;
-
-//    public static UserPreferences sharedPreferences(Context context) {
-//        if (userPreferences == null) {
-//            userPreferences = new UserPreferences(context);
-//        }
-//    }
+    @Property(key = "totalWorkoutTime")
+    public abstract long totalWorkoutTime();
 }
