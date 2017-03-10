@@ -47,9 +47,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         preferences.edit().putTotalWorkoutTime(0).apply();
 
-//        startService(new Intent(this, WorkoutTimerService.class));
-//        preferences.edit().putStatus("started").apply();
-
         Workout workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
         //setSize = workout.getSetName().size();
         setSize = 3;
@@ -60,7 +57,7 @@ public class WorkoutActivity extends AppCompatActivity {
     @OnClick(R.id.workout_rounded_button)
     public void startStopTimerClick() {
 
-        if (preferences.get().status().equals("started")) {
+        if (preferences.get().status().equals("started") || preferences.get().status().equals("")) {
             stopService(new Intent(this, WorkoutTimerService.class));
             preferences.edit().putStatus("stopped").apply();
         } else if (preferences.get().status().equals("stopped")) {
@@ -85,7 +82,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onPause();
     }
 
