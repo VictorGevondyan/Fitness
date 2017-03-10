@@ -2,13 +2,14 @@ package com.flycode.jasonfit.activity.model;
 
 import android.graphics.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created - Schumakher on  3/9/17.
  */
 
-public class Workout {
+public class Workout implements Serializable {
     private int id;
     private String name;
     private String picture;

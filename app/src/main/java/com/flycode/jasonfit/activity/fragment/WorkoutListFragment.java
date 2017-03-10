@@ -1,20 +1,23 @@
 package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.activity.activity.WorkoutActivity;
 import com.flycode.jasonfit.activity.adapter.WorkoutListAdapter;
 import com.flycode.jasonfit.activity.model.Workout;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,11 +39,36 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
 
         unbinder = ButterKnife.bind(this, workoutsView);
 
+        fillWorkoutSetAdapter();
+
+        return workoutsView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onWorkoutItemClick(Workout workout) {
+        Intent intent = new Intent(getActivity(), WorkoutActivity.class);
+        intent.putExtra("CURRENT_WORKOUT", workout);
+
+        startActivity(intent);
+    }
+
+    private void fillWorkoutSetAdapter() {
         ArrayList<Workout> todayWorkouts = new ArrayList<>();
 
         Workout hulk = new Workout();
         hulk.setName("hulk");
         hulk.setId(1);
+        hulk.setSetTiming(new ArrayList<String>(Arrays.asList("1:30",
+                "01:30",
+                "02: 40",
+                "00 : 20")));
 
         todayWorkouts.add(hulk);
 
@@ -64,22 +92,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
 
         otherWorkouts.add(outpark);
 
-
         workoutsRecycler.setAdapter(new WorkoutListAdapter(todayWorkouts, otherWorkouts, this));
         workoutsRecycler.setLayoutManager(new StickyHeaderLayoutManager());
-
-        return workoutsView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onWorkoutItemClick(Workout workout) {
-        Toast.makeText(getActivity(), workout.getName(), Toast.LENGTH_SHORT).show();
     }
 }
