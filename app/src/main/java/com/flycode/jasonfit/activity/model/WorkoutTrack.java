@@ -10,6 +10,15 @@ import io.t28.shade.annotation.Property;
  */
 @Preferences("com.flycode.jasonfit.workouttrack")
 public abstract class WorkoutTrack {
+    private static WorkoutTrackPreferences workoutTrackPreferences;
+
+    public static WorkoutTrackPreferences sharedPreferences(Context context) {
+        if (workoutTrackPreferences == null) {
+            workoutTrackPreferences = new WorkoutTrackPreferences(context);
+        }
+        return workoutTrackPreferences;
+    }
+
     @Property(key = "workoutId")
     public abstract int workoutId();
 
@@ -18,4 +27,10 @@ public abstract class WorkoutTrack {
 
     @Property(key = "totalWorkoutTime")
     public abstract long totalWorkoutTime();
+
+    @Property(key = "currentWorkoutTime")
+    public abstract long currentWorkoutTime();
+
+    @Property(key = "status")
+    public abstract String status();
 }

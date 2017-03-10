@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.adapter.SideMenuAdapter;
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements SideMenuAdapter.OnSideMenuClickListener {
     private static final String EXTRA_MENU_ITEM = "extraMenuItem";
 
+    @BindView(R.id.side_menu_container) View sideMenuView;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
     @BindView(R.id.side_menu) RecyclerView sideMenuRecyclerView;
@@ -52,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
         settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
         settingsTransaction.commit();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        DrawerLayout.LayoutParams layoutParams = (DrawerLayout.LayoutParams) sideMenuView.getLayoutParams();
+        layoutParams.width = metrics.widthPixels;
+        sideMenuView.setLayoutParams(layoutParams);
+        drawerLayout.openDrawer(GravityCompat.START, false);
     }
 
     @Override
