@@ -24,9 +24,10 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="240dp"
+        android:id="@+id/side_menu_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
+        android:layout_gravity="start"
         android:background="@color/colorGray">
 
         <android.support.v7.widget.RecyclerView
