@@ -74,6 +74,7 @@
     <string name="error">Error</string>
     <string name="please_enter_valid_height">Please, enter valid height.</string>
     <string name="please_enter_valid_weight">Please, enter valid weight.</string>
+    <string name="food">Food</string>
 
     <string-array name="gender">
         <item>Male</item>
@@ -99,6 +100,62 @@
     <string-array name="weight_measurement">
         <item>kg</item>
         <item>pound</item>
+    </string-array>
+
+    <string-array name="food_descriptors">
+        <item>Proximities</item>
+        <item>Minerals</item>
+        <item>Vitamins</item>
+        <item>Lipids</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="proximities">
+        <item>Water</item>
+        <item>Energy</item>
+        <item>Protein</item>
+        <item>Total Lipid (Fat)</item>
+        <item>Carbohydrate (By Difference)</item>
+        <item>Fiber (Total Dietary)</item>
+        <item>Sugars (Total)</item>
+    </string-array>
+
+    <string-array name="minerals">
+        <item>Calcium, Ca</item>
+        <item>Iron, Fe</item>
+        <item>Magnesium, Mg</item>
+        <item>Phosphorus, P</item>
+        <item>Potassium, K</item>
+        <item>Sodium, Na</item>
+        <item>Zinc, Zn</item>
+    </string-array>
+
+    <string-array name="vitamins">
+        <item>Vitamin C, total ascorbic acid</item>
+        <item>Thiamin</item>
+        <item>Riboflavin</item>
+        <item>Niacin</item>
+        <item>Vitamin B-6</item>
+        <item>Folate, DFE</item>
+        <item>Vitamin B-12</item>
+        <item>Vitamin A, RAE</item>
+        <item>Vitamin A, IU</item>
+        <item>Vitamin E (alpha-tocopherol)</item>
+        <item>Vitamin D (D2+D3)</item>
+        <item>Vitamin D</item>
+        <item>Vitamin K (phylloquinone)</item>
+    </string-array>
+
+    <string-array name="lipids">
+        <item>Fatty acids, total saturated</item>
+        <item>Fatty acids, total monounsaturated</item>
+        <item>Fatty acids, total polyunsaturated</item>
+        <item>Fatty acids, total trans</item>
+        <item>Cholesterol</item>
+    </string-array>
+
+    <string-array name="other">
+        <item>Caffeine</item>
     </string-array>
 
 </resources>

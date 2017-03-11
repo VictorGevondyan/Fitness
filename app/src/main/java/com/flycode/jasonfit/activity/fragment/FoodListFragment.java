@@ -2,6 +2,7 @@ package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.activity.Constants;
+import com.flycode.jasonfit.activity.activity.FoodActivity;
 import com.flycode.jasonfit.activity.adapter.FoodListAdapter;
 import com.flycode.jasonfit.activity.model.Food;
 
@@ -55,7 +58,9 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
     @Override
     public void onFoodItemClick(Food food) {
-
+        Intent intent = new Intent(getActivity(), FoodActivity.class)
+                .putExtra(Constants.EXTRAS.FOOD, food);
+        startActivity(intent);
     }
 
     private class DividerDecoration extends RecyclerView.ItemDecoration {

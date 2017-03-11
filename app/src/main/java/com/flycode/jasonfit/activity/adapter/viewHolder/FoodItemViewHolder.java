@@ -11,6 +11,7 @@ import com.flycode.jasonfit.activity.model.Food;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by acerkinght on 3/11/17.
@@ -32,6 +33,11 @@ public class FoodItemViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
 
         this.listener = listener;
+    }
+
+    @OnClick(R.id.container)
+    public void onClick() {
+        listener.onItemClick(this);
     }
 
     public void setup(Food food) {

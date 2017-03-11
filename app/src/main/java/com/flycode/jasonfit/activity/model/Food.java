@@ -4,12 +4,14 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
+
 /**
  * Created - Schumakher on  3/7/17.
  */
 
 @Table(name = "Food")
-public class Food extends Model {
+public class Food extends Model implements Serializable {
     @Column(name = "food", unique = true)
     public String food;
 
@@ -70,8 +72,8 @@ public class Food extends Model {
     @Column(name = "vitamin_b_6")
     public double vitaminB6;
 
-    @Column(name = "floate_dfe")
-    public double floateDFE;
+    @Column(name = "folate_dfe")
+    public double folateDFE;
 
     @Column(name = "vitamin_b_12")
     public double vitaminB12;
@@ -112,4 +114,71 @@ public class Food extends Model {
     @Column(name = "caffeine")
     public double caffeine;
 
+    public static double[][] getValues(Food food) {
+        return new double[][] {
+                getProximities(food),
+                getMinerals(food),
+                getVitamins(food),
+                getLipids(food),
+                getOther(food)
+        };
+    }
+
+    private static double[] getProximities(Food food) {
+        return new double[] {
+                food.water,
+                food.energy,
+                food.protein,
+                food.fat,
+                food.carbohydrate,
+                food.fiber,
+                food.sugars
+        };
+    }
+
+    private static double[] getMinerals(Food food) {
+        return new double[] {
+                food.calcium,
+                food.iron,
+                food.magnesium,
+                food.phosphorus,
+                food.potassium,
+                food.sodium,
+                food.zinc
+        };
+    }
+
+    private static double[] getVitamins(Food food) {
+        return new double[] {
+                food.vitaminC,
+                food.thiamin,
+                food.riboflavin,
+                food.niacin,
+                food.vitaminB6,
+                food.folateDFE,
+                food.vitaminB12,
+                food.vitaminARAE,
+                food.vitaminAIU,
+                food.vitaminE,
+                food.vitaminDD2D3,
+                food.vitaminD,
+                food.vitaminK
+        };
+    }
+
+    private static double[] getLipids(Food food) {
+        return new double[] {
+                food.fattyAcidsTotalSaturated,
+                food.fattyAcidsTotalMonounsaturated,
+                food.fattyAcidsTotalPolyunsaturated,
+                food.fattyAcidsTotalTrans,
+                food.cholesterol
+        };
+    }
+
+    private static double[] getOther(Food food) {
+        return new double[] {
+                food.caffeine
+        };
+    }
 }
