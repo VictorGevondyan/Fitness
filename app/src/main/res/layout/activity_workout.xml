@@ -7,23 +7,38 @@
     android:orientation="vertical"
     tools:context="com.flycode.jasonfit.activity.activity.WorkoutActivity">
 
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/colorGrayDark"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="dolorem ipsum"/>
+        android:layout_height="75dp">
+
+        <ImageView
+            android:id="@+id/title_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="ContentDescription"
+            tools:background="@color/colorBlack"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            tools:text="dolorem ipsum"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/workout_species_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorGrayLight"
+        android:background="@color/colorChestnut"
         android:gravity="center"
         android:textSize="16sp"
+        android:textColor="@color/colorWhite"
         tools:text="dolorem ipsum"/>
 
 
@@ -38,14 +53,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/workout_time_current_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/workout_rounded_button"
+            android:layout_centerInParent="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
             
@@ -67,15 +82,19 @@
 
         <Button
             android:id="@+id/workout_rounded_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_launcher_round"/>
+            android:background="@drawable/rounded_shape_button"
+            android:textColor="@color/colorWhite"
+            android:textAllCaps="true"
+            android:text="@string/start_pause"/>
 
         <LinearLayout
             android:id="@+id/workout_time_estimated_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_toEndOf="@+id/workout_rounded_button"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -97,10 +116,15 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:layout_marginTop="10dp"
+    <ProgressBar
+        android:id="@+id/workout_progress"
         android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:background="@color/colorAccent"/>
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:indeterminate="false"
+        android:progress="0"
+        tools:max="100"
+        tools:progress="25"
+        style="?android:attr/progressBarStyleHorizontal"/>
 
 </LinearLayout>

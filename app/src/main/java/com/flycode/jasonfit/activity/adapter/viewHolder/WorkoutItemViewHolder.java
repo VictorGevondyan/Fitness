@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.adapter.OnItemClickListener;
 import com.flycode.jasonfit.activity.model.Workout;
+import com.flycode.jasonfit.activity.util.ImageUtil;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
@@ -51,14 +52,6 @@ public class WorkoutItemViewHolder extends SectioningAdapter.ItemViewHolder {
 
     public void setupItem(Workout workout) {
         titleTextView.setText(workout.getName());
-
-        try {
-            InputStream inputStream = imageView.getContext().getAssets().open(workout.getPicture());
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageBitmap(bitmap);
-        }
-        catch(IOException ex) {
-            return;
-        }
+        imageView.setImageBitmap(ImageUtil.getImageBitmap(imageView.getContext(), workout));
     }
 }

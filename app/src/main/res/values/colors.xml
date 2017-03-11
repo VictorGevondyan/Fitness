@@ -3,6 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorBurgundy">#800000</color>
+    <color name="colorChestnut">#954535</color>
+    <color name="colorChestnutRu">#CD5C5C</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteDark">#F5F5F5</color>
     <color name="colorGray">#D3D3D3</color>

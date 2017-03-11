@@ -2,13 +2,18 @@
     <string name="app_name">Jason Fit</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="start_pause">start\npause</string>
 
     <!-- Strings for Workout(s) screen's -->
 
     <string name="current">Current</string>
     <string name="estimated">Estimated</string>
+    <string name="status_stopped">stopped</string>
+    <string name="status_running">running</string>
+    <string name="status_finished">finished</string>
     <string name="workout_time_null">00:00</string>
-
+    <string name="ok">OK</string>
+    <string name="workout_congrats">Congratulations! You finished your workout successfully. \n Please input your weight</string>
     <!-- temporary -->
 
     <string name="current_time">02:40</string>
