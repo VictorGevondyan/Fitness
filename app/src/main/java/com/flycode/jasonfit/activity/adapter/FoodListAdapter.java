@@ -44,4 +44,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodItemViewHolder> im
     public interface OnFoodItemClickListener {
         void onFoodItemClick(Food food);
     }
+
+    public void setItems( List<Food> itemsList ){
+        this.foodList = itemsList;
+        notifyDataSetChanged();
+    }
+
 }

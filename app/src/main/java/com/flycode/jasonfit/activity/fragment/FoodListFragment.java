@@ -2,14 +2,18 @@ package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.DatabaseUtils;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.R;
@@ -29,7 +33,11 @@ import butterknife.Unbinder;
 public class FoodListFragment extends Fragment implements FoodListAdapter.OnFoodItemClickListener {
     @BindView(R.id.food) RecyclerView foodRecyclerView;
 
+    @BindView(R.id.search_edit_text) EditText searchEditText;
+
     private Unbinder unbinder;
+
+    private FoodListAdapter foodListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,11 +47,16 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
         List<Food> foodList = new Select().from(Food.class).execute();
 
-        foodRecyclerView.setAdapter(new FoodListAdapter(foodList, this));
+        foodListAdapter = new FoodListAdapter(foodList, this);
+
+        foodRecyclerView.setAdapter(foodListAdapter);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         foodRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
 
+        searchEditText.addTextChangedListener(searchTextWatcher);
+
         return foodListView;
+
     }
 
     @Override
@@ -82,4 +95,51 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
             }
         }
     }
+
+
+    TextWatcher searchTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            String searchQuery =  charSequence.toString();
+            searchQuery = "%" + searchQuery + "%";
+
+            List<Food> foodList = new Select()
+                        .from(Food.class)
+                        .where("food LIKE ?", searchQuery)
+                        .orderBy("food ASC")
+                        .execute();
+
+            foodListAdapter.setItems(foodList);
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
