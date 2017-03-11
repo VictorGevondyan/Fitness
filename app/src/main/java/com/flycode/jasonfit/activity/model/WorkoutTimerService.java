@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,21 @@ public class WorkoutTimerService extends Service {
                         .putTotalWorkoutTime(preferences.get().totalWorkoutTime() + 1000)
                         .putCurrentWorkoutTime(preferences.get().currentWorkoutTime() + 1000)
                         .apply();
+
+                int workoutNumber = preferences.getWorkoutNumber();
+                int currentWorkoutTime = (int) (preferences.getCurrentWorkoutTime() / 1000);
+                int maxCurrentWorkoutTime = preferences.getCurrentWorkoutTimeArray().get(workoutNumber);
+                int workoutsCount = preferences.getCurrentWorkoutTimeArray().size();
+
+                if (currentWorkoutTime == maxCurrentWorkoutTime && workoutNumber < workoutsCount - 1 ) {
+
+                    preferences
+                            .edit()
+                            .putCurrentWorkoutTime(0)
+                            .putWorkoutNumber(workoutNumber + 1)
+                            .apply();
+                    Log.i("TAGG", String.valueOf(workoutNumber));
+                }
 
                 Intent broadcastIntent = new Intent(WORKOUT_BROADCAST_IDENTIFIER);
                 broadcastIntent.putExtra(WORKOUT_BROADCAST_IDENTIFIER, "timer tick");
