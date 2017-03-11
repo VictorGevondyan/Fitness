@@ -11,12 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
 
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.adapter.SideMenuAdapter;
-import com.flycode.jasonfit.activity.fragment.FoodsFragment;
+import com.flycode.jasonfit.activity.fragment.FoodListFragment;
 import com.flycode.jasonfit.activity.fragment.InfoFragment;
 import com.flycode.jasonfit.activity.fragment.MealsFragment;
 import com.flycode.jasonfit.activity.fragment.StatsFragment;
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             case STATS:
                 return new StatsFragment();
             case FOODS:
-                return new FoodsFragment();
+                return new FoodListFragment();
             case SETTINGS:
                 return new SettingsFragment();
             case INFO:
