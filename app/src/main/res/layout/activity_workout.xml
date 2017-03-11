@@ -116,11 +116,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
-
     <ProgressBar
         android:id="@+id/workout_progress"
         android:layout_width="match_parent"
