@@ -64,7 +64,8 @@
                 android:paddingTop="@dimen/button_top_bottom_padding"
                 android:text="24"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"/>
+
 
             <TextView
                 android:layout_width="0dp"

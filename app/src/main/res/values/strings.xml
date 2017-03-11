@@ -17,7 +17,7 @@
     <!-- End of Strings for Workout(s) screen's -->
 
     <!-- Strings for Info screen -->
-    <string name="search">... Search</string>
+    <string name="search">Search</string>
 
     <string name="info_disclaimer_title">disclaimer</string>
     <string name="info_disclaimer_content">We give our best to show you with this system how to achieve good results for your body.
@@ -71,11 +71,6 @@
     <string name="try_for_free">OK! TRY THIS APP\nFREE FOR 7 DAYS</string>
     <string name="one_month">1 MONTH € 9,99</string>
 
-    <string name="foods_food">FOOD</string>
-    <string name="foods_energy">ENERGY\nkcal</string>
-    <string name="foods_fat">FAT\ng</string>
-    <string name="foods_protein">PROTEIN\ng</string>
-    <string name="foods_carb">CARB\ng</string>
     <string name="error">Error</string>
     <string name="please_enter_valid_height">Please, enter valid height.</string>
     <string name="please_enter_valid_weight">Please, enter valid weight.</string>
