@@ -57,8 +57,7 @@
                 android:paddingBottom="@dimen/button_top_bottom_padding"
                 android:paddingRight="@dimen/common_padding"
                 android:layout_marginRight="@dimen/tiny_margin"
-                android:background="@color/colorBlack"
-                />
+                android:background="@color/colorBlack"/>
 
             <TextView
                 android:layout_width="0dp"

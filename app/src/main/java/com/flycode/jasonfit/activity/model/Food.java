@@ -1,89 +1,115 @@
 package com.flycode.jasonfit.activity.model;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 /**
  * Created - Schumakher on  3/7/17.
  */
 
-public class Food {
-    public int id;
-    private String name;
-    private Float water;
-    private int energy;
-    private Float protein;
-    private Float fat;
-    private Float carbohydrates;
-    private Float fiber;
-    private Float sugars;
+@Table(name = "Food")
+public class Food extends Model {
+    @Column(name = "food", unique = true)
+    public String food;
 
-    public int getId() {
-        return id;
-    }
+    @Column(name = "water")
+    public double water;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    @Column(name = "energy")
+    public double energy;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "protein")
+    public double protein;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Column(name = "fat")
+    public double fat;
 
-    public Float getWater() {
-        return water;
-    }
+    @Column(name = "carbohydrate")
+    public double carbohydrate;
 
-    public void setWater(Float water) {
-        this.water = water;
-    }
+    @Column(name = "fiber")
+    public double fiber;
 
-    public int getEnergy() {
-        return energy;
-    }
+    @Column(name = "sugars")
+    public double sugars;
 
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
+    @Column(name = "calcium")
+    public double calcium;
 
-    public Float getProtein() {
-        return protein;
-    }
+    @Column(name = "iron")
+    public double iron;
 
-    public void setProtein(Float protein) {
-        this.protein = protein;
-    }
+    @Column(name = "magnesium")
+    public double magnesium;
 
-    public Float getFat() {
-        return fat;
-    }
+    @Column(name = "phosphorus")
+    public double phosphorus;
 
-    public void setFat(Float fat) {
-        this.fat = fat;
-    }
+    @Column(name = "potassium")
+    public double potassium;
 
-    public Float getCarbohydrates() {
-        return carbohydrates;
-    }
+    @Column(name = "sodium")
+    public double sodium;
 
-    public void setCarbohydrates(Float carbohydrates) {
-        this.carbohydrates = carbohydrates;
-    }
+    @Column(name = "zinc")
+    public double zinc;
 
-    public Float getFiber() {
-        return fiber;
-    }
+    @Column(name = "vitamin_c")
+    public double vitaminC;
 
-    public void setFiber(Float fiber) {
-        this.fiber = fiber;
-    }
+    @Column(name = "thiamin")
+    public double thiamin;
 
-    public Float getSugars() {
-        return sugars;
-    }
+    @Column(name = "riboflavin")
+    public double riboflavin;
 
-    public void setSugars(Float sugars) {
-        this.sugars = sugars;
-    }
+    @Column(name = "niacin")
+    public double niacin;
+
+    @Column(name = "vitamin_b_6")
+    public double vitaminB6;
+
+    @Column(name = "floate_dfe")
+    public double floateDFE;
+
+    @Column(name = "vitamin_b_12")
+    public double vitaminB12;
+
+    @Column(name = "vitamin_a_rae")
+    public double vitaminARAE;
+
+    @Column(name = "vitamin_a_iu")
+    public double vitaminAIU;
+
+    @Column(name = "vitamin_e")
+    public double vitaminE;
+
+    @Column(name = "vitamin_d_d2_d3")
+    public double vitaminDD2D3;
+
+    @Column(name = "vitamin_d")
+    public double vitaminD;
+
+    @Column(name = "vitamin_k")
+    public double vitaminK;
+
+    @Column(name = "fatty_acids_total_saturated")
+    public double fattyAcidsTotalSaturated;
+
+    @Column(name = "fatty_acids_total_monounsaturated")
+    public double fattyAcidsTotalMonounsaturated;
+
+    @Column(name = "fatty_acids_total_polyunsaturated")
+    public double fattyAcidsTotalPolyunsaturated;
+
+    @Column(name = "fatty_acids_total_trans")
+    public double fattyAcidsTotalTrans;
+
+    @Column(name = "cholesterol")
+    public double cholesterol;
+
+    @Column(name = "caffeine")
+    public double caffeine;
+
 }
