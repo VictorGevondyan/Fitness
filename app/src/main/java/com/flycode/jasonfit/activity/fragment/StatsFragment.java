@@ -1,13 +1,11 @@
 package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.LinearLayout;
 
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.model.ProgressData;
@@ -17,8 +15,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +28,8 @@ public class StatsFragment extends Fragment {
 
     @BindView(R.id.chart) LineChart lineChart;
 
+    @BindView(R.id.calendar) LinearLayout calendar;
+
     private Unbinder unbinder;
 
     @Override
@@ -42,6 +40,8 @@ public class StatsFragment extends Fragment {
         unbinder = ButterKnife.bind(this, statsView);
 
         createChart();
+
+        createCalendar(inflater);
 
         return statsView;
 
@@ -84,6 +84,16 @@ public class StatsFragment extends Fragment {
         LineData lineData = new LineData(dataSet);
         lineChart.setData(lineData);
         lineChart.invalidate(); // refresh
+
+    }
+
+    private void createCalendar( LayoutInflater layoutInflater ){
+
+        int index;
+        for( index = 0; index < 7; index++ ){
+            View itemCalendar = layoutInflater.inflate( R.layout.item_calendar, calendar, false);
+            calendar.addView(itemCalendar);
+        }
 
     }
 
