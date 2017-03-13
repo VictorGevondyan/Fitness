@@ -2,6 +2,7 @@ package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -85,6 +86,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         );
         datePickerDialog.showYearPickerFirst(true);
         datePickerDialog.show(getFragmentManager(), "datePicker");
+
     }
 
     @OnClick(R.id.gender)
@@ -314,7 +316,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                     }
 
                 }).show();
-
+        
     }
 
     @Override
@@ -367,4 +369,5 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
         return getResources().getStringArray(R.array.nutrition)[selectedIndex];
     }
+
 }
