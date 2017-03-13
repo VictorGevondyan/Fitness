@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/try_for_free"
-        android:name="com.flycode.jasonfit.activity.fragment.SettingsFragment">
+        android:name="com.flycode.jasonfit.fragment.SettingsFragment">
     </fragment>
 
     <LinearLayout

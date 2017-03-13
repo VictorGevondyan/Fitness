@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.flycode.jasonfit.activity.activity.WorkoutActivity">
+    tools:context="com.flycode.jasonfit.activity.WorkoutActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -116,15 +116,15 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ProgressBar
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/workout_progress"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:layout_marginTop="10dp"
         android:indeterminate="false"
-        android:progress="0"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_progressBackgroundTint="@color/colorGray"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         tools:max="100"
-        tools:progress="25"
-        style="?android:attr/progressBarStyleHorizontal"/>
+        tools:progress="25"/>
 
 </LinearLayout>
