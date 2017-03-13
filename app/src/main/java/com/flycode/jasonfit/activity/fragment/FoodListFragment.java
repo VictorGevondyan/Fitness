@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 /**
@@ -33,20 +34,24 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
     @BindView(R.id.food) RecyclerView foodRecyclerView;
 
     private Unbinder unbinder;
+    private FoodListAdapter foodListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View foodListView = inflater.inflate(R.layout.fragment_foods, container, false);
+        View foodListView = inflater.inflate(R.layout.fragment_food_list, container, false);
 
         unbinder = ButterKnife.bind(this, foodListView);
 
         List<Food> foodList = new Select().from(Food.class).execute();
 
-        foodRecyclerView.setAdapter(new FoodListAdapter(foodList, this));
+        foodListAdapter = new FoodListAdapter(foodList, this);
+
+        foodRecyclerView.setAdapter(foodListAdapter);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         foodRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
 
         return foodListView;
+
     }
 
     @Override
@@ -87,4 +92,36 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
             }
         }
     }
+
+    @OnTextChanged(R.id.search_edit_text)
+    public void onSearch(CharSequence charSequence, int i, int i1, int i2) {
+
+        String searchQuery =  charSequence.toString();
+        searchQuery = "%" + searchQuery + "%";
+
+        List<Food> foodList = new Select()
+                .from(Food.class)
+                .where("food LIKE ?", searchQuery)
+                .orderBy("food ASC")
+                .execute();
+
+        foodListAdapter.setItems(foodList);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

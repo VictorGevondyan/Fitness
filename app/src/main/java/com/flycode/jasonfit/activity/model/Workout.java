@@ -1,6 +1,7 @@
 package com.flycode.jasonfit.activity.model;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Workout implements Serializable {
     private ArrayList<String> weekday;
     private Color color;
     private ArrayList<String> setName;
-    private ArrayList<String> setPicture;
+    private ArrayList<Integer> setPicture;
     private ArrayList<String> setTiming;
 
     public int getId() {
@@ -67,11 +68,11 @@ public class Workout implements Serializable {
         this.setName = setName;
     }
 
-    public ArrayList<String> getSetPicture() {
+    public ArrayList<Integer> getSetPicture() {
         return setPicture;
     }
 
-    public void setSetPicture(ArrayList<String> setPicture) {
+    public void setSetPicture(ArrayList<Integer> setPicture) {
         this.setPicture = setPicture;
     }
 

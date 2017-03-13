@@ -7,15 +7,22 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.model.Workout;
 import com.flycode.jasonfit.activity.model.WorkoutTimerService;
 import com.flycode.jasonfit.activity.model.WorkoutTrack;
 import com.flycode.jasonfit.activity.model.WorkoutTrackPreferences;
+import com.flycode.jasonfit.activity.util.ImageUtil;
+import com.flycode.jasonfit.activity.util.StringUtil;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,15 +32,22 @@ import static com.flycode.jasonfit.activity.model.WorkoutTimerService.WORKOUT_BR
 
 public class WorkoutActivity extends AppCompatActivity {
     @BindView(R.id.title) TextView workoutTitle;
+    @BindView(R.id.title_background) ImageView workoutTitleBackground;
     @BindView(R.id.workout_species_title) TextView workoutSpeciesTitle;
     @BindView(R.id.workout_image_view) ImageView workoutImageView;
     @BindView(R.id.workout_time_current) TextView workoutTimeCurrent;
     @BindView(R.id.workout_time_estimated) TextView workoutTimeEstimated;
     @BindView(R.id.workout_rounded_button) Button workoutRoundedButton;
+    @BindView(R.id.workout_progress) ProgressBar workoutProgress;
 
-    private WorkoutTrackPreferences preferences;
+    private WorkoutTrackPreferences workoutTrackPreferences;
     private IntentFilter intentFilter;
     private int setSize;
+    private long estimatedTimeSecsFull;
+    private String statusStopped;
+    private String statusRunning;
+    private String statusFinnished;
+    private Workout workout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,27 +56,46 @@ public class WorkoutActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        preferences = WorkoutTrack.sharedPreferences(this);
+        workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
+        setSize = workout.getSetName().size() - 1;
+
+        workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
         intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
 
-        preferences.edit().putTotalWorkoutTime(0).apply();
+        statusStopped = getResources().getString(R.string.status_stopped);
+        statusRunning = getResources().getString(R.string.status_running);
+        statusFinnished = getResources().getString(R.string.status_finished);
 
-        Workout workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
-        //setSize = workout.getSetName().size();
-        setSize = 3;
+        workoutTrackPreferences
+                .edit()
+                .putTotalWorkoutTime(0)
+                .putWorkoutNumber(0)
+                .putCurrentWorkoutTime(0)
+                .apply();
 
-        setupView(workout);
+        calculateSpeciesTimes();
+
+        setupView();
     }
 
     @OnClick(R.id.workout_rounded_button)
     public void startStopTimerClick() {
+        String status = workoutTrackPreferences.get().status();
 
-        if (preferences.get().status().equals("started") || preferences.get().status().equals("")) {
+        if (status.equals(statusRunning) || status.equals("")) {
             stopService(new Intent(this, WorkoutTimerService.class));
-            preferences.edit().putStatus("stopped").apply();
-        } else if (preferences.get().status().equals("stopped")) {
+            workoutTrackPreferences
+                    .edit()
+                    .putStatus(statusStopped)
+                    .apply();
+
+        } else if (status.equals(statusStopped) || status.equals(statusFinnished) || status.equals("")) {
+
             startService(new Intent(this, WorkoutTimerService.class));
-            preferences.edit().putStatus("started").apply();
+            workoutTrackPreferences
+                    .edit()
+                    .putStatus(statusRunning)
+                    .apply();
         }
     }
 
@@ -71,6 +104,8 @@ public class WorkoutActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             incrementCurrentTime();
+            redrawDependsWorkoutItem();
+            checkForWorkoutEnd();
         }
     };
 
@@ -86,118 +121,161 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private void setupView(Workout workout) {
+    private void setupView() {
         workoutTitle.setText(workout.getName());
+        workoutTitleBackground.setImageBitmap(ImageUtil.getImageBitmap(this, workout));
+
         workoutTimeCurrent.setText(getResources().getString(R.string.workout_time_null));
         workoutTimeEstimated.setText(getResources().getString(R.string.workout_time_null));
 
-        processWorkoutTimeEstimated(workout);
+        workoutSpeciesTitle.setText(workout.getSetName().get(0));
+        workoutImageView.setImageResource(workout.getSetPicture().get(0));
+
+        processWorkoutTimeEstimated();
     }
 
-    private void processWorkoutTimeEstimated(Workout workout) {
-        String estimatedTimeString;
+    private void redrawDependsWorkoutItem() {
+        int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
 
-        int estimatedTimeHours = 0;
-        int estimatedTimeMins = 0;
-        int estimatedTimeSecs = 0;
+        String speciesTitle = workout
+                .getSetName()
+                .get(workoutNumber);
+
+        workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray().get(workoutNumber));
+        workoutProgress.setProgress((int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000));
+
+
+        workoutSpeciesTitle.setText(speciesTitle);
+        workoutImageView.setImageResource(workout.getSetPicture().get(workoutNumber));
+    }
+
+    private void calculateSpeciesTimes() {
+
+        ArrayList<Integer> arrayList = new ArrayList<>();
 
         for (int i = 0; i <= setSize; i++) {
+            int speciesTimeHours = 0;
+            int speciesTimeMins = 0;
+            int speciesTimeSecs = 0;
+            int speciesTimeSecsFull = 0;
 
             String time = workout.getSetTiming().get(i);
 
             String[] split = time.split(":");
-            if (split.length == 3) {
-                estimatedTimeHours += Integer.parseInt(split[0].trim());
-                estimatedTimeMins += Integer.parseInt(split[1].trim());
-                estimatedTimeSecs += Integer.parseInt(split[2].trim());
-            } else if (split.length == 2) {
-                estimatedTimeMins += Integer.parseInt(split[0].trim());
-                estimatedTimeSecs += Integer.parseInt(split[1].trim());
-            } else if (split.length == 1) {
-                estimatedTimeSecs += Integer.parseInt(split[0].trim());
+
+            switch (split.length) {
+                default: speciesTimeSecs = 0;
+
+                case 3:
+                    if (!split[0].equals("")  && !split[1].equals("") && !split[2].equals("")) {
+                        speciesTimeHours = Integer.parseInt(split[0].trim());
+                        speciesTimeMins = Integer.parseInt(split[1].trim());
+                        speciesTimeSecs = Integer.parseInt(split[2].trim());
+                    }
+                    break;
+
+                case 2:
+                    if (!split[0].equals("") && !split[1].equals("")) {
+                        speciesTimeMins = Integer.parseInt(split[0].trim());
+                        speciesTimeSecs = Integer.parseInt(split[1].trim());
+                    }
+                    break;
+
+                case 1:
+                    if (!split[0].equals("")) {
+                        speciesTimeSecs = Integer.parseInt(split[0].trim());
+                    }
+                    break;
             }
+
+            speciesTimeMins += speciesTimeSecs / 60;
+            speciesTimeSecs = speciesTimeSecs % 60;
+            speciesTimeHours += speciesTimeMins / 60;
+            speciesTimeMins = speciesTimeMins % 60;
+
+            speciesTimeSecsFull = speciesTimeHours * 60 * 60 + speciesTimeMins * 60 + speciesTimeSecs;
+            arrayList.add(speciesTimeSecsFull);
         }
 
-        estimatedTimeMins += estimatedTimeSecs / 60;
-        estimatedTimeSecs = estimatedTimeSecs % 60;
-        estimatedTimeHours += estimatedTimeMins / 60;
+        workoutTrackPreferences
+                .edit()
+                .putCurrentWorkoutTimeArray(arrayList)
+                .apply();
+    }
+
+    private void processWorkoutTimeEstimated() {
+
+        for (int i = 0; i <= setSize; i++) {
+            estimatedTimeSecsFull += workoutTrackPreferences
+                                            .get()
+                                            .currentWorkoutTimeArray()
+                                            .get(i);
+        }
+
+        int estimatedTimeMins = (int) (estimatedTimeSecsFull / 60);
+        int estimatedTimeSecs = (int) (estimatedTimeSecsFull % 60);
+        int estimatedTimeHours = estimatedTimeMins / 60;
         estimatedTimeMins = estimatedTimeMins % 60;
 
-        String estimatedTimeHoursString;
-        String estimatedTimeMinsString;
-        String estimatedTimeSecsString;
-
-        if (estimatedTimeHours < 10) {
-            estimatedTimeHoursString = "0" + String.valueOf(estimatedTimeHours);
-        } else {
-            estimatedTimeHoursString = String.valueOf(estimatedTimeHours);
-        }
-
-        if (estimatedTimeMins < 10) {
-            estimatedTimeMinsString = "0" + String.valueOf(estimatedTimeMins);
-        } else {
-            estimatedTimeMinsString = String.valueOf(estimatedTimeMins);
-        }
-
-        if (estimatedTimeSecs < 10) {
-            estimatedTimeSecsString = "0" + String.valueOf(estimatedTimeSecs);
-        } else {
-            estimatedTimeSecsString = String.valueOf(estimatedTimeSecs);
-        }
-
-        if (estimatedTimeHours != 0) {
-            estimatedTimeString = estimatedTimeHoursString + ":" + estimatedTimeMinsString + ":" + estimatedTimeSecsString;
-        } else if (estimatedTimeMins != 0) {
-            estimatedTimeString = estimatedTimeMinsString + ":" + estimatedTimeSecsString;
-        } else {
-            estimatedTimeString = estimatedTimeSecsString;
-        }
-
-        workoutTimeEstimated.setText(estimatedTimeString);
+        workoutTimeEstimated.setText(StringUtil.test(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
     }
 
     private void incrementCurrentTime() {
-        int currentTimeHours;
-        int currentTimeMins;
-        int currentTimeSecs;
 
-        String currentTimeString;
+        long totalWorkoutTime = workoutTrackPreferences
+                                            .get()
+                                            .totalWorkoutTime();
 
-        currentTimeHours = (int) (preferences.get().totalWorkoutTime() / 1000 / 60 / 60);
-        currentTimeMins = (int) ((preferences.get().totalWorkoutTime() / 1000 / 60) % 60);
-        currentTimeSecs = (int) ((preferences.get().totalWorkoutTime() / 1000) % 60);
+        int currentTimeHours = (int) (totalWorkoutTime / 1000 / 60 / 60);
 
-        String currentTimeHoursString;
-        String currentTimeMinsString;
-        String currentTimeSecsString;
+        int currentTimeMins = (int) ((totalWorkoutTime / 1000 / 60) % 60);
 
-        if (currentTimeHours < 10) {
-            currentTimeHoursString = "0" + String.valueOf(currentTimeHours);
-        } else {
-            currentTimeHoursString = String.valueOf(currentTimeHours);
+        int currentTimeSecs = (int) ((totalWorkoutTime / 1000) % 60);
+
+        workoutTimeCurrent.setText(StringUtil.test(currentTimeHours, currentTimeMins, currentTimeSecs));
+    }
+
+    private void checkForWorkoutEnd() {
+        int totalWorkoutTime = (int) (workoutTrackPreferences
+                                                .get()
+                                                .totalWorkoutTime() / 1000);
+
+        if (totalWorkoutTime == estimatedTimeSecsFull) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+            workoutTrackPreferences
+                    .edit()
+                    .putCurrentWorkoutTime(0)
+                    .putTotalWorkoutTime(0)
+                    .putWorkoutNumber(0)
+                    .putStatus(statusFinnished)
+                    .apply();
+
+
+            new MaterialDialog.Builder(this)
+                    .content(R.string.workout_congrats)
+                    .inputType(InputType.TYPE_CLASS_NUMBER)
+                    .input(null, null , new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // party
+                        }
+                    }).show();
         }
+    }
 
-        if (currentTimeMins < 10) {
-            currentTimeMinsString = "0" + String.valueOf(currentTimeMins);
-        } else {
-            currentTimeMinsString = String.valueOf(currentTimeMins);
-        }
+    @Override
+    public void onBackPressed() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        stopService(new Intent(this, WorkoutTimerService.class));
+        workoutTrackPreferences
+                .edit()
+                .putCurrentWorkoutTime(0)
+                .putTotalWorkoutTime(0)
+                .putWorkoutNumber(0)
+                .putStatus(statusStopped)
+                .apply();
 
-        if (currentTimeSecs < 10) {
-            currentTimeSecsString = "0" + String.valueOf(currentTimeSecs);
-        } else {
-            currentTimeSecsString = String.valueOf(currentTimeSecs);
-        }
-
-
-        if (currentTimeHours != 0) {
-            currentTimeString = currentTimeHoursString + ":" + currentTimeMinsString + ":" + currentTimeSecsString;
-        } else if (currentTimeMins != 0){
-            currentTimeString = currentTimeMinsString + ":" + currentTimeSecsString;
-        } else {
-            currentTimeString = "00:" + currentTimeSecsString;
-        }
-
-        workoutTimeCurrent.setText(currentTimeString);
+        super.onBackPressed();
     }
 }
