@@ -2,21 +2,20 @@ package com.flycode.jasonfit.activity.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.database.DatabaseUtils;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.activity.Constants;
+import com.flycode.jasonfit.activity.activity.FoodActivity;
 import com.flycode.jasonfit.activity.adapter.FoodListAdapter;
 import com.flycode.jasonfit.activity.model.Food;
 
@@ -24,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 /**
@@ -33,15 +33,12 @@ import butterknife.Unbinder;
 public class FoodListFragment extends Fragment implements FoodListAdapter.OnFoodItemClickListener {
     @BindView(R.id.food) RecyclerView foodRecyclerView;
 
-    @BindView(R.id.search_edit_text) EditText searchEditText;
-
     private Unbinder unbinder;
-
     private FoodListAdapter foodListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View foodListView = inflater.inflate(R.layout.fragment_foods, container, false);
+        View foodListView = inflater.inflate(R.layout.fragment_food_list, container, false);
 
         unbinder = ButterKnife.bind(this, foodListView);
 
@@ -52,8 +49,6 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         foodRecyclerView.setAdapter(foodListAdapter);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         foodRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-
-        searchEditText.addTextChangedListener(searchTextWatcher);
 
         return foodListView;
 
@@ -68,7 +63,9 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
     @Override
     public void onFoodItemClick(Food food) {
-
+        Intent intent = new Intent(getActivity(), FoodActivity.class)
+                .putExtra(Constants.EXTRAS.FOOD, food);
+        startActivity(intent);
     }
 
     private class DividerDecoration extends RecyclerView.ItemDecoration {
@@ -96,35 +93,20 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         }
     }
 
+    @OnTextChanged(R.id.search_edit_text)
+    public void onSearch(CharSequence charSequence, int i, int i1, int i2) {
 
-    TextWatcher searchTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        String searchQuery =  charSequence.toString();
+        searchQuery = "%" + searchQuery + "%";
 
-        }
+        List<Food> foodList = new Select()
+                .from(Food.class)
+                .where("food LIKE ?", searchQuery)
+                .orderBy("food ASC")
+                .execute();
 
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            String searchQuery =  charSequence.toString();
-            searchQuery = "%" + searchQuery + "%";
-
-            List<Food> foodList = new Select()
-                        .from(Food.class)
-                        .where("food LIKE ?", searchQuery)
-                        .orderBy("food ASC")
-                        .execute();
-
-            foodListAdapter.setItems(foodList);
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
+        foodListAdapter.setItems(foodList);
+    }
 }
 
 

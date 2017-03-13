@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.flycode.jasonfit">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".activity.JasonFitApplication"
@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.activity.MainActivity"/>
+        <activity android:name=".activity.activity.MainActivity" />
         <activity android:name=".activity.activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,10 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.activity.WorkoutActivity"/>
+        <activity android:name=".activity.activity.WorkoutActivity" />
 
-        <service android:name=".activity.model.WorkoutTimerService"
-            android:exported="false"/>
+        <service
+            android:name=".activity.model.WorkoutTimerService"
+            android:exported="false" />
+
+        <activity android:name=".activity.activity.FoodActivity"></activity>
     </application>
 
 </manifest>
