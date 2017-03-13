@@ -40,7 +40,7 @@ public class WorkoutItemViewHolder extends SectioningAdapter.ItemViewHolder {
         this.listener = listener;
     }
 
-    @OnClick(R.id.workout_card_view)
+    @OnClick(R.id.item_workout)
     public void onClick() {
         listener.onItemClick(this);
     }

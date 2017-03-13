@@ -10,8 +10,10 @@
         android:id="@+id/workout_header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"
+        android:textAllCaps="true"
         android:textSize="@dimen/title_text_size"
         tools:text="dolorem ipsum"/>
 

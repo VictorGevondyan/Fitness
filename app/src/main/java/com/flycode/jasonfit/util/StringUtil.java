@@ -5,7 +5,7 @@ package com.flycode.jasonfit.util;
  */
 
 public class StringUtil {
-    public static String test (int timeHours, int timeMins, int timeSecs) {
+    public static String getFormattedTime (int timeHours, int timeMins, int timeSecs) {
         String estimatedTimeString;
 
         String timeHoursString;

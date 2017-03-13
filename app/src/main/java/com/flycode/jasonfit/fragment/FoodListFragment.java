@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,9 +47,11 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
         foodListAdapter = new FoodListAdapter(foodList, this);
 
-        foodRecyclerView.setAdapter(foodListAdapter);
+
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         foodRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
+
+        foodRecyclerView.setAdapter(foodListAdapter);
 
         return foodListView;
 
@@ -108,20 +111,3 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         foodListAdapter.setItems(foodList);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

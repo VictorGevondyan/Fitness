@@ -35,7 +35,14 @@
             android:layout_height="match_parent"
             android:src="@drawable/wallpaper"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBlack"
+            android:alpha="0.6"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/side_menu"

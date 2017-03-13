@@ -1,10 +1,18 @@
 package com.flycode.jasonfit.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -13,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
@@ -49,6 +58,10 @@ public class WorkoutActivity extends AppCompatActivity {
     private String statusFinnished;
     private Workout workout;
 
+    private static final int NOTIFICATION_ID = 666;
+    private Notification.Builder builder;
+    private NotificationManager notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +74,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
         intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
+
+        builder = new Notification.Builder(this);
+        notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
 
         statusStopped = getResources().getString(R.string.status_stopped);
         statusRunning = getResources().getString(R.string.status_running);
@@ -89,6 +105,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putStatus(statusStopped)
                     .apply();
 
+            cancelNotification();
+
         } else if (status.equals(statusStopped) || status.equals(statusFinnished) || status.equals("")) {
 
             startService(new Intent(this, WorkoutTimerService.class));
@@ -96,6 +114,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     .edit()
                     .putStatus(statusRunning)
                     .apply();
+
+            showNotification();
         }
     }
 
@@ -136,17 +156,22 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void redrawDependsWorkoutItem() {
         int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
+        int currentWorkoutTime = (int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000);
+        int currentWorkoutImage = workout.getSetPicture().get(workoutNumber);
 
         String speciesTitle = workout
                 .getSetName()
                 .get(workoutNumber);
 
         workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray().get(workoutNumber));
-        workoutProgress.setProgress((int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000));
+        workoutProgress.setProgress(currentWorkoutTime);
 
 
         workoutSpeciesTitle.setText(speciesTitle);
         workoutImageView.setImageResource(workout.getSetPicture().get(workoutNumber));
+        builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime));
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), currentWorkoutImage));
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void calculateSpeciesTimes() {
@@ -217,7 +242,7 @@ public class WorkoutActivity extends AppCompatActivity {
         int estimatedTimeHours = estimatedTimeMins / 60;
         estimatedTimeMins = estimatedTimeMins % 60;
 
-        workoutTimeEstimated.setText(StringUtil.test(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
+        workoutTimeEstimated.setText(StringUtil.getFormattedTime(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
     }
 
     private void incrementCurrentTime() {
@@ -232,7 +257,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         int currentTimeSecs = (int) ((totalWorkoutTime / 1000) % 60);
 
-        workoutTimeCurrent.setText(StringUtil.test(currentTimeHours, currentTimeMins, currentTimeSecs));
+        workoutTimeCurrent.setText(StringUtil.getFormattedTime(currentTimeHours, currentTimeMins, currentTimeSecs));
     }
 
     private void checkForWorkoutEnd() {
@@ -251,6 +276,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putStatus(statusFinnished)
                     .apply();
 
+            cancelNotification();
+
 
             new MaterialDialog.Builder(this)
                     .content(R.string.workout_congrats)
@@ -266,16 +293,72 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        stopService(new Intent(this, WorkoutTimerService.class));
-        workoutTrackPreferences
-                .edit()
-                .putCurrentWorkoutTime(0)
-                .putTotalWorkoutTime(0)
-                .putWorkoutNumber(0)
-                .putStatus(statusStopped)
-                .apply();
+        if (workoutTrackPreferences.getStatus().equals(statusRunning)) {
 
-        super.onBackPressed();
+            new MaterialDialog.Builder(this)
+                    .content(R.string.sure_go_back)
+                    .positiveText(R.string.yes)
+                    .negativeText(R.string.no)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            LocalBroadcastManager.getInstance(WorkoutActivity.this).unregisterReceiver(receiver);
+                            stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
+
+                            workoutTrackPreferences
+                                    .edit()
+                                    .putCurrentWorkoutTime(0)
+                                    .putTotalWorkoutTime(0)
+                                    .putWorkoutNumber(0)
+                                    .putStatus(statusStopped)
+                                    .apply();
+
+                            cancelNotification();
+
+                            WorkoutActivity.super.onBackPressed();
+
+                        }
+                    })
+                    .show();
+
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void showNotification() {
+        int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
+        String currentWorkoutTitle = workout.getSetName().get(workoutNumber);
+        int currentWorkoutImage = workout.getSetPicture().get(workoutNumber);
+        int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000);
+        String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0 , currentWorkoutTimeSecs);
+
+        Intent notificationIntent = new Intent(this, WorkoutActivity.class);
+        PendingIntent notificationContentIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Resources resources = this.getResources();
+        builder
+                .setTicker(currentWorkoutTitle)
+                .setContentTitle(currentWorkoutTitle)
+                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setLargeIcon(BitmapFactory.decodeResource(resources, currentWorkoutImage))
+                .setAutoCancel(false)
+//                .setContentIntent(notificationContentIntent)
+//                .addAction(R.drawable.arrow_up, "Start activity" , notificationContentIntent)
+                .setContentText(currentWorkoutTimeFormatted);
+
+        Notification notification = builder.build();
+
+        notification.ledARGB = Color.BLUE;
+        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private void cancelNotification() {
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 }
