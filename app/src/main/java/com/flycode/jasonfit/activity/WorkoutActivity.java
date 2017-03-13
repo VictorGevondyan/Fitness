@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
@@ -266,16 +268,35 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        stopService(new Intent(this, WorkoutTimerService.class));
-        workoutTrackPreferences
-                .edit()
-                .putCurrentWorkoutTime(0)
-                .putTotalWorkoutTime(0)
-                .putWorkoutNumber(0)
-                .putStatus(statusStopped)
-                .apply();
+        if (workoutTrackPreferences.getStatus().equals(statusRunning)) {
 
-        super.onBackPressed();
+            new MaterialDialog.Builder(this)
+                    .content(R.string.sure_go_back)
+                    .positiveText(R.string.yes)
+                    .negativeText(R.string.no)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            LocalBroadcastManager.getInstance(WorkoutActivity.this).unregisterReceiver(receiver);
+                            stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
+
+                            workoutTrackPreferences
+                                    .edit()
+                                    .putCurrentWorkoutTime(0)
+                                    .putTotalWorkoutTime(0)
+                                    .putWorkoutNumber(0)
+                                    .putStatus(statusStopped)
+                                    .apply();
+
+                            WorkoutActivity.super.onBackPressed();
+
+                        }
+                    })
+                    .show();
+
+        } else {
+            super.onBackPressed();
+        }
     }
 }
