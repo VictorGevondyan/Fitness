@@ -122,7 +122,7 @@
         android:layout_height="25dp"
         android:indeterminate="false"
         app:mpb_progressStyle="horizontal"
-        app:mpb_progressBackgroundTint="@color/colorGrayLight"
+        app:mpb_progressBackgroundTint="@color/colorGray"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         tools:max="100"
         tools:progress="25"/>
