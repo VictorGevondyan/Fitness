@@ -5,28 +5,28 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".activity.JasonFitApplication"
+        android:name=".JasonFitApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.activity.MainActivity" />
-        <activity android:name=".activity.activity.StartActivity">
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.activity.WorkoutActivity" />
+        <activity android:name=".activity.WorkoutActivity" />
 
         <service
-            android:name=".activity.model.WorkoutTimerService"
+            android:name=".model.WorkoutTimerService"
             android:exported="false" />
 
-        <activity android:name=".activity.activity.FoodActivity"></activity>
+        <activity android:name=".activity.FoodActivity"/>
     </application>
 
 </manifest>
