@@ -83,6 +83,7 @@
     <string name="please_enter_valid_height">Please, enter valid height.</string>
     <string name="please_enter_valid_weight">Please, enter valid weight.</string>
     <string name="food">Food</string>
+    <string name="let_us_start">LET\'S START!</string>
 
     <string-array name="gender">
         <item>Male</item>
