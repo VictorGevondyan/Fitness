@@ -1,16 +1,9 @@
 package com.flycode.jasonfit.activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,10 +17,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 import com.flycode.jasonfit.model.Workout;
 import com.flycode.jasonfit.model.WorkoutTimerService;
 import com.flycode.jasonfit.model.WorkoutTrack;
+import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.StringUtil;
 
@@ -53,14 +46,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private IntentFilter intentFilter;
     private int setSize;
     private long estimatedTimeSecsFull;
-    private String statusStopped;
-    private String statusRunning;
-    private String statusFinnished;
     private Workout workout;
-
-    private static final int NOTIFICATION_ID = 666;
-    private Notification.Builder builder;
-    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +61,6 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
         intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
 
-        builder = new Notification.Builder(this);
-        notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-
-        statusStopped = getResources().getString(R.string.status_stopped);
-        statusRunning = getResources().getString(R.string.status_running);
-        statusFinnished = getResources().getString(R.string.status_finished);
-
         workoutTrackPreferences
                 .edit()
                 .putTotalWorkoutTime(0)
@@ -92,30 +71,28 @@ public class WorkoutActivity extends AppCompatActivity {
         calculateSpeciesTimes();
 
         setupView();
+
+        fillSetNamePreferences();
     }
 
     @OnClick(R.id.workout_rounded_button)
     public void startStopTimerClick() {
         String status = workoutTrackPreferences.get().status();
 
-        if (status.equals(statusRunning) || status.equals("")) {
+        if (status.equals(WorkoutTrack.STATUS.RUNNING) || status.equals("")) {
             stopService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
                     .edit()
-                    .putStatus(statusStopped)
+                    .putStatus(WorkoutTrack.STATUS.PAUSED)
                     .apply();
 
-            cancelNotification();
-
-        } else if (status.equals(statusStopped) || status.equals(statusFinnished) || status.equals("")) {
+        } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals("")) {
 
             startService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
                     .edit()
-                    .putStatus(statusRunning)
+                    .putStatus(WorkoutTrack.STATUS.RUNNING)
                     .apply();
-
-            showNotification();
         }
     }
 
@@ -125,6 +102,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             incrementCurrentTime();
             redrawDependsWorkoutItem();
+
             checkForWorkoutEnd();
         }
     };
@@ -145,9 +123,6 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutTitle.setText(workout.getName());
         workoutTitleBackground.setImageBitmap(ImageUtil.getImageBitmap(this, workout));
 
-        workoutTimeCurrent.setText(getResources().getString(R.string.workout_time_null));
-        workoutTimeEstimated.setText(getResources().getString(R.string.workout_time_null));
-
         workoutSpeciesTitle.setText(workout.getSetName().get(0));
         workoutImageView.setImageResource(workout.getSetPicture().get(0));
 
@@ -157,7 +132,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private void redrawDependsWorkoutItem() {
         int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
         int currentWorkoutTime = (int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000);
-        int currentWorkoutImage = workout.getSetPicture().get(workoutNumber);
 
         String speciesTitle = workout
                 .getSetName()
@@ -166,12 +140,8 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray().get(workoutNumber));
         workoutProgress.setProgress(currentWorkoutTime);
 
-
         workoutSpeciesTitle.setText(speciesTitle);
         workoutImageView.setImageResource(workout.getSetPicture().get(workoutNumber));
-        builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime));
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), currentWorkoutImage));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void calculateSpeciesTimes() {
@@ -182,7 +152,7 @@ public class WorkoutActivity extends AppCompatActivity {
             int speciesTimeHours = 0;
             int speciesTimeMins = 0;
             int speciesTimeSecs = 0;
-            int speciesTimeSecsFull = 0;
+            int speciesTimeSecsFull;
 
             String time = workout.getSetTiming().get(i);
 
@@ -248,8 +218,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private void incrementCurrentTime() {
 
         long totalWorkoutTime = workoutTrackPreferences
-                                            .get()
-                                            .totalWorkoutTime();
+                .get()
+                .totalWorkoutTime();
 
         int currentTimeHours = (int) (totalWorkoutTime / 1000 / 60 / 60);
 
@@ -261,11 +231,12 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void checkForWorkoutEnd() {
-        int totalWorkoutTime = (int) (workoutTrackPreferences
-                                                .get()
-                                                .totalWorkoutTime() / 1000);
 
-        if (totalWorkoutTime == estimatedTimeSecsFull) {
+        String status = workoutTrackPreferences
+                .getStatus();
+
+        if (status.equals(WorkoutTrack.STATUS.FINISHED)) {
+
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
             workoutTrackPreferences
@@ -273,19 +244,23 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putCurrentWorkoutTime(0)
                     .putTotalWorkoutTime(0)
                     .putWorkoutNumber(0)
-                    .putStatus(statusFinnished)
+                    .putStatus(WorkoutTrack.STATUS.FINISHED)
                     .apply();
 
-            cancelNotification();
-
+            stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
             new MaterialDialog.Builder(this)
                     .content(R.string.workout_congrats)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
+                    .cancelable(false)
+                    .canceledOnTouchOutside(false)
                     .input(null, null , new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            // party
+                            Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
+                            goToStatsIntent.putExtra("FROM_WORKOUT", true);
+                            startActivity(goToStatsIntent);
+                            //TODO:save input in db
                         }
                     }).show();
         }
@@ -293,7 +268,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (workoutTrackPreferences.getStatus().equals(statusRunning)) {
+        if (workoutTrackPreferences.getStatus().equals(WorkoutTrack.STATUS.RUNNING)) {
 
             new MaterialDialog.Builder(this)
                     .content(R.string.sure_go_back)
@@ -311,10 +286,8 @@ public class WorkoutActivity extends AppCompatActivity {
                                     .putCurrentWorkoutTime(0)
                                     .putTotalWorkoutTime(0)
                                     .putWorkoutNumber(0)
-                                    .putStatus(statusStopped)
+                                    .putStatus(WorkoutTrack.STATUS.PAUSED)
                                     .apply();
-
-                            cancelNotification();
 
                             WorkoutActivity.super.onBackPressed();
 
@@ -327,38 +300,13 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private void showNotification() {
-        int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
-        String currentWorkoutTitle = workout.getSetName().get(workoutNumber);
-        int currentWorkoutImage = workout.getSetPicture().get(workoutNumber);
-        int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000);
-        String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0 , currentWorkoutTimeSecs);
+    private void fillSetNamePreferences() {
+        ArrayList<String> setNameArray = new ArrayList<>();
 
-        Intent notificationIntent = new Intent(this, WorkoutActivity.class);
-        PendingIntent notificationContentIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        for (int i = 0; i < setSize; i++) {
+            setNameArray.add(workout.getSetName().get(i));
+        }
 
-        Resources resources = this.getResources();
-        builder
-                .setTicker(currentWorkoutTitle)
-                .setContentTitle(currentWorkoutTitle)
-                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setLargeIcon(BitmapFactory.decodeResource(resources, currentWorkoutImage))
-                .setAutoCancel(false)
-//                .setContentIntent(notificationContentIntent)
-//                .addAction(R.drawable.arrow_up, "Start activity" , notificationContentIntent)
-                .setContentText(currentWorkoutTimeFormatted);
-
-        Notification notification = builder.build();
-
-        notification.ledARGB = Color.BLUE;
-        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-
-        notificationManager.notify(NOTIFICATION_ID, notification);
-    }
-
-    private void cancelNotification() {
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
+        workoutTrackPreferences.edit().putCurrentWorkoutNameArray(setNameArray);
     }
 }
