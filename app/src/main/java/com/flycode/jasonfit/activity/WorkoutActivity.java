@@ -9,14 +9,17 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.Workout;
 import com.flycode.jasonfit.model.WorkoutTimerService;
 import com.flycode.jasonfit.model.WorkoutTrack;
@@ -25,6 +28,7 @@ import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +90,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putStatus(WorkoutTrack.STATUS.PAUSED)
                     .apply();
 
-        } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals("")) {
+        } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE) || status.equals("")) {
 
             startService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
@@ -257,10 +261,42 @@ public class WorkoutActivity extends AppCompatActivity {
                     .input(null, null , new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
-                            goToStatsIntent.putExtra("FROM_WORKOUT", true);
-                            startActivity(goToStatsIntent);
-                            //TODO:save input in db
+                            Calendar calendar = Calendar.getInstance();
+
+                            int currentYear = calendar.get(Calendar.YEAR);
+                            int currentMonth = calendar.get(Calendar.MONTH);
+                            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                            StatsData statsData = null;
+
+                            try {
+
+                                statsData = new Select()
+                                        .from(StatsData.class)
+                                        .where("year = ?", currentYear)
+                                        .where("month = ?", currentMonth)
+                                        .where("day = ?", currentDay)
+                                        .executeSingle();
+                            } catch (Exception ignored) {
+                            }
+
+
+
+                            if (statsData != null && statsData.month == currentMonth && statsData.day == currentDay) {
+
+                                statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
+                            } else {
+
+                                statsData = new StatsData();
+                                statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
+                                statsData.year = currentYear;
+                                statsData.month = currentMonth;
+                                statsData.day = currentDay;
+                            }
+
+                            statsData.weight = Math.round(Integer.parseInt(input.toString()));
+
+                            statsData.save();
                         }
                     }).show();
         }
@@ -286,7 +322,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                     .putCurrentWorkoutTime(0)
                                     .putTotalWorkoutTime(0)
                                     .putWorkoutNumber(0)
-                                    .putStatus(WorkoutTrack.STATUS.PAUSED)
+                                    .putStatus(WorkoutTrack.STATUS.IDLE)
                                     .apply();
 
                             WorkoutActivity.super.onBackPressed();
@@ -303,10 +339,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private void fillSetNamePreferences() {
         ArrayList<String> setNameArray = new ArrayList<>();
 
-        for (int i = 0; i < setSize; i++) {
+        for (int i = 0; i <= setSize; i++) {
             setNameArray.add(workout.getSetName().get(i));
         }
 
-        workoutTrackPreferences.edit().putCurrentWorkoutNameArray(setNameArray);
+        workoutTrackPreferences.edit()
+                .putCurrentWorkoutNameArray(setNameArray)
+                .apply();
     }
 }
