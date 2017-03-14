@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.flycode.jasonfit.model.UserPreferences;
 
+import java.util.Calendar;
+
 import io.t28.shade.annotation.Preferences;
 import io.t28.shade.annotation.Property;
 
@@ -40,23 +42,24 @@ public abstract class User {
     private static UserPreferences userPreferences;
 
     public static UserPreferences sharedPreferences(Context context) {
-        if (userPreferences == null) {
+
+        if ( userPreferences == null ) {
             userPreferences = new UserPreferences(context);
         }
 
         return userPreferences;
     }
 
-    @Property(key = "height")
+    @Property(key = "height", defValue = "160")
     public abstract int height();
 
-    @Property(key = "weight")
+    @Property(key = "weight", defValue = "65")
     public abstract int weight();
 
-    @Property(key = "birthday", defValue = "-1395374400000")
+    @Property(key = "birthday", defValue = "631137600000")
     public abstract long birthday();
 
-    @Property(key = "gender", defValue = GENDER.MALE)
+    @Property(key = "gender", defValue = GENDER.FEMALE)
     public abstract String gender();
 
     @Property(key = "nutrition", defValue = NUTRITION.ALL)

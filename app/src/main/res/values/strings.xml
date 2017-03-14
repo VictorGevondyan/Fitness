@@ -38,7 +38,7 @@
     <string name="meals">Meals</string>
     <string name="stats">Stats</string>
     <string name="foods">Foods</string>
-    <string name="settings">Settings</string>
+    <string name="settings">S e t t i n g s</string>
     <string name="info">Info</string>
 
     <!-- End of  Strings for sideMenu -->
@@ -76,6 +76,7 @@
     <string name="please_enter_valid_height">Please, enter valid height.</string>
     <string name="please_enter_valid_weight">Please, enter valid weight.</string>
     <string name="food">Food</string>
+    <string name="let_us_start">LET\'S START!</string>
 
     <string-array name="gender">
         <item>Male</item>
