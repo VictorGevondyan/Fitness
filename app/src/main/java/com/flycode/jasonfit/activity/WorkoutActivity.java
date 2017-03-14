@@ -8,10 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 import com.flycode.jasonfit.model.Workout;
-import com.flycode.jasonfit.model.WorkoutTimerService;
+import com.flycode.jasonfit.service.WorkoutTimerService;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.StringUtil;
@@ -37,9 +36,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.flycode.jasonfit.model.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
+import static com.flycode.jasonfit.service.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
 
 public class WorkoutActivity extends AppCompatActivity {
+
     @BindView(R.id.title) TextView workoutTitle;
     @BindView(R.id.title_background) ImageView workoutTitleBackground;
     @BindView(R.id.workout_species_title) TextView workoutSpeciesTitle;
@@ -55,7 +55,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private long estimatedTimeSecsFull;
     private String statusStopped;
     private String statusRunning;
-    private String statusFinnished;
+    private String statusFinished;
     private Workout workout;
 
     private static final int NOTIFICATION_ID = 666;
@@ -80,7 +80,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         statusStopped = getResources().getString(R.string.status_stopped);
         statusRunning = getResources().getString(R.string.status_running);
-        statusFinnished = getResources().getString(R.string.status_finished);
+        statusFinished = getResources().getString(R.string.status_finished);
 
         workoutTrackPreferences
                 .edit()
@@ -92,13 +92,14 @@ public class WorkoutActivity extends AppCompatActivity {
         calculateSpeciesTimes();
 
         setupView();
+
     }
 
     @OnClick(R.id.workout_rounded_button)
     public void startStopTimerClick() {
         String status = workoutTrackPreferences.get().status();
 
-        if (status.equals(statusRunning) || status.equals("")) {
+        if ( status.equals(statusRunning) || status.equals("") ) {
             stopService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
                     .edit()
@@ -107,7 +108,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             cancelNotification();
 
-        } else if (status.equals(statusStopped) || status.equals(statusFinnished) || status.equals("")) {
+        } else if ( status.equals(statusStopped) || status.equals(statusFinished) || status.equals("") ) {
 
             startService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
@@ -116,6 +117,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     .apply();
 
             showNotification();
+
         }
     }
 
@@ -128,6 +130,10 @@ public class WorkoutActivity extends AppCompatActivity {
             checkForWorkoutEnd();
         }
     };
+
+    /**
+     * End of TextToSpeech flow methods
+     */
 
     @Override
     protected void onResume() {
@@ -273,7 +279,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putCurrentWorkoutTime(0)
                     .putTotalWorkoutTime(0)
                     .putWorkoutNumber(0)
-                    .putStatus(statusFinnished)
+                    .putStatus(statusFinished)
                     .apply();
 
             cancelNotification();
@@ -361,4 +367,5 @@ public class WorkoutActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
+
 }

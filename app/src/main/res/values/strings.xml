@@ -22,6 +22,9 @@
     <string name="current_time">02:40</string>
     <string name="estimated_time">28:14</string>
 
+    <string name="tts_failed">Text To Speech Initialization Failed!</string>
+    <string name="tts_countdown">three two one</string>
+
     <!-- End of Strings for Workout(s) screen's -->
 
     <!-- Strings for Info screen -->
@@ -71,6 +74,8 @@
     <string name="foot">foot</string>
     <string name="kg">kg</string>
     <string name="pound">pound</string>
+
+    <string name="snackbar_text">Your Data was changed</string>
 
     <!-- End of strings for Settings screen -->
 

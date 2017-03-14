@@ -23,7 +23,7 @@
         <activity android:name=".activity.WorkoutActivity" />
 
         <service
-            android:name=".model.WorkoutTimerService"
+            android:name=".service.WorkoutTimerService"
             android:exported="false" />
 
         <activity android:name=".activity.FoodActivity"/>
