@@ -12,21 +12,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.StartActivity">
+
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.IntroActivity" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.StartActivity" />
         <activity android:name=".activity.WorkoutActivity" />
+        <activity android:name=".activity.FoodActivity" />
 
         <service
             android:name=".service.WorkoutTimerService"
             android:exported="false" />
-
-        <activity android:name=".activity.FoodActivity"/>
     </application>
 
 </manifest>

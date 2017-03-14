@@ -21,6 +21,6 @@
         tools:text="dolorem ipsum"
         android:gravity="center"
         android:layout_gravity="center"
-        android:background="@drawable/rounded_outline"/>
+        android:background="@drawable/rounded_outline_white"/>
 
 </LinearLayout>

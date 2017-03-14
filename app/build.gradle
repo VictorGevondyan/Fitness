@@ -39,7 +39,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.sickmartian.calendarview:calendarview:1.0.0'
-    compile 'com.makeramen:roundedimageview:2.3.0'
+    compile 'me.relex:circleindicator:1.2.2@aar'
 
     // Architecture
     compile 'com.jakewharton:butterknife:8.4.0'

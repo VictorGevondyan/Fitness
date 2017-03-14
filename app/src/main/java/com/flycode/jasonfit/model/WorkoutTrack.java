@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 
 import io.t28.shade.annotation.Preferences;
 import io.t28.shade.annotation.Property;
@@ -17,6 +19,13 @@ import io.t28.shade.converter.Converter;
  */
 @Preferences("com.flycode.jasonfit.workouttrack")
 public abstract class WorkoutTrack {
+    public static class STATUS {
+        public final static String FINISHED = "finished";
+        public final static String RUNNING = "running";
+        public final static String PAUSED = "paused";
+        public final static String IDLE = "idle";
+    }
+
     private static WorkoutTrackPreferences workoutTrackPreferences;
 
     public static WorkoutTrackPreferences sharedPreferences(Context context) {
@@ -38,11 +47,15 @@ public abstract class WorkoutTrack {
     @Property(key = "currentWorkoutTime")
     public abstract long currentWorkoutTime();
 
+    @Property(key = "status", defValue = STATUS.IDLE)
+    public abstract String status();
+
     @Property(key = "currentWorkoutTimeArray", converter = IntegerSetConverter.class)
     public abstract ArrayList<Integer> currentWorkoutTimeArray();
 
-    @Property(key = "status")
-    public abstract String status();
+    @Property(key = "currentWorkoutNameArray", converter = StringSetConverter.class)
+    public abstract ArrayList<String> currentWorkoutNameArray();
+
 
     public static class IntegerSetConverter implements Converter<ArrayList<Integer>, String> {
 
@@ -69,6 +82,36 @@ public abstract class WorkoutTrack {
                 index++;
 
                 if (index < integers.size()) {
+                    stringBuilder.append(",");
+                }
+            }
+            return stringBuilder.toString();
+        }
+    }
+
+    public static class StringSetConverter implements Converter<ArrayList<String>, String> {
+
+        @NonNull
+        @Override
+        public ArrayList<String> toConverted(@Nullable String strings) {
+            ArrayList<String> stringsArray = new ArrayList<>();
+
+            Collections.addAll(stringsArray, strings.split(","));
+
+            return stringsArray;
+        }
+
+        @NonNull
+        @Override
+        public String toSupported(@Nullable ArrayList<String> strings) {
+            StringBuilder stringBuilder = new StringBuilder();
+            int index = 0;
+
+            for (String string : strings) {
+                stringBuilder.append(string);
+                index++;
+
+                if (index < strings.size()) {
                     stringBuilder.append(",");
                 }
             }
