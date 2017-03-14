@@ -15,6 +15,9 @@
     <string name="workout_congrats">Congratulations! You finished your workout successfully. \n Please input your weight</string>
     <string name="sure_go_back">Are You sure with proceeding with go back? Current workout will be canceled.</string>
 
+    <string name="tts_failed">Text To Speech Initialization Failed!</string>
+    <string name="tts_countdown">three two one</string>
+
     <!-- End of Strings for Workout(s) screen's -->
 
     <!-- Strings for Info screen -->
@@ -64,6 +67,8 @@
     <string name="foot">foot</string>
     <string name="kg">kg</string>
     <string name="pound">pound</string>
+
+    <string name="snackbar_text">Your Data was changed</string>
 
     <!-- End of strings for Settings screen -->
 

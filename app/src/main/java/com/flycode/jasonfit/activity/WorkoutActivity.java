@@ -21,9 +21,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.Workout;
-import com.flycode.jasonfit.model.WorkoutTimerService;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
+import com.flycode.jasonfit.service.WorkoutTimerService;
 import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.StringUtil;
 
@@ -34,9 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.flycode.jasonfit.model.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
+import static com.flycode.jasonfit.service.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
 
 public class WorkoutActivity extends AppCompatActivity {
+
     @BindView(R.id.title) TextView workoutTitle;
     @BindView(R.id.title_background) ImageView workoutTitleBackground;
     @BindView(R.id.workout_species_title) TextView workoutSpeciesTitle;
@@ -83,6 +84,7 @@ public class WorkoutActivity extends AppCompatActivity {
     public void startStopTimerClick() {
         String status = workoutTrackPreferences.get().status();
 
+
         if (status.equals(WorkoutTrack.STATUS.RUNNING) || status.equals("")) {
             stopService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
@@ -110,6 +112,10 @@ public class WorkoutActivity extends AppCompatActivity {
             checkForWorkoutEnd();
         }
     };
+
+    /**
+     * End of TextToSpeech flow methods
+     */
 
     @Override
     protected void onResume() {
@@ -347,4 +353,5 @@ public class WorkoutActivity extends AppCompatActivity {
                 .putCurrentWorkoutNameArray(setNameArray)
                 .apply();
     }
+
 }
