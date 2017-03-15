@@ -85,15 +85,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     public void onSetBirthday() {
         Calendar initialTime = Calendar.getInstance();
 
-//        long birthday = calendar.getTimeInMillis();
-//
-//        long previousBirthday = userPreferences.getBirthday();
-//
-//        if (previousBirthday != birthday) {
-//            mustShowSnackBar = true;
-//        }
-
-
         initialTime.setTimeInMillis(userPreferences.getBirthday());
         DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
                 this,
@@ -103,6 +94,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         );
         datePickerDialog.showYearPickerFirst(true);
         datePickerDialog.show(getFragmentManager(), "datePicker");
+        datePickerDialog.setMaxDate(Calendar.getInstance());
 
     }
 
@@ -428,7 +420,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         }
 
         Snackbar
-                .make(settingsCoordinatorLayout, "Your Data was changed", Snackbar.LENGTH_LONG)
+                .make(settingsCoordinatorLayout, R.string.snackbar_text, Snackbar.LENGTH_LONG)
                 .show();
 
     }

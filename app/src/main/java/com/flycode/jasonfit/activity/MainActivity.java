@@ -61,6 +61,12 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         layoutParams.width = metrics.widthPixels;
         sideMenuView.setLayoutParams(layoutParams);
         drawerLayout.openDrawer(GravityCompat.START, false);
+
+        if (getIntent().getBooleanExtra("FROM_WORKOUT", false)) {
+            currentMenuItem = SideMenuAdapter.SideMenuItem.STATS;
+            settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override

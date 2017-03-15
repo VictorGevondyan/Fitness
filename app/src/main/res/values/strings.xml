@@ -8,19 +8,15 @@
 
     <string name="current">Current</string>
     <string name="estimated">Estimated</string>
-    <string name="status_stopped">stopped</string>
-    <string name="status_running">running</string>
-    <string name="status_finished">finished</string>
     <string name="workout_time_null">00:00</string>
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="workout_congrats">Congratulations! You finished your workout successfully. \n Please input your weight</string>
     <string name="sure_go_back">Are You sure with proceeding with go back? Current workout will be canceled.</string>
-    <!-- temporary -->
 
-    <string name="current_time">02:40</string>
-    <string name="estimated_time">28:14</string>
+    <string name="tts_failed">Text To Speech Initialization Failed!</string>
+    <string name="tts_countdown">three two one</string>
 
     <!-- End of Strings for Workout(s) screen's -->
 
@@ -71,6 +67,8 @@
     <string name="foot">foot</string>
     <string name="kg">kg</string>
     <string name="pound">pound</string>
+
+    <string name="snackbar_text">Your Data was changed</string>
 
     <!-- End of strings for Settings screen -->
 
