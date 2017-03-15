@@ -46,6 +46,31 @@
 
     <!-- End of  Strings for sideMenu -->
 
+    <!-- Strings for Stats fragment -->
+
+    <string name="current_body_mass_title">CURRENT BODY MASS INDEX"</string>
+    <string name="calories_burnt_title">CALORIES BURNT</string>
+    <string name="chart_title">weight from start to today</string>
+
+    <string name="body_mass_overweight_title">Overweight</string>
+    <string name="calories_burnt_this_week">This week</string>
+    <string name="calories_burnt_last_week">Last week</string>
+    <string name="calories_burnt_record_week">Week record</string>
+    <string name="kcal">&#160;kcal</string>
+    <string name="week">WEEK:&#160;</string>
+
+    <string-array name="week_days">
+        <item>MO</item>
+        <item>TU</item>
+        <item>WE</item>
+        <item>TH</item>
+        <item>FR</item>
+        <item>SA</item>
+        <item>SU</item>
+    </string-array>
+
+    <!-- End of strings for Stats fragment -->
+
     <!-- Strings for Settings screen -->
 
     <string name="current_weight">Current Weight</string>

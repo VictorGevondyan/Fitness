@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_calendar"
     android:layout_width="0dp"
     android:layout_height="140dp"
@@ -8,37 +9,53 @@
     android:weightSum="4">
 
     <TextView
+        android:id="@+id/calendar_day_of_week"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginRight="@dimen/tiny_margin"
+        android:layout_marginEnd="@dimen/tiny_margin"
         android:layout_marginBottom="@dimen/tiny_margin"
         android:background="@color/colorBlack"
-        android:text="MO"
+        tools:text="MO"
         android:textSize="@dimen/pair_text_size"
         android:textColor="@color/colorWhite"
         android:gravity="center"/>
 
     <TextView
+        android:id="@+id/calendar_multiplier"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginRight="@dimen/tiny_margin"
+        android:layout_marginEnd="@dimen/tiny_margin"
         android:layout_marginBottom="@dimen/tiny_margin"
         android:background="@color/colorGray"
-        android:text="1x"
+        tools:text="1x"
         android:textSize="@dimen/pair_text_size"
         android:textColor="@color/colorBlack"
         android:gravity="center"/>
 
     <TextView
+        android:id="@+id/calendar_weight"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_marginRight="@dimen/tiny_margin"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/tiny_margin"
         android:layout_marginBottom="@dimen/tiny_margin"
         android:background="@color/colorGrayLight"
-        android:text="84\nkg"
+        tools:text="84"
+        android:textSize="@dimen/pair_text_size"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/calendar_metric"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/tiny_margin"
+        android:layout_marginBottom="@dimen/tiny_margin"
+        android:background="@color/colorGrayLight"
+        tools:text="kg"
         android:textSize="@dimen/pair_text_size"
         android:textColor="@color/colorBlack"
         android:gravity="center"/>

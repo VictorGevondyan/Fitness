@@ -11,11 +11,8 @@ import com.activeandroid.annotation.Table;
 @Table(name = "StatsData")
 public class StatsData extends Model {
 
-    @Column(name = "day")
-    public int day;
-
-    @Column(name = "month")
-    public int month;
+    @Column(name = "dayOfYear")
+    public int dayOfYear;
 
     @Column(name = "year")
     public int year;
@@ -29,8 +26,7 @@ public class StatsData extends Model {
 
     private  static int[] getDate(StatsData statsData) {
         return  new int[] {
-                statsData.day,
-                statsData.month,
+                statsData.dayOfYear,
                 statsData.year
         };
     }
