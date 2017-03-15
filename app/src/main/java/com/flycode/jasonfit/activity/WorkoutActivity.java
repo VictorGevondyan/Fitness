@@ -18,8 +18,11 @@ import android.widget.TextView;
 import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.flycode.jasonfit.JasonFitApplication;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
+import com.flycode.jasonfit.model.User;
+import com.flycode.jasonfit.model.UserPreferences;
 import com.flycode.jasonfit.model.Workout;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
@@ -267,6 +270,12 @@ public class WorkoutActivity extends AppCompatActivity {
                     .input(null, null , new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
+                            if (input.length() == 0) {
+                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                                return;
+                            }
+
                             Calendar calendar = Calendar.getInstance();
 
                             int currentYear = calendar.get(Calendar.YEAR);
@@ -301,6 +310,11 @@ public class WorkoutActivity extends AppCompatActivity {
                             }
 
                             statsData.weight = Math.round(Integer.parseInt(input.toString()));
+
+                            User.sharedPreferences(JasonFitApplication.sharedApplication())
+                                    .edit()
+                                    .putWeight(statsData.weight)
+                                    .apply();
 
                             statsData.save();
                         }

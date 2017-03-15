@@ -8,12 +8,11 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.fragment.IntroFragment;
 
@@ -38,7 +37,7 @@ public class IntroActivity extends AppCompatActivity {
 
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @OnClick(R.id.proceed)
@@ -68,17 +67,17 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
-//    IInAppBillingService mService;
-//
-//    ServiceConnection mServiceConn = new ServiceConnection() {
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            mService = null;
-//        }
-//
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            mService = IInAppBillingService.Stub.asInterface(service);
-//        }
-//    };
+    IInAppBillingService mService;
+
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
 }
