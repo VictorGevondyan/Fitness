@@ -58,6 +58,16 @@
     <string name="calories_burnt_record_week">Week record</string>
     <string name="kcal">&#160;kcal</string>
     <string name="week">WEEK:&#160;</string>
+    
+    <string name="bmi_very_underweight">Very severely underweight</string>
+    <string name="bmi_severely_underweight">Severely underweight</string>
+    <string name="bmi_underweight">Underweight</string>
+    <string name="bmi_normal">Normal(healthy weight)</string>
+    <string name="bmi_overweight">Overweight</string>
+    <string name="bmi_obese1">Obese Class I(Moderately obese)</string>
+    <string name="bmi_obese2">Obese Class II(Severely obese)</string>
+    <string name="bmi_obese3">Obese Class III(Very severely obese)</string>
+    <string name="bmi_human">Are You a human?</string>
 
     <string-array name="week_days">
         <item>MO</item>
