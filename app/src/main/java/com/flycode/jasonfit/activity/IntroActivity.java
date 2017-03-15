@@ -1,6 +1,10 @@
 package com.flycode.jasonfit.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,6 +35,10 @@ public class IntroActivity extends AppCompatActivity {
 
         viewPager.setAdapter(new IntroPagerAdapter(getSupportFragmentManager()));
         indicator.setViewPager(viewPager);
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
     @OnClick(R.id.proceed)
@@ -59,4 +67,18 @@ public class IntroActivity extends AppCompatActivity {
             return IntroFragment.initialize(BACKGROUND_RESOURCES[position]);
         }
     }
+
+    IInAppBillingService mService;
+
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
 }
