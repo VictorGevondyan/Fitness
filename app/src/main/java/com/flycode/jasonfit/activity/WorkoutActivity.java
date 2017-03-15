@@ -279,8 +279,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             Calendar calendar = Calendar.getInstance();
 
                             int currentYear = calendar.get(Calendar.YEAR);
-                            int currentMonth = calendar.get(Calendar.MONTH);
-                            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                            int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
                             StatsData statsData = null;
 
@@ -289,15 +288,12 @@ public class WorkoutActivity extends AppCompatActivity {
                                 statsData = new Select()
                                         .from(StatsData.class)
                                         .where("year = ?", currentYear)
-                                        .where("month = ?", currentMonth)
-                                        .where("day = ?", currentDay)
+                                        .where("dayOfYear = ?", currentDay)
                                         .executeSingle();
                             } catch (Exception ignored) {
                             }
 
-
-
-                            if (statsData != null && statsData.month == currentMonth && statsData.day == currentDay) {
+                            if (statsData != null) {
 
                                 statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
                             } else {
@@ -305,8 +301,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                 statsData = new StatsData();
                                 statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
                                 statsData.year = currentYear;
-                                statsData.month = currentMonth;
-                                statsData.day = currentDay;
+                                statsData.dayOfYear = currentDay;
                             }
 
                             statsData.weight = Math.round(Integer.parseInt(input.toString()));
