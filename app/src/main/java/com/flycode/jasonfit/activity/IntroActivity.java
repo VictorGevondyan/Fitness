@@ -68,17 +68,17 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
-    IInAppBillingService mService;
-
-    ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-        }
-    };
+//    IInAppBillingService mService;
+//
+//    ServiceConnection mServiceConn = new ServiceConnection() {
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            mService = null;
+//        }
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            mService = IInAppBillingService.Stub.asInterface(service);
+//        }
+//    };
 }
