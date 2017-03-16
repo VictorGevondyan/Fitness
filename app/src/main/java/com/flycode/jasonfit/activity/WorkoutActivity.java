@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -65,8 +66,8 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutTrackPreferences
                 .edit()
                 .putTotalWorkoutTime(0)
-                .putWorkoutNumber(0)
-                .putCurrentWorkoutTime(0)
+                .putSubWorkoutNumber(0)
+                .putSubWorkoutTime(0)
                 .apply();
 
         calculateSpeciesTimes();
@@ -78,24 +79,24 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @OnClick(R.id.workout_rounded_button)
     public void startStopTimerClick() {
-        String status = workoutTrackPreferences.get().status();
+        String status = workoutTrackPreferences.get().totalWorkoutStatus();
 
 
         if (status.equals(WorkoutTrack.STATUS.RUNNING) || status.equals("")) {
-            stopService(new Intent(this, WorkoutTimerService.class));
+//            stopService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
                     .edit()
-                    .putStatus(WorkoutTrack.STATUS.PAUSED)
+                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.PAUSED)
                     .apply();
 
-
-        } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals("")) {
+        } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE) || status.equals("")) {
 
             startService(new Intent(this, WorkoutTimerService.class));
             workoutTrackPreferences
                     .edit()
-                    .putStatus(WorkoutTrack.STATUS.RUNNING)
+                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.RUNNING)
                     .apply();
+
         }
     }
 
@@ -137,8 +138,8 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void redrawDependsWorkoutItem() {
-        int workoutNumber = workoutTrackPreferences.getWorkoutNumber();
-        int currentWorkoutTime = (int) (workoutTrackPreferences.getCurrentWorkoutTime() / 1000);
+        int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
+        int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
 
         String speciesTitle = workout
                 .getSetName()
@@ -240,7 +241,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void checkForWorkoutEnd() {
 
         String status = workoutTrackPreferences
-                .getStatus();
+                .getTotalWorkoutStatus();
 
         if (status.equals(WorkoutTrack.STATUS.FINISHED)) {
 
@@ -248,34 +249,57 @@ public class WorkoutActivity extends AppCompatActivity {
 
             workoutTrackPreferences
                     .edit()
-                    .putCurrentWorkoutTime(0)
+                    .putSubWorkoutTime(0)
                     .putTotalWorkoutTime(0)
-                    .putWorkoutNumber(0)
-                    .putStatus(WorkoutTrack.STATUS.FINISHED)
+                    .putSubWorkoutNumber(0)
+                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.FINISHED)
                     .apply();
 
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
-            new MaterialDialog.Builder(this)
-                    .content(R.string.workout_congrats)
+            MaterialDialog.Builder enterWeightDialogBuilder = new MaterialDialog.Builder(this);
+
+
+                    enterWeightDialogBuilder.content(R.string.workout_congrats)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .cancelable(false)
                     .canceledOnTouchOutside(false)
                     .input(null, null , new MaterialDialog.InputCallback() {
+
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
+
                             Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
                             goToStatsIntent.putExtra("FROM_WORKOUT", true);
                             startActivity(goToStatsIntent);
                             //TODO:save input in db
+
                         }
+
                     }).show();
+
+            enterWeightDialogBuilder.onPositive(enterWeightOkCallback);
+
         }
     }
 
+    MaterialDialog.SingleButtonCallback enterWeightOkCallback = new MaterialDialog.SingleButtonCallback() {
+
+        @Override
+        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+            workoutTrackPreferences
+                    .edit()
+                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.IDLE)
+                    .apply();
+
+        }
+
+    };
+
     @Override
     public void onBackPressed() {
-        if (workoutTrackPreferences.getStatus().equals(WorkoutTrack.STATUS.RUNNING)) {
+        if (workoutTrackPreferences.getTotalWorkoutStatus().equals(WorkoutTrack.STATUS.RUNNING)) {
 
             new MaterialDialog.Builder(this)
                     .content(R.string.sure_go_back)
@@ -290,10 +314,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
                             workoutTrackPreferences
                                     .edit()
-                                    .putCurrentWorkoutTime(0)
+                                    .putSubWorkoutTime(0)
                                     .putTotalWorkoutTime(0)
-                                    .putWorkoutNumber(0)
-                                    .putStatus(WorkoutTrack.STATUS.PAUSED)
+                                    .putSubWorkoutNumber(0)
+                                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.IDLE)
                                     .apply();
 
                             WorkoutActivity.super.onBackPressed();
@@ -310,11 +334,14 @@ public class WorkoutActivity extends AppCompatActivity {
     private void fillSetNamePreferences() {
         ArrayList<String> setNameArray = new ArrayList<>();
 
-        for (int i = 0; i < setSize; i++) {
+        for (int i = 0; i <= setSize; i++) {
             setNameArray.add(workout.getSetName().get(i));
         }
 
-        workoutTrackPreferences.edit().putCurrentWorkoutNameArray(setNameArray);
+        workoutTrackPreferences
+                .edit()
+                .putCurrentWorkoutNameArray(setNameArray)
+                .apply();
     }
 
 }

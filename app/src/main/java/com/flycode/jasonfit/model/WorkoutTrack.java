@@ -19,7 +19,9 @@ import io.t28.shade.converter.Converter;
  */
 @Preferences("com.flycode.jasonfit.workouttrack")
 public abstract class WorkoutTrack {
+
     public static class STATUS {
+        public final static String PREPARING_TO_FINISH = "preparingFinish";
         public final static String FINISHED = "finished";
         public final static String RUNNING = "running";
         public final static String PAUSED = "paused";
@@ -38,24 +40,23 @@ public abstract class WorkoutTrack {
     @Property(key = "workoutId")
     public abstract int workoutId();
 
-    @Property(key = "workoutNumber")
-    public abstract int workoutNumber();
+    @Property(key = "subWorkoutNumber")
+    public abstract int subWorkoutNumber();
 
     @Property(key = "totalWorkoutTime")
     public abstract long totalWorkoutTime();
 
-    @Property(key = "currentWorkoutTime")
-    public abstract long currentWorkoutTime();
+    @Property(key = "subWorkoutTime")
+    public abstract long subWorkoutTime();
 
-    @Property(key = "status", defValue = STATUS.IDLE)
-    public abstract String status();
+    @Property(key = "totalWorkoutStatus", defValue = STATUS.IDLE)
+    public abstract String totalWorkoutStatus();
 
     @Property(key = "currentWorkoutTimeArray", converter = IntegerSetConverter.class)
     public abstract ArrayList<Integer> currentWorkoutTimeArray();
 
     @Property(key = "currentWorkoutNameArray", converter = StringSetConverter.class)
     public abstract ArrayList<String> currentWorkoutNameArray();
-
 
     public static class IntegerSetConverter implements Converter<ArrayList<Integer>, String> {
 
@@ -115,7 +116,10 @@ public abstract class WorkoutTrack {
                     stringBuilder.append(",");
                 }
             }
+
             return stringBuilder.toString();
         }
+
     }
+
 }
