@@ -10,19 +10,24 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.model.ProgressData;
 import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
 import com.flycode.jasonfit.model.UserPreferences;
+import com.flycode.jasonfit.util.UserNormsUtil;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +45,7 @@ public class StatsFragment extends Fragment {
 
     @BindView(R.id.calendar_title) TextView calendarTitle;
     @BindView(R.id.body_mass_overweight) TextView bodyMassOverweight;
+    @BindView(R.id.body_mass_overweight_title) TextView bodyMassOverweightTitle;
     @BindView(R.id.calories_burnt_this_week) TextView burntThisWeek;
     @BindView(R.id.calories_burnt_last_week) TextView burntLastWeek;
     @BindView(R.id.calories_burnt_record_week) TextView burntRecordWeek;
@@ -79,34 +85,44 @@ public class StatsFragment extends Fragment {
 
     private void createChart(){
 
-        ArrayList<ProgressData> progressDataArrayList = new ArrayList<>();
+        List<StatsData> statsData = new Select()
+                .from(StatsData.class)
+                .execute();
 
-        int index;
-        ProgressData progressData;
-        for( index = 0; index < 20; index++ ){
-            progressData = new ProgressData( index, index);
-            progressDataArrayList.add(progressData);
+        List<Entry> entryList = new ArrayList<>();
+
+        for (int i = 0; i < statsData.size() - 1; i++) {
+            int weight = statsData.get(i).weight;
+            entryList.add(new Entry(i, weight));
         }
 
-        ArrayList<Entry> entries = new ArrayList<>();
+        LineDataSet chartDataSet = new LineDataSet(entryList, "weight");
+        chartDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        chartDataSet.setColor(getResources().getColor(R.color.colorGrayDark));
+        chartDataSet.setLineWidth(3);
 
-        for (ProgressData data : progressDataArrayList) {
-
-            // turn your data into Entry objects
-            entries.add( new Entry( data.getDate(), data.getWeight()) );
-
-        }
-
-
-        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(getResources().getColor(R.color.colorBlue));
-        dataSet.setValueTextColor(getResources().getColor(R.color.colorGray)); // styling, ...
-
-
-        LineData lineData = new LineData(dataSet);
+        LineData lineData = new LineData(chartDataSet);
         lineChart.setData(lineData);
-        lineChart.invalidate(); // refresh
+        lineChart.invalidate();
 
+        Description description = new Description();
+        description.setEnabled(false);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.setDescription(description);
+        lineChart.getXAxis().setDrawLabels(false);
+        lineChart.getAxisLeft().setSpaceMin(1);
+        lineChart.getAxisLeft().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return String.valueOf(Math.round(value));
+            }
+        });
+        lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return String.valueOf(Math.round(value));
+            }
+        });
     }
 
     private void createCalendar( LayoutInflater layoutInflater ){
@@ -159,13 +175,14 @@ public class StatsFragment extends Fragment {
         }
 
         int weightArraySize = weightArray.size();
-        int overweight = weightArray.get(weightArraySize - 1)  - 50;
+        int lastWeight = weightArray.get(weightArraySize - 1);
+        int height = userPreferences.getHeight();
+        double bMI = UserNormsUtil.getBMI(lastWeight, height);
+        String overweightCategory = UserNormsUtil.getOverweightType(getActivity(), bMI);
 
-        if (overweight >= 0) {
-            bodyMassOverweight.setText(String.valueOf(overweight));
-        } else {
-            bodyMassOverweight.setText(0);
-        }
+
+        bodyMassOverweight.setText(String.valueOf(bMI));
+        bodyMassOverweightTitle.setText(overweightCategory);
     }
 
     private void setupCalendarView() {

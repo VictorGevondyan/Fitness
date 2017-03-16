@@ -17,6 +17,8 @@
 
     <string name="tts_failed">Text To Speech Initialization Failed!</string>
     <string name="tts_countdown">three two one</string>
+    <string name="workout_end">Workout is finished, please enter your weight.</string>
+
 
     <!-- End of Strings for Workout(s) screen's -->
 
@@ -41,7 +43,8 @@
     <string name="meals">Meals</string>
     <string name="stats">Stats</string>
     <string name="foods">Foods</string>
-    <string name="settings">S e t t i n g s</string>
+    <string name="settings">Settings</string>
+    <string name="settings_spacing">S e t t i n g s</string>
     <string name="info">Info</string>
 
     <!-- End of  Strings for sideMenu -->
@@ -58,6 +61,16 @@
     <string name="calories_burnt_record_week">Week record</string>
     <string name="kcal">&#160;kcal</string>
     <string name="week">WEEK:&#160;</string>
+    
+    <string name="bmi_very_underweight">Very severely underweight</string>
+    <string name="bmi_severely_underweight">Severely underweight</string>
+    <string name="bmi_underweight">Underweight</string>
+    <string name="bmi_normal">Normal(healthy weight)</string>
+    <string name="bmi_overweight">Overweight</string>
+    <string name="bmi_obese1">Obese Class I(Moderately obese)</string>
+    <string name="bmi_obese2">Obese Class II(Severely obese)</string>
+    <string name="bmi_obese3">Obese Class III(Very severely obese)</string>
+    <string name="bmi_human">Are You a human?</string>
 
     <string-array name="week_days">
         <item>MO</item>
@@ -99,7 +112,7 @@
 
     <!-- Strings for Start screen -->
 
-    <string name="try_for_free">OK! TRY THIS APP\nFREE FOR 7 DAYS</string>
+    <string name="try_for_free">TRY THIS APP\nFREE FOR 7 DAYS</string>
     <string name="one_month">1 MONTH € 9,99</string>
 
     <string name="error">Error</string>
@@ -126,12 +139,12 @@
 
     <string-array name="height_measurement">
         <item>cm</item>
-        <item>foot</item>
+        <item>inch</item>
     </string-array>
 
     <string-array name="weight_measurement">
         <item>kg</item>
-        <item>pound</item>
+        <item>lb</item>
     </string-array>
 
     <string-array name="food_descriptors">
