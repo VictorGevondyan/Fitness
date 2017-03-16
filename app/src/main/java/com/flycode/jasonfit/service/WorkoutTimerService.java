@@ -107,7 +107,7 @@ WorkoutTimerService extends Service {
                 }
 
                 checkForWorkoutEnd();
-                updateNotification();
+                updateNotification(currentSubWorkoutNumber);
 
                 Intent broadcastIntent = new Intent(WORKOUT_BROADCAST_IDENTIFIER);
                 LocalBroadcastManager.getInstance(WorkoutTimerService.this).sendBroadcast(broadcastIntent);
@@ -290,10 +290,13 @@ WorkoutTimerService extends Service {
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    private void updateNotification() {
+    private void updateNotification(int workoutNumber) {
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
+        String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray().get(workoutNumber);
 
-        builder.setContentText(StringUtil.getFormattedTime(0, 0, currentWorkoutTime));
+
+        builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime))
+                .setContentTitle(currentWorkoutTitle);
 
         Notification notification = builder.build();
 

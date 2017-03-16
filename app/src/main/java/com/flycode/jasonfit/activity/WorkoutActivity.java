@@ -15,9 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.Workout;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
@@ -26,6 +28,7 @@ import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -274,6 +277,37 @@ public class WorkoutActivity extends AppCompatActivity {
                             startActivity(goToStatsIntent);
                             //TODO:save input in db
 
+                            Calendar calendar = Calendar.getInstance();
+
+                            int currentYear = calendar.get(Calendar.YEAR);
+                            int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+                            StatsData statsData = null;
+
+                            try {
+
+                                statsData = new Select()
+                                        .from(StatsData.class)
+                                        .where("year = ?", currentYear)
+                                        .where("dayOfYear = ?", currentDay)
+                                        .executeSingle();
+                            } catch (Exception ignored) {
+                            }
+
+                            if (statsData != null) {
+
+                                statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
+                            } else {
+
+                                statsData = new StatsData();
+                                statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
+                                statsData.year = currentYear;
+                                statsData.dayOfYear = currentDay;
+                            }
+
+                            statsData.weight = Math.round(Integer.parseInt(input.toString()));
+
+                            statsData.save();
                         }
 
                     }).show();

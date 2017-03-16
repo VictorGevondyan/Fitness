@@ -2,7 +2,9 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,19 +20,16 @@
                 android:id="@+id/calendar_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TITLE"
                 android:textSize="@dimen/section_header_text_size"
-                android:gravity="center"/>
+                android:gravity="center"
+                tools:text="TITLE"/>
 
             <LinearLayout
                 android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="7"
-                >
-
-            </LinearLayout>
+                android:weightSum="7"/>
 
 
         </LinearLayout>
@@ -42,7 +41,8 @@
             android:gravity="center_horizontal"
             android:paddingBottom="@dimen/button_top_bottom_padding"
             android:paddingTop="@dimen/button_top_bottom_padding"
-            android:text="CURRENT BODY MASS INDEX"
+            android:text="@string/current_body_mass_title"
+            android:textAllCaps="true"
             android:textColor="@color/text_semidark_grey"
             android:textSize="@dimen/section_header_text_size" />
 
@@ -53,33 +53,37 @@
             android:weightSum="2">
 
             <TextView
+                android:id="@+id/body_mass_overweight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorBlack"
-                android:gravity="right|center_vertical"
+                android:gravity="end|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:paddingEnd="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="24"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/pair_text_size"/>
+                android:textSize="@dimen/pair_text_size"
+                tools:text="24"
+                tools:ignore="RtlSymmetry" />
 
 
             <TextView
+                android:id="@+id/body_mass_overweight_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/tiny_margin"
+                android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorBlack"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingLeft="@dimen/common_padding"
+                android:paddingStart="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="Overweight"
+                android:text="@string/body_mass_overweight_title"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
@@ -90,8 +94,9 @@
             android:gravity="center_horizontal"
             android:paddingBottom="@dimen/button_top_bottom_padding"
             android:paddingTop="@dimen/button_top_bottom_padding"
-            android:text="CALORIES BURNT"
+            android:text="@string/calories_burnt_title"
             android:textColor="@color/text_semidark_grey"
+            android:textAllCaps="true"
             android:textSize="@dimen/section_header_text_size" />
 
         <LinearLayout
@@ -101,32 +106,35 @@
             android:weightSum="2">
 
             <TextView
+                android:id="@+id/calories_burnt_this_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorBlack"
-                android:gravity="right|center_vertical"
+                android:gravity="end|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:paddingEnd="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="24"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry"
+                tools:text="24"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/tiny_margin"
+                android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorBlack"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingLeft="@dimen/common_padding"
+                android:paddingStart="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="Overweight"
+                android:text="@string/calories_burnt_this_week"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
@@ -138,32 +146,35 @@
             android:weightSum="2">
 
             <TextView
+                android:id="@+id/calories_burnt_last_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorGrayDark"
-                android:gravity="right|center_vertical"
+                android:gravity="end|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:paddingEnd="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="24"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry"
+                tools:text="24"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/tiny_margin"
+                android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorGrayDark"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingLeft="@dimen/common_padding"
+                android:paddingStart="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="Overweight"
+                android:text="@string/calories_burnt_last_week"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
@@ -175,34 +186,49 @@
             android:weightSum="2">
 
             <TextView
+                android:id="@+id/calories_burnt_record_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorGrayDark"
-                android:gravity="right|center_vertical"
+                android:gravity="end|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:paddingEnd="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="24"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry"
+                tools:text="24"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/tiny_margin"
+                android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
                 android:background="@color/colorGrayDark"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:paddingBottom="@dimen/button_top_bottom_padding"
-                android:paddingLeft="@dimen/common_padding"
+                android:paddingStart="@dimen/common_padding"
                 android:paddingTop="@dimen/button_top_bottom_padding"
-                android:text="Overweight"
+                android:text="@string/calories_burnt_record_week"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/pair_text_size" />
+                android:textSize="@dimen/pair_text_size"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhiteDark"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/button_top_bottom_padding"
+            android:paddingTop="@dimen/button_top_bottom_padding"
+            android:text="@string/chart_title"
+            android:textAllCaps="true"
+            android:textColor="@color/text_semidark_grey"
+            android:textSize="@dimen/section_header_text_size" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
