@@ -1,5 +1,6 @@
 package com.flycode.jasonfit.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -58,6 +59,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View settingsView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         unbinder = ButterKnife.bind(this, settingsView);
@@ -73,6 +75,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         weightMeasurementEditText.setText(formattedWeightMeasurement());
 
         return settingsView;
+
     }
 
     @Override
@@ -354,6 +357,11 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @OnClick(R.id.weight)
     public void onSetCurrentWeight() {
 
+        Activity parentActivity = getActivity();
+        if( parentActivity instanceof MainActivity ){
+            return;
+        }
+
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
 
         materialDialogBuilder
@@ -403,6 +411,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
                 }).show();
         materialDialogBuilder.onPositive(dataChangedButtonCallback);
+
     }
 
     MaterialDialog.SingleButtonCallback dataChangedButtonCallback = new MaterialDialog.SingleButtonCallback() {
