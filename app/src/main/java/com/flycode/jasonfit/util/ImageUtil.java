@@ -14,11 +14,11 @@ import java.io.InputStream;
  */
 
 public class ImageUtil {
-    public static Bitmap getImageBitmap(Context context, Workout workout) {
+    public static Bitmap getImageBitmap(Context context, String name) {
 
         InputStream inputStream = null;
         try {
-            inputStream = context.getAssets().open(workout.getPicture());
+            inputStream = context.getAssets().open(name);
         } catch (IOException e) {
             e.printStackTrace();
         }

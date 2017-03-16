@@ -88,12 +88,11 @@ WorkoutTimerService extends Service {
 
                 int currentSubWorkoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
                 int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
-                int maxCurrentWorkoutTime = workoutTrackPreferences.getCurrentWorkoutTimeArray().get(currentSubWorkoutNumber);
+                int maxCurrentWorkoutTime = workoutTrackPreferences.getCurrentWorkoutTimeArray()[currentSubWorkoutNumber];
 
-                int workoutsCount = workoutTrackPreferences.getCurrentWorkoutTimeArray().size();
+                int workoutsCount = workoutTrackPreferences.getCurrentWorkoutTimeArray().length;
 
                 if (currentWorkoutTime == maxCurrentWorkoutTime && currentSubWorkoutNumber < workoutsCount - 1) {
-
                     workoutTrackPreferences
                             .edit()
                             .putSubWorkoutTime(0)
@@ -161,9 +160,9 @@ WorkoutTimerService extends Service {
 
         ttsIsReady = false;
 
-        ArrayList<String> subworkoutNamesArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
+        String[] subWorkoutNamesArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
         int subWorkoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        String subWorkoutName = subworkoutNamesArray.get(subWorkoutNumber);
+        String subWorkoutName = subWorkoutNamesArray[subWorkoutNumber];
 
         // If the 3d parameter of speak() is set to null, the UtteranceProgressListener will not be called.
         // So, if we need it will be called, we must use this HashMap
@@ -223,13 +222,11 @@ WorkoutTimerService extends Service {
 
         int setSize = workoutTrackPreferences
                 .getCurrentWorkoutTimeArray()
-                .size();
+                .length;
 
-        for (int i = 0; i <= setSize - 1; i++) {
+        for (int index = 0; index <= setSize - 1; index++) {
             estimatedTimeSecsFull += workoutTrackPreferences
-                    .get()
-                    .currentWorkoutTimeArray()
-                    .get(i);
+                    .getCurrentWorkoutTimeArray()[index];
         }
 
         if (totalWorkoutTime == estimatedTimeSecsFull) {
@@ -246,8 +243,8 @@ WorkoutTimerService extends Service {
 
     private void showNotification() {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        ArrayList<String> stringArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
-        String currentWorkoutTitle = stringArray.get(workoutNumber);
+        String[] stringArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
+        String currentWorkoutTitle = stringArray[workoutNumber];
         int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0, currentWorkoutTimeSecs);
 
@@ -279,7 +276,7 @@ WorkoutTimerService extends Service {
 
     private void updateNotification(int workoutNumber) {
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
-        String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray().get(workoutNumber);
+        String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray()[workoutNumber];
 
         builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime))
                 .setContentTitle(currentWorkoutTitle);

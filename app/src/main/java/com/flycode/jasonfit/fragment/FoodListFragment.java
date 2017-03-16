@@ -47,7 +47,6 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
         foodListAdapter = new FoodListAdapter(foodList, this);
 
-
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         foodRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
 

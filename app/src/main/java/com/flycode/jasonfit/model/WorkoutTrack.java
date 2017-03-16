@@ -53,20 +53,21 @@ public abstract class WorkoutTrack {
     public abstract String totalWorkoutStatus();
 
     @Property(key = "currentWorkoutTimeArray", converter = IntegerSetConverter.class)
-    public abstract ArrayList<Integer> currentWorkoutTimeArray();
+    public abstract int[] currentWorkoutTimeArray();
 
     @Property(key = "currentWorkoutNameArray", converter = StringSetConverter.class)
-    public abstract ArrayList<String> currentWorkoutNameArray();
+    public abstract String[] currentWorkoutNameArray();
 
-    public static class IntegerSetConverter implements Converter<ArrayList<Integer>, String> {
+    public static class IntegerSetConverter implements Converter<int[], String> {
 
         @NonNull
         @Override
-        public ArrayList<Integer> toConverted(@Nullable String strings) {
-            ArrayList<Integer> integers = new ArrayList<>();
+        public int[] toConverted(@Nullable String strings) {
+            String[] splitString = strings.split(",");
+            int[] integers = new int[splitString.length];
 
-            for (String string : strings.split(",")) {
-                integers.add(Integer.valueOf(string));
+            for (int index = 0 ; index < splitString.length ; index++) {
+                integers[index] = Integer.valueOf(splitString[index]);
             }
 
             return integers;
@@ -74,7 +75,7 @@ public abstract class WorkoutTrack {
 
         @NonNull
         @Override
-        public String toSupported(@Nullable ArrayList<Integer> integers) {
+        public String toSupported(@Nullable int[] integers) {
             StringBuilder stringBuilder = new StringBuilder();
             int index = 0;
 
@@ -82,7 +83,7 @@ public abstract class WorkoutTrack {
                 stringBuilder.append(integer);
                 index++;
 
-                if (index < integers.size()) {
+                if (index < integers.length) {
                     stringBuilder.append(",");
                 }
             }
@@ -90,21 +91,17 @@ public abstract class WorkoutTrack {
         }
     }
 
-    public static class StringSetConverter implements Converter<ArrayList<String>, String> {
+    public static class StringSetConverter implements Converter<String[], String> {
 
         @NonNull
         @Override
-        public ArrayList<String> toConverted(@Nullable String strings) {
-            ArrayList<String> stringsArray = new ArrayList<>();
-
-            Collections.addAll(stringsArray, strings.split(","));
-
-            return stringsArray;
+        public String[] toConverted(@Nullable String strings) {
+            return strings.split(",");
         }
 
         @NonNull
         @Override
-        public String toSupported(@Nullable ArrayList<String> strings) {
+        public String toSupported(@Nullable String[] strings) {
             StringBuilder stringBuilder = new StringBuilder();
             int index = 0;
 
@@ -112,7 +109,7 @@ public abstract class WorkoutTrack {
                 stringBuilder.append(string);
                 index++;
 
-                if (index < strings.size()) {
+                if (index < strings.length) {
                     stringBuilder.append(",");
                 }
             }

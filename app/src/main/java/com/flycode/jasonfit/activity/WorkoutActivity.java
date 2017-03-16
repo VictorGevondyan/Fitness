@@ -64,7 +64,7 @@ public class WorkoutActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
-        setSize = workout.getSetName().size() - 1;
+        setSize = workout.getSubNames().length;
 
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
         intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
@@ -134,11 +134,11 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void setupView() {
-        workoutTitle.setText(workout.getName());
-        workoutTitleBackground.setImageBitmap(ImageUtil.getImageBitmap(this, workout));
+        workoutTitle.setText(workout.name);
+        workoutTitleBackground.setImageBitmap(ImageUtil.getImageBitmap(this, workout.picture));
 
-        workoutSpeciesTitle.setText(workout.getSetName().get(0));
-        workoutImageView.setImageResource(workout.getSetPicture().get(0));
+        workoutSpeciesTitle.setText(workout.getSubNames()[0]);
+        workoutImageView.setImageBitmap(ImageUtil.getImageBitmap(this, workout.getSubPictures()[0]));
 
         processWorkoutTimeEstimated();
     }
@@ -147,90 +147,37 @@ public class WorkoutActivity extends AppCompatActivity {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
 
-        String speciesTitle = workout
-                .getSetName()
-                .get(workoutNumber);
+        String speciesTitle = workout.getSubNames()[workoutNumber];
 
-        workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray().get(workoutNumber));
+        workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray()[workoutNumber]);
         workoutProgress.setProgress(currentWorkoutTime);
 
         workoutSpeciesTitle.setText(speciesTitle);
-        workoutImageView.setImageResource(workout.getSetPicture().get(workoutNumber));
+        workoutImageView.setImageBitmap(ImageUtil.getImageBitmap(this, workout.getSubPictures()[workoutNumber]));
     }
 
     private void calculateSpeciesTimes() {
-
-        ArrayList<Integer> arrayList = new ArrayList<>();
-
-        for (int i = 0; i <= setSize; i++) {
-            int speciesTimeHours = 0;
-            int speciesTimeMins = 0;
-            int speciesTimeSecs = 0;
-            int speciesTimeSecsFull;
-
-            String time = workout.getSetTiming().get(i);
-
-            String[] split = time.split(":");
-
-            switch (split.length) {
-                default: speciesTimeSecs = 0;
-
-                case 3:
-                    if (!split[0].equals("")  && !split[1].equals("") && !split[2].equals("")) {
-                        speciesTimeHours = Integer.parseInt(split[0].trim());
-                        speciesTimeMins = Integer.parseInt(split[1].trim());
-                        speciesTimeSecs = Integer.parseInt(split[2].trim());
-                    }
-                    break;
-
-                case 2:
-                    if (!split[0].equals("") && !split[1].equals("")) {
-                        speciesTimeMins = Integer.parseInt(split[0].trim());
-                        speciesTimeSecs = Integer.parseInt(split[1].trim());
-                    }
-                    break;
-
-                case 1:
-                    if (!split[0].equals("")) {
-                        speciesTimeSecs = Integer.parseInt(split[0].trim());
-                    }
-                    break;
-            }
-
-            speciesTimeMins += speciesTimeSecs / 60;
-            speciesTimeSecs = speciesTimeSecs % 60;
-            speciesTimeHours += speciesTimeMins / 60;
-            speciesTimeMins = speciesTimeMins % 60;
-
-            speciesTimeSecsFull = speciesTimeHours * 60 * 60 + speciesTimeMins * 60 + speciesTimeSecs;
-            arrayList.add(speciesTimeSecsFull);
-        }
-
         workoutTrackPreferences
                 .edit()
-                .putCurrentWorkoutTimeArray(arrayList)
+                .putCurrentWorkoutTimeArray(workout.getSubTiming())
                 .apply();
     }
 
     private void processWorkoutTimeEstimated() {
 
-        for (int i = 0; i <= setSize; i++) {
-            estimatedTimeSecsFull += workoutTrackPreferences
-                                            .get()
-                                            .currentWorkoutTimeArray()
-                                            .get(i);
+        for (int index = 0; index < setSize; index++) {
+            estimatedTimeSecsFull += workoutTrackPreferences.getCurrentWorkoutTimeArray()[index];
         }
 
-        int estimatedTimeMins = (int) (estimatedTimeSecsFull / 60);
+        int estimatedTimeMinutes = (int) (estimatedTimeSecsFull / 60);
         int estimatedTimeSecs = (int) (estimatedTimeSecsFull % 60);
-        int estimatedTimeHours = estimatedTimeMins / 60;
-        estimatedTimeMins = estimatedTimeMins % 60;
+        int estimatedTimeHours = estimatedTimeMinutes / 60;
+        estimatedTimeMinutes = estimatedTimeMinutes % 60;
 
-        workoutTimeEstimated.setText(StringUtil.getFormattedTime(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
+        workoutTimeEstimated.setText(StringUtil.getFormattedTime(estimatedTimeHours, estimatedTimeMinutes, estimatedTimeSecs));
     }
 
     private void decrementCurrentTime() {
-
         long totalWorkoutTime = workoutTrackPreferences
                 .get()
                 .totalWorkoutTime();
@@ -248,7 +195,6 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void checkForWorkoutEnd() {
-
         String status = workoutTrackPreferences
                 .getTotalWorkoutStatus();
 
@@ -368,15 +314,9 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void fillSetNamePreferences() {
-        ArrayList<String> setNameArray = new ArrayList<>();
-
-        for (int i = 0; i <= setSize; i++) {
-            setNameArray.add(workout.getSetName().get(i));
-        }
-
         workoutTrackPreferences
                 .edit()
-                .putCurrentWorkoutNameArray(setNameArray)
+                .putCurrentWorkoutNameArray(workout.getSubNames())
                 .apply();
     }
 
