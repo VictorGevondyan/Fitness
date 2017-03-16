@@ -262,12 +262,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
-            new MaterialDialog.Builder(this)
-                    .content(R.string.workout_congrats)
+            MaterialDialog materialDialog = new MaterialDialog.Builder(this)
+                    .title(R.string.workout_congrats)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .cancelable(false)
                     .canceledOnTouchOutside(false)
-                    .input(null, null , new MaterialDialog.InputCallback() {
+                    .alwaysCallInputCallback()
+                    .input("", "", new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             if (input.length() == 0) {
@@ -276,44 +277,32 @@ public class WorkoutActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            Calendar calendar = Calendar.getInstance();
-
-                            int currentYear = calendar.get(Calendar.YEAR);
-                            int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
-
-                            StatsData statsData = null;
+                            int weight;
 
                             try {
+                                weight = Integer.valueOf(input.toString());
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
 
-                                statsData = new Select()
-                                        .from(StatsData.class)
-                                        .where("year = ?", currentYear)
-                                        .where("dayOfYear = ?", currentDay)
-                                        .executeSingle();
-                            } catch (Exception ignored) {
+                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                                return;
                             }
 
-                            if (statsData != null) {
-
-                                statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
-                            } else {
-
-                                statsData = new StatsData();
-                                statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
-                                statsData.year = currentYear;
-                                statsData.dayOfYear = currentDay;
+                            if ( weight < 20 || weight > 200) {
+                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                                return;
                             }
 
-                            statsData.weight = Math.round(Integer.parseInt(input.toString()));
+                            saveWeight(weight);
 
-                            User.sharedPreferences(JasonFitApplication.sharedApplication())
-                                    .edit()
-                                    .putWeight(statsData.weight)
-                                    .apply();
-
-                            statsData.save();
+                            dialog.getInputEditText().setError(null);
+                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                         }
                     }).show();
+            materialDialog.getInputEditText().setError(null);
+            materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
         }
     }
 
@@ -363,4 +352,42 @@ public class WorkoutActivity extends AppCompatActivity {
                 .apply();
     }
 
+    private void saveWeight(int weight) {
+        Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        StatsData statsData = null;
+
+        try {
+
+            statsData = new Select()
+                    .from(StatsData.class)
+                    .where("year = ?", currentYear)
+                    .where("dayOfYear = ?", currentDay)
+                    .executeSingle();
+        } catch (Exception ignored) {
+        }
+
+        if (statsData != null) {
+
+            statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
+        } else {
+
+            statsData = new StatsData();
+            statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
+            statsData.year = currentYear;
+            statsData.dayOfYear = currentDay;
+        }
+
+        statsData.weight = weight;
+
+        User.sharedPreferences(JasonFitApplication.sharedApplication())
+                .edit()
+                .putWeight(statsData.weight)
+                .apply();
+
+        statsData.save();
+    }
 }

@@ -397,7 +397,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                             dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
                         }
-
                     }
 
                 }).show();

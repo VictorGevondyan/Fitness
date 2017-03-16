@@ -12,7 +12,7 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="workout_congrats">Congratulations! You finished your workout successfully. \n Please input your weight</string>
+    <string name="workout_congrats">Congratulations! You finished your workout successfully. Please input your weight</string>
     <string name="sure_go_back">Are You sure with proceeding with go back? Current workout will be canceled.</string>
 
     <string name="tts_failed">Text To Speech Initialization Failed!</string>
