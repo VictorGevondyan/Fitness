@@ -2,6 +2,7 @@ package com.flycode.jasonfit.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,14 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +95,7 @@ public class StatsFragment extends Fragment {
 
         List<Entry> entryList = new ArrayList<>();
 
-        for (int i = 0; i < statsData.size() - 1; i++) {
+        for (int i = 0; i <= statsData.size() - 1; i++) {
             int weight = statsData.get(i).weight;
             entryList.add(new Entry(i, weight));
         }
@@ -197,7 +201,7 @@ public class StatsFragment extends Fragment {
             dayOfWeek.setText(weekDays[i]);
 
             TextView multiplier = (TextView) calendarItems.get(i).findViewById(R.id.calendar_multiplier);
-            multiplier.setText("1x");
+            String multiplierString;
 
             TextView metric = (TextView) calendarItems.get(i).findViewById(R.id.calendar_metric);
             metric.setText(userPreferences.getWeightMeasurement());
@@ -207,10 +211,14 @@ public class StatsFragment extends Fragment {
             statsData = getWeekStatsData(Calendar.DAY_OF_WEEK, i);
 
             if (statsData != null) {
+                multiplierString = String.valueOf(statsData.multiplier) + "x";
                 weight.setText(String.valueOf(statsData.weight));
             } else {
                 weight.setText("_");
+                multiplierString = "";
             }
+
+            multiplier.setText(multiplierString);
         }
     }
 
@@ -218,7 +226,7 @@ public class StatsFragment extends Fragment {
         double burntCaloriesThisWeek = 0;
 
         StatsData statsData;
-        ArrayList<Double> burntCaloriesWeek = new ArrayList<>();
+        ArrayList<Double> burntCaloriesThisWeekArray = new ArrayList<>();
         String kcal = getResources().getString(R.string.kcal);
 
         for (int i = 0; i < 7; i++) {
@@ -227,15 +235,30 @@ public class StatsFragment extends Fragment {
 
             if (statsData != null) {
                 burntCaloriesThisWeek += statsData.burntCalories;
-                burntCaloriesWeek.add(statsData.burntCalories);
+                burntCaloriesThisWeekArray.add(statsData.burntCalories);
             }
         }
 
         String burntThisWeekString = String.valueOf(burntCaloriesThisWeek) + kcal;
         burntThisWeek.setText(burntThisWeekString);
 
-        String burntRecordWeekString = String .valueOf(Collections.max(burntCaloriesWeek)) + kcal;
+        String burntRecordWeekString = String .valueOf(Collections.max(burntCaloriesThisWeekArray)) + kcal;
         burntRecordWeek.setText(burntRecordWeekString);
+
+        //_________burnt last week____________
+
+        double burntCaloriesLastWeek = 0;
+
+        statsData = null;
+        ArrayList<Double> burntCaloriesLastWeekArray = new ArrayList<>();
+
+        getPreviousWeek(-1);
+
+        for (int i = 0; i < 7; i++) {
+
+
+
+        }
     }
 
     private StatsData getWeekStatsData(int dayOfWeek, int index) {
@@ -264,5 +287,23 @@ public class StatsFragment extends Fragment {
         }
 
         return statsData;
+    }
+
+    private void getPreviousWeek(int num) {
+        Calendar c = Calendar.getInstance();
+        // Set the calendar to monday of the current week
+        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        c.add(Calendar.DATE, num * 7);
+        // Print dates of the current week starting on Monday
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        ArrayList<String> listDate = new ArrayList<String>();
+
+        for (int i = 0; i < 7; i++)
+        {
+            listDate.add(df.format(c.getTime()));
+            c.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        Log.i("TAGG", listDate.toString());
     }
 }

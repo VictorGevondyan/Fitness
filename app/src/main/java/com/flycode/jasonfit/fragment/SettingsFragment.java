@@ -487,11 +487,11 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     }
 
     private String formattedHeightMeasurement() {
-        return getString(userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? R.string.cm : R.string.foot);
+        return getString(userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? R.string.cm : R.string.inch);
     }
 
     private String formattedWeightMeasurement() {
-        return getString(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.pound);
+        return getString(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
 
     private String formattedNutrition() {

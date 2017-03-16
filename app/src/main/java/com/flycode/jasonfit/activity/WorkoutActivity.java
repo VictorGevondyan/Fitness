@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
@@ -28,6 +27,7 @@ import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 import com.flycode.jasonfit.service.WorkoutTimerService;
 import com.flycode.jasonfit.util.ImageUtil;
+import com.flycode.jasonfit.util.MetricConverter;
 import com.flycode.jasonfit.util.StringUtil;
 
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class WorkoutActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            incrementCurrentTime();
+            decrementCurrentTime();
             redrawDependsWorkoutItem();
 
             checkForWorkoutEnd();
@@ -229,19 +229,22 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutTimeEstimated.setText(StringUtil.getFormattedTime(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
     }
 
-    private void incrementCurrentTime() {
+    private void decrementCurrentTime() {
 
         long totalWorkoutTime = workoutTrackPreferences
                 .get()
                 .totalWorkoutTime();
 
-        int currentTimeHours = (int) (totalWorkoutTime / 1000 / 60 / 60);
+        int timeLeftSecsFull = (int) (estimatedTimeSecsFull - (totalWorkoutTime / 1000));
 
-        int currentTimeMins = (int) ((totalWorkoutTime / 1000 / 60) % 60);
+        if (timeLeftSecsFull >= 0) {
+            int timeLeftMins = timeLeftSecsFull / 60;
+            int timeLeftSecs = timeLeftSecsFull % 60;
+            int timeLeftHours = timeLeftMins / 60;
+            timeLeftMins = timeLeftMins % 60;
 
-        int currentTimeSecs = (int) ((totalWorkoutTime / 1000) % 60);
-
-        workoutTimeCurrent.setText(StringUtil.getFormattedTime(currentTimeHours, currentTimeMins, currentTimeSecs));
+            workoutTimeCurrent.setText(StringUtil.getFormattedTime(timeLeftHours, timeLeftMins, timeLeftSecs));
+        }
     }
 
     private void checkForWorkoutEnd() {
@@ -264,7 +267,7 @@ public class WorkoutActivity extends AppCompatActivity {
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
             MaterialDialog materialDialog = new MaterialDialog.Builder(this)
-                    .title(R.string.workout_congrats)
+                    .content(getString(R.string.workout_congrats, formattedWeightMeasurement()))
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .cancelable(false)
                     .canceledOnTouchOutside(false)
@@ -284,11 +287,6 @@ public class WorkoutActivity extends AppCompatActivity {
                             startActivity(goToStatsIntent);
                             //TODO:save input in db
 
-                            Calendar calendar = Calendar.getInstance();
-
-                            int currentYear = calendar.get(Calendar.YEAR);
-                            int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
-
                             int weight;
 
                             try {
@@ -307,7 +305,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            saveWeight(weight);
+                            saveWeight(MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
 
                             dialog.getInputEditText().setError(null);
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
@@ -391,7 +389,6 @@ public class WorkoutActivity extends AppCompatActivity {
         StatsData statsData = null;
 
         try {
-
             statsData = new Select()
                     .from(StatsData.class)
                     .where("year = ?", currentYear)
@@ -401,14 +398,14 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
         if (statsData != null) {
-
             statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
+            statsData.multiplier += 1;
         } else {
-
             statsData = new StatsData();
             statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
             statsData.year = currentYear;
             statsData.dayOfYear = currentDay;
+            statsData.multiplier = 1;
         }
 
         statsData.weight = weight;
@@ -419,5 +416,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 .apply();
 
         statsData.save();
+    }
+
+    private String formattedWeightMeasurement() {
+        return getString(User.sharedPreferences(this).getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
 }
