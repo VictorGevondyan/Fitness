@@ -291,6 +291,7 @@ WorkoutTimerService extends Service {
     }
 
     private void updateNotification(int workoutNumber) {
+
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray().get(workoutNumber);
 
@@ -304,6 +305,7 @@ WorkoutTimerService extends Service {
         notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
         notificationManager.notify(NOTIFICATION_ID, notification);
+
     }
 
 }

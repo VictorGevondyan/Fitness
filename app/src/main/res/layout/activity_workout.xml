@@ -7,6 +7,10 @@
     android:orientation="vertical"
     tools:context="com.flycode.jasonfit.activity.WorkoutActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="75dp">
@@ -40,7 +44,6 @@
         android:textSize="16sp"
         android:textColor="@color/colorWhite"
         tools:text="dolorem ipsum"/>
-
 
     <ImageView
         android:id="@+id/workout_image_view"

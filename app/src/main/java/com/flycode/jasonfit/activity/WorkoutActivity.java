@@ -7,8 +7,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -46,6 +49,7 @@ public class WorkoutActivity extends AppCompatActivity {
     @BindView(R.id.workout_time_estimated) TextView workoutTimeEstimated;
     @BindView(R.id.workout_rounded_button) Button workoutRoundedButton;
     @BindView(R.id.workout_progress) ProgressBar workoutProgress;
+    @BindView(R.id.toolbar) Toolbar workoutToolbar;
 
     private WorkoutTrackPreferences workoutTrackPreferences;
     private IntentFilter intentFilter;
@@ -138,7 +142,33 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutImageView.setImageResource(workout.getSetPicture().get(0));
 
         processWorkoutTimeEstimated();
+
+        setupToolbar();
+
     }
+
+    private void setupToolbar(){
+
+        workoutToolbar.setTitle(workout.getName());
+        setSupportActionBar(workoutToolbar);
+
+        // This action bar is, in fact, the same workoutToolbar
+        ActionBar workoutActionBar = getSupportActionBar();
+
+        // This function call sets back icon as the home button icon
+        workoutActionBar.setDisplayHomeAsUpEnabled(true);
+        workoutActionBar.setDisplayShowHomeEnabled(true);
+        workoutActionBar.setHomeButtonEnabled(true);
+        workoutToolbar.setNavigationOnClickListener(backButtonClickListener);
+
+    }
+
+    View.OnClickListener backButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onBackPressed();
+        }
+    };
 
     private void redrawDependsWorkoutItem() {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
