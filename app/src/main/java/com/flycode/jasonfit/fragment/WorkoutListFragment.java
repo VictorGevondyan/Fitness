@@ -97,7 +97,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
         outpark.setName("OUTPARK WILD");
         outpark.setId(2);
         outpark.setPicture("outdoor.jpg");
-        outpark.setSetTiming(new ArrayList<>(Arrays.asList("0:5", "00:5", "00: 5", "00 : 5")));
+        outpark.setSetTiming(new ArrayList<>(Arrays.asList("0:6", "00:3", "00: 7", "00 : 5")));
         outpark.setSetName(new ArrayList<>(Arrays.asList("climbing", "piss drinking", "in camel sleeping", "cliff jumping")));
         outpark.setSetPicture(new ArrayList<>(Arrays.asList(R.drawable.outpark_climb, R.drawable.outpark_piss,
                 R.drawable.outpark_camel, R.drawable.outpark_cliff)));

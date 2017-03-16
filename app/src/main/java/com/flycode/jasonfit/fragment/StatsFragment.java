@@ -95,7 +95,7 @@ public class StatsFragment extends Fragment {
 
         List<Entry> entryList = new ArrayList<>();
 
-        for (int i = 0; i < statsData.size() - 1; i++) {
+        for (int i = 0; i <= statsData.size() - 1; i++) {
             int weight = statsData.get(i).weight;
             entryList.add(new Entry(i, weight));
         }

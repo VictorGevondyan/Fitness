@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
@@ -107,7 +106,7 @@ public class WorkoutActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            incrementCurrentTime();
+            decrementCurrentTime();
             redrawDependsWorkoutItem();
 
             checkForWorkoutEnd();
@@ -226,19 +225,22 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutTimeEstimated.setText(StringUtil.getFormattedTime(estimatedTimeHours, estimatedTimeMins, estimatedTimeSecs));
     }
 
-    private void incrementCurrentTime() {
+    private void decrementCurrentTime() {
 
         long totalWorkoutTime = workoutTrackPreferences
                 .get()
                 .totalWorkoutTime();
 
-        int currentTimeHours = (int) (totalWorkoutTime / 1000 / 60 / 60);
+        int timeLeftSecsFull = (int) (estimatedTimeSecsFull - (totalWorkoutTime / 1000));
 
-        int currentTimeMins = (int) ((totalWorkoutTime / 1000 / 60) % 60);
+        if (timeLeftSecsFull >= 0) {
+            int timeLeftMins = timeLeftSecsFull / 60;
+            int timeLeftSecs = timeLeftSecsFull % 60;
+            int timeLeftHours = timeLeftMins / 60;
+            timeLeftMins = timeLeftMins % 60;
 
-        int currentTimeSecs = (int) ((totalWorkoutTime / 1000) % 60);
-
-        workoutTimeCurrent.setText(StringUtil.getFormattedTime(currentTimeHours, currentTimeMins, currentTimeSecs));
+            workoutTimeCurrent.setText(StringUtil.getFormattedTime(timeLeftHours, timeLeftMins, timeLeftSecs));
+        }
     }
 
     private void checkForWorkoutEnd() {
@@ -307,7 +309,11 @@ public class WorkoutActivity extends AppCompatActivity {
                                 statsData.multiplier = 1;
                             }
 
-                            statsData.weight = Math.round(Integer.parseInt(input.toString()));
+                            if (input == "") {
+                                statsData.weight = 0;
+                            } else {
+                                statsData.weight = Integer.parseInt(input.toString());
+                            }
 
                             statsData.save();
                         }
