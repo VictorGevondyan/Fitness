@@ -190,14 +190,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void redrawDependsWorkoutItem() {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
 
         String speciesTitle = workout
                 .getSetName()
                 .get(workoutNumber);
 
-        workoutProgress.setMax(workoutTrackPreferences.getCurrentWorkoutTimeArray().get(workoutNumber));
-        workoutProgress.setProgress(currentWorkoutTime);
+        workoutProgress.setMax((int) estimatedTimeSecsFull);
+        workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 1000));
 
         workoutSpeciesTitle.setText(speciesTitle);
         workoutImageView.setImageResource(workout.getSetPicture().get(workoutNumber));
