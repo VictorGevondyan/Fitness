@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,10 +12,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
@@ -33,6 +36,8 @@ import com.flycode.jasonfit.util.ImageUtil;
 import com.flycode.jasonfit.util.MetricConverter;
 import com.flycode.jasonfit.util.StringUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -138,6 +143,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void setupView() {
+
         workoutTitle.setText(workout.getName());
         workoutTitleBackground.setImageBitmap(ImageUtil.getImageBitmap(this, workout));
 
@@ -152,8 +158,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void setupToolbar(){
 
-        workoutToolbar.setTitle(workout.getName());
         setSupportActionBar(workoutToolbar);
+
+        // We set minimum height of toolbar the same, as its height.
+        // We need it in order to make Toolbar Back Button to center vertical in toolbar( strange, but it true  )
+        workoutToolbar.setMinimumHeight(getDpFromPixels(75));
+
+        // We do so in order the layout, containing workout image to be toolbar background.
+        workoutToolbar.setBackgroundColor( getResources().getColor(android.R.color.transparent) );
 
         // This action bar is, in fact, the same workoutToolbar
         ActionBar workoutActionBar = getSupportActionBar();
@@ -162,6 +174,9 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutActionBar.setDisplayHomeAsUpEnabled(true);
         workoutActionBar.setDisplayShowHomeEnabled(true);
         workoutActionBar.setHomeButtonEnabled(true);
+
+        // We do so, because we use title TextView as the Toolbar title
+        workoutActionBar.setDisplayShowTitleEnabled(false);
         workoutToolbar.setNavigationOnClickListener(backButtonClickListener);
 
     }
@@ -451,4 +466,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private String formattedWeightMeasurement() {
         return getString(User.sharedPreferences(this).getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
+
+    private int getDpFromPixels( int dpValue ){
+        final float scale = this.getResources().getDisplayMetrics().density;
+        int pixelsValue = (int) ( dpValue * scale + 0.5f);
+
+        return pixelsValue;
+    }
+
 }
