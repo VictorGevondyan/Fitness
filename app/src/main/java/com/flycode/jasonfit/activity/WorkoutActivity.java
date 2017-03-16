@@ -286,12 +286,14 @@ public class WorkoutActivity extends AppCompatActivity {
                             if (statsData != null) {
 
                                 statsData.burntCalories += (double) (estimatedTimeSecsFull * 7 / 60);
+                                statsData.multiplier += 1;
                             } else {
 
                                 statsData = new StatsData();
                                 statsData.burntCalories = (double) (estimatedTimeSecsFull * 7 / 60);
                                 statsData.year = currentYear;
                                 statsData.dayOfYear = currentDay;
+                                statsData.multiplier = 1;
                             }
 
                             statsData.weight = Math.round(Integer.parseInt(input.toString()));
