@@ -2,10 +2,6 @@ package com.flycode.jasonfit.model;
 
 import android.content.Context;
 
-import com.flycode.jasonfit.model.UserPreferences;
-
-import java.util.Calendar;
-
 import io.t28.shade.annotation.Preferences;
 import io.t28.shade.annotation.Property;
 
@@ -26,7 +22,7 @@ public abstract class User {
         public static final String DEUTSCH = "deutsch";
     }
 
-    public static final class MEASUREMENTS {
+    public static final class METRICS {
         public static final String CM = "cm";
         public static final String KG = "kg";
         public static final String FOOT = "foor";
@@ -68,9 +64,9 @@ public abstract class User {
     @Property(key = "language", defValue = LANGUAGE.ENGLISH)
     public abstract String language();
 
-    @Property(key = "heightMeasurement", defValue = MEASUREMENTS.CM)
+    @Property(key = "heightMeasurement", defValue = METRICS.CM)
     public abstract String heightMeasurement();
 
-    @Property(key = "weightMeasurement", defValue = MEASUREMENTS.KG)
+    @Property(key = "weightMeasurement", defValue = METRICS.KG)
     public abstract String weightMeasurement();
 }

@@ -18,10 +18,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.JasonFitApplication;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.MainActivity;
-import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
 import com.flycode.jasonfit.model.UserPreferences;
-import com.flycode.jasonfit.util.StringUtil;
+import com.flycode.jasonfit.util.MetricConverter;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -65,8 +64,8 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         unbinder = ButterKnife.bind(this, settingsView);
         userPreferences = User.sharedPreferences(JasonFitApplication.sharedApplication());
 
-        heightEditText.setText(String.valueOf(userPreferences.getHeight()));
-        weightEditText.setText(String.valueOf(userPreferences.getWeight()));
+        heightEditText.setText(formattedHeight());
+        weightEditText.setText(formattedWeight());
         birthdayEditText.setText(formattedBirthday());
         genderEditText.setText(formattedGender());
         nutritionEditText.setText(formattedNutrition());
@@ -144,12 +143,16 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         String nutrition = userPreferences.getNutrition();
         int selectedIndex = 0;
 
-        if (nutrition.equals(User.NUTRITION.ALL)) {
-            selectedIndex = 0;
-        } else if (nutrition.equals(User.NUTRITION.VEGETARIAN)) {
-            selectedIndex = 1;
-        } else if (nutrition.equals(User.NUTRITION.VEGAN)) {
-            selectedIndex = 2;
+        switch (nutrition) {
+            case User.NUTRITION.ALL:
+                selectedIndex = 0;
+                break;
+            case User.NUTRITION.VEGETARIAN:
+                selectedIndex = 1;
+                break;
+            case User.NUTRITION.VEGAN:
+                selectedIndex = 2;
+                break;
         }
 
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
@@ -204,7 +207,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-
                         String language = which == 0 ? User.LANGUAGE.ENGLISH : User.LANGUAGE.DEUTSCH;
 
                         String previousLanguage = userPreferences.getLanguage();
@@ -230,7 +232,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @OnClick(R.id.height_measurement)
     public void onSetHeightMeasurement() {
-        int selectedIndex = userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? 0 : 1;
+        int selectedIndex = userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? 0 : 1;
 
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
 
@@ -240,8 +242,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-
-                        String heightMeasurement = which == 0 ? User.MEASUREMENTS.CM : User.MEASUREMENTS.FOOT;
+                        String heightMeasurement = which == 0 ? User.METRICS.CM : User.METRICS.FOOT;
 
                         String previousHeightMeasurement = userPreferences.getHeightMeasurement();
                         if( !previousHeightMeasurement.equals(heightMeasurement) ){
@@ -254,6 +255,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                 .apply();
 
                         heightMeasurementEditText.setText(formattedHeightMeasurement());
+                        heightEditText.setText(formattedHeight());
 
                         showSnackbar();
 
@@ -265,7 +267,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @OnClick(R.id.weight_measurement)
     public void onSetWeightMeasurement() {
-        int selectedIndex = userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? 0 : 1;
+        int selectedIndex = userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? 0 : 1;
 
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
 
@@ -275,8 +277,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-
-                        String weightMeasurement = which == 0 ? User.MEASUREMENTS.KG : User.MEASUREMENTS.POUND;
+                        String weightMeasurement = which == 0 ? User.METRICS.KG : User.METRICS.POUND;
 
                         String previousWeightMeasurement = userPreferences.getWeightMeasurement();
                         if( !previousWeightMeasurement.equals(weightMeasurement) ){
@@ -289,6 +290,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                 .apply();
 
                         weightMeasurementEditText.setText(formattedWeightMeasurement());
+                        weightEditText.setText(formattedWeight());
 
                         showSnackbar();
 
@@ -301,7 +303,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @OnClick(R.id.height)
     public void onSetHeight() {
-
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
 
         materialDialogBuilder
@@ -310,8 +311,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .alwaysCallInputCallback()
                 .input("", String.valueOf(userPreferences.getHeight()), new MaterialDialog.InputCallback() {
 
+                    @SuppressWarnings("ConstantConditions")
                     @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         if (input.length() == 0) {
                             dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
@@ -320,6 +322,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
                         try {
                             int height = Integer.valueOf(input.toString());
+                            height = MetricConverter.convertHeight(height, userPreferences.getHeightMeasurement(), true);
 
                             if (height < 135 || height > 210) {
                                 dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
@@ -338,7 +341,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putHeight(height)
                                     .apply();
 
-                            heightEditText.setText(input);
+                            heightEditText.setText(formattedHeight());
 
                             dialog.getInputEditText().setError(null);
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
@@ -370,8 +373,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .alwaysCallInputCallback()
                 .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
 
+                    @SuppressWarnings("ConstantConditions")
                     @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         if (input.length() == 0) {
                             dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
@@ -380,6 +384,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
                         try {
                             int weight = Integer.valueOf(input.toString());
+                            weight = MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true);
 
                             if ( weight < 20 || weight > 200) {
                                 dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
@@ -398,7 +403,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                                     .putWeight(weight)
                                     .apply();
 
-                            weightEditText.setText(input);
+                            weightEditText.setText(formattedWeight());
 
                             dialog.getInputEditText().setError(null);
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
@@ -406,7 +411,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                             dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
                         }
-
                     }
 
                 }).show();
@@ -474,35 +478,56 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         return dateFormat.format(new Date(userPreferences.getBirthday()));
     }
 
-    private int formattedGender() {
-        return userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female;
+    private String formattedGender() {
+        return getString(userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female);
     }
 
-    private int formattedLanguage() {
-        return userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? R.string.english : R.string.deutsch;
+    private String formattedLanguage() {
+        return getString(userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? R.string.english : R.string.deutsch);
     }
 
-    private int formattedHeightMeasurement() {
-        return userPreferences.getHeightMeasurement().equals(User.MEASUREMENTS.CM) ? R.string.cm : R.string.foot;
+    private String formattedHeightMeasurement() {
+        return getString(userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? R.string.cm : R.string.inch);
     }
 
-    private int formattedWeightMeasurement() {
-        return userPreferences.getWeightMeasurement().equals(User.MEASUREMENTS.KG) ? R.string.kg : R.string.pound;
+    private String formattedWeightMeasurement() {
+        return getString(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
 
     private String formattedNutrition() {
         String nutrition = userPreferences.getNutrition();
         int selectedIndex = 0;
 
-        if (nutrition.equals(User.NUTRITION.ALL)) {
-            selectedIndex = 0;
-        } else if (nutrition.equals(User.NUTRITION.VEGETARIAN)) {
-            selectedIndex = 1;
-        } else if (nutrition.equals(User.NUTRITION.VEGAN)) {
-            selectedIndex = 2;
+        switch (nutrition) {
+            case User.NUTRITION.ALL:
+                selectedIndex = 0;
+                break;
+            case User.NUTRITION.VEGETARIAN:
+                selectedIndex = 1;
+                break;
+            case User.NUTRITION.VEGAN:
+                selectedIndex = 2;
+                break;
         }
 
         return getResources().getStringArray(R.array.nutrition)[selectedIndex];
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
+    private String formattedHeight() {
+        return new StringBuilder()
+                .append(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false))
+                .append(" ")
+                .append(formattedHeightMeasurement())
+                .toString();
+    }
+
+    @SuppressWarnings("StringBufferReplaceableByString")
+    private String formattedWeight() {
+        return new StringBuilder()
+                .append(MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false))
+                .append(" ")
+                .append(formattedWeightMeasurement())
+                .toString();
+    }
 }

@@ -16,7 +16,7 @@ import com.flycode.jasonfit.model.Food;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FoodActivity extends AppCompatActivity implements View.OnClickListener {
+public class FoodActivity extends AppCompatActivity {
     private static final String EXPEND_SETTINGS = "expendSettings";
 
     @BindView(R.id.food_info_container) LinearLayout foorInfoContainerLinearLayout;
@@ -32,7 +32,6 @@ public class FoodActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private LinearLayout[] parameterContainers;
-    private boolean[] expendSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +61,6 @@ public class FoodActivity extends AppCompatActivity implements View.OnClickListe
         double[][] values = Food.getValues(food);
 
         parameterContainers = new LinearLayout[descriptors.length];
-        expendSettings = new boolean[descriptors.length];
-
-        for (int descriptorIndex = 0 ; descriptorIndex < descriptors.length ; descriptorIndex++) {
-            expendSettings[descriptorIndex] = false;
-        }
-
-        if (savedInstanceState != null) {
-            expendSettings = savedInstanceState.getBooleanArray(EXPEND_SETTINGS);
-        }
 
         for (int descriptorIndex = 0 ; descriptorIndex < descriptors.length ; descriptorIndex++) {
             View descriptorView = layoutInflater.inflate(R.layout.item_food_descriptor, foorInfoContainerLinearLayout, false);
@@ -81,10 +71,6 @@ public class FoodActivity extends AppCompatActivity implements View.OnClickListe
 
             TextView descriptorName = (TextView) descriptorView.findViewById(R.id.title);
             descriptorName.setText(descriptors[descriptorIndex]);
-
-            Button expendButton = (Button) descriptorView.findViewById(R.id.expend);
-            expendButton.setTag(descriptorIndex);
-            expendButton.setOnClickListener(this);
 
             String[] parameters = getResources().getStringArray(DESCRIPTOR_NAMES[descriptorIndex]);
 
@@ -98,32 +84,11 @@ public class FoodActivity extends AppCompatActivity implements View.OnClickListe
 
                 parameterContainerLinearLayout.addView(parameterView);
             }
-
-            if (expendSettings[descriptorIndex]) {
-                parameterContainerLinearLayout.setVisibility(View.VISIBLE);
-            } else {
-                parameterContainerLinearLayout.setVisibility(View.GONE);
-            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putBooleanArray(EXPEND_SETTINGS, expendSettings);
-    }
-
-    @Override
-    public void onClick(View view) {
-        int index = (Integer) view.getTag();
-
-        if (expendSettings[index]) {
-            parameterContainers[index].setVisibility(View.GONE);
-        } else {
-            parameterContainers[index].setVisibility(View.VISIBLE);
-        }
-
-        expendSettings[index] = !expendSettings[index];
     }
 }

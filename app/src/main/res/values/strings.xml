@@ -12,12 +12,12 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="workout_congrats">Congratulations! You finished your workout successfully. \n Please input your weight</string>
+    <string name="workout_congrats">Congratulations! You finished your workout successfully. Please input your weight in %s</string>
     <string name="sure_go_back">Are You sure with proceeding with go back? Current workout will be canceled.</string>
 
     <string name="tts_failed">Text To Speech Initialization Failed!</string>
     <string name="tts_countdown">three two one</string>
-    <string name="workout_end"> workout is finished, please enter your weight </string>
+    <string name="workout_end">Workout is finished, please enter your weight.</string>
 
 
     <!-- End of Strings for Workout(s) screen's -->
@@ -102,9 +102,9 @@
     <string name="english">English</string>
     <string name="deutsch">Deutsch</string>
     <string name="cm">cm</string>
-    <string name="foot">foot</string>
+    <string name="inch">inch</string>
     <string name="kg">kg</string>
-    <string name="pound">pound</string>
+    <string name="lbs">lbs</string>
 
     <string name="snackbar_text">Your Data was changed</string>
 
@@ -112,7 +112,7 @@
 
     <!-- Strings for Start screen -->
 
-    <string name="try_for_free">OK! TRY THIS APP\nFREE FOR 7 DAYS</string>
+    <string name="try_for_free">TRY THIS APP\nFREE FOR 7 DAYS</string>
     <string name="one_month">1 MONTH € 9,99</string>
 
     <string name="error">Error</string>
@@ -139,12 +139,12 @@
 
     <string-array name="height_measurement">
         <item>cm</item>
-        <item>foot</item>
+        <item>inch</item>
     </string-array>
 
     <string-array name="weight_measurement">
         <item>kg</item>
-        <item>pound</item>
+        <item>lbs</item>
     </string-array>
 
     <string-array name="food_descriptors">
