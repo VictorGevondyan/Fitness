@@ -77,8 +77,6 @@ WorkoutTimerService extends Service {
                     return;
                 }
 
-                WorkoutTrackPreferences preferences = WorkoutTrack.sharedPreferences(WorkoutTimerService.this);
-
                 if (!totalWorkoutStatus.equals(WorkoutTrack.STATUS.FINISHED)) {
 
                     workoutTrackPreferences.edit()
@@ -154,11 +152,9 @@ WorkoutTimerService extends Service {
             if (status == TextToSpeech.SUCCESS) {
                 speakSubWorkoutNames();
             } else {
-                Toast.makeText(WorkoutTimerService.this, R.string.tts_failed, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WorkoutTimerService.this, R.string.tts_failed, Toast.LENGTH_SHORT).show();
             }
-
         }
-
     };
 
     public void speakSubWorkoutNames() {
@@ -167,19 +163,17 @@ WorkoutTimerService extends Service {
 
         ArrayList<String> subworkoutNamesArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
         int subWorkoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        String subworkoutName = subworkoutNamesArray.get(subWorkoutNumber);
+        String subWorkoutName = subworkoutNamesArray.get(subWorkoutNumber);
 
         // If the 3d parameter of speak() is set to null, the UtteranceProgressListener will not be called.
         // So, if we need it will be called, we must use this HashMap
         HashMap<String, String> paramsHashMap = new HashMap<>();
-        paramsHashMap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, subworkoutName);
+        paramsHashMap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, subWorkoutName);
 
-        textToSpeech.speak(subworkoutName, TextToSpeech.QUEUE_FLUSH, paramsHashMap);
-
+        textToSpeech.speak(subWorkoutName, TextToSpeech.QUEUE_FLUSH, paramsHashMap);
     }
 
     public void speakWorkoutEnd(){
-
         String workoutEnd = getString(R.string.workout_end);
 
         // If the 3d parameter of speak() is set to null, the UtteranceProgressListener will not be called.
@@ -187,7 +181,6 @@ WorkoutTimerService extends Service {
         HashMap<String, String> paramsHashMap = new HashMap<>();
         paramsHashMap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, workoutEnd);
         textToSpeech.speak(workoutEnd, TextToSpeech.QUEUE_FLUSH, paramsHashMap);
-
     }
 
     public void stopTextToSpeech() {
@@ -207,14 +200,11 @@ WorkoutTimerService extends Service {
             // If we have this utterance id here, it means, that workout end message is finished,
             // so we must finish the service.
             if( utteranceId.equals(getString(R.string.workout_end)) ){
-
                 workoutTrackPreferences
                         .edit()
                         .putTotalWorkoutStatus(WorkoutTrack.STATUS.FINISHED)
                         .apply();
-
             }
-
         }
 
         @Override
@@ -225,7 +215,6 @@ WorkoutTimerService extends Service {
 
 
     private void checkForWorkoutEnd() {
-
         int totalWorkoutTime = (int) (workoutTrackPreferences
                 .get()
                 .totalWorkoutTime() / 1000);
@@ -252,9 +241,7 @@ WorkoutTimerService extends Service {
                     .apply();
 
             speakWorkoutEnd();
-
         }
-
     }
 
     private void showNotification() {
@@ -295,7 +282,6 @@ WorkoutTimerService extends Service {
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray().get(workoutNumber);
 
-
         builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime))
                 .setContentTitle(currentWorkoutTitle);
 
@@ -307,7 +293,6 @@ WorkoutTimerService extends Service {
         notificationManager.notify(NOTIFICATION_ID, notification);
 
     }
-
 }
 
 
