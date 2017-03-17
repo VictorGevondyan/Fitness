@@ -1,135 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context="com.flycode.jasonfit.activity.WorkoutActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/title_background"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="ContentDescription"
-            android:scaleType="centerCrop"/>
+            android:layout_height="75dp">
+
+            <ImageView
+                android:id="@+id/title_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                tools:text="dolorem ipsum"/>
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/sub_workout_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorChestnut"
             android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:textSize="16sp"
             android:textColor="@color/colorWhite"
             tools:text="dolorem ipsum"/>
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
+        <ImageView
+            android:id="@+id/workout_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            tools:background="@color/colorWhiteDark"
+            tools:src="@mipmap/ic_launcher"
+            tools:ignore="ContentDescription"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/workout_species_title"
+    <LinearLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorChestnut"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@color/colorWhite"
-        tools:text="dolorem ipsum"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/workout_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_margin="10dp"
-        tools:background="@color/colorWhiteDark"
-        tools:src="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/workout_time_current_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/workout_rounded_button"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-            
-            <TextView
-                android:id="@+id/workout_time_current"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+            <LinearLayout
+                android:id="@+id/workout_time_current_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/button_container"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/workout_time_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="@string/workout_time_null"/>
+
+                <TextView
+                    android:id="@+id/current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:text="@string/current"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/button_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/workout_time_null"/>
+                android:layout_centerHorizontal="true">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <mbanje.kurt.fabbutton.FabButton
+                    android:id="@+id/current_workout_progress"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    app:fbb_progressWidthRatio="1.0"/>
+
+                <Button
+                    android:id="@+id/pause_resume"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_shape_button"
+                    android:textColor="@color/colorWhite"
+                    android:textAllCaps="true"
+                    android:text="@string/start_pause"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/workout_time_estimated_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="16sp"
-                android:text="@string/current"/>
-            
-        </LinearLayout>
+                android:layout_centerInParent="true"
+                android:layout_toEndOf="@+id/button_container"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/workout_rounded_button"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_shape_button"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="true"
-            android:text="@string/start_pause"/>
+                <TextView
+                    android:id="@+id/workout_time_estimated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="@string/workout_time_null"/>
 
-        <LinearLayout
-            android:id="@+id/workout_time_estimated_layout"
+                <TextView
+                    android:id="@+id/complete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:text="@string/complete"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/workout_progress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/workout_rounded_button"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="15dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="bottom"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:indeterminate="false"
+            app:mpb_progressStyle="horizontal"
+            app:mpb_progressBackgroundTint="@color/colorGray"
+            app:mpb_useIntrinsicPadding="false"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+            tools:max="100"
+            tools:progress="25"/>
 
-            <TextView
-                android:id="@+id/workout_time_estimated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/workout_time_null"/>
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="16sp"
-                android:text="@string/complete"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/workout_progress"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:indeterminate="false"
-        app:mpb_progressStyle="horizontal"
-        app:mpb_progressBackgroundTint="@color/colorGray"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-        tools:max="100"
-        tools:progress="25"/>
-
-</LinearLayout>
+</RelativeLayout>

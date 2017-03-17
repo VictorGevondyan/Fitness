@@ -66,26 +66,18 @@ public class StatsFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, statsView);
 
-        createChart();
-
-        createCalendar(inflater);
-
-        setupView();
+        setupView(inflater);
 
         return statsView;
-
     }
 
     @Override
     public void onDestroyView() {
-
         super.onDestroyView();
-
         unbinder.unbind();
     }
 
     private void createChart(){
-
         List<StatsData> statsData = new Select()
                 .from(StatsData.class)
                 .execute();
@@ -136,8 +128,9 @@ public class StatsFragment extends Fragment {
         }
     }
 
-    private void setupView() {
-
+    private void setupView(LayoutInflater inflater) {
+        createChart();
+        createCalendar(inflater);
         setupCalendarTitle();
         setupOverWeight();
         setupCalendarView();
@@ -181,13 +174,11 @@ public class StatsFragment extends Fragment {
         double bMI = UserNormsUtil.getBMI(lastWeight, height);
         String overweightCategory = UserNormsUtil.getOverweightType(getActivity(), bMI);
 
-
         bodyMassOverweight.setText(String.valueOf(bMI));
         bodyMassOverweightTitle.setText(overweightCategory);
     }
 
     private void setupCalendarView() {
-
         String[] weekDays = this.getResources().getStringArray(R.array.week_days);
 
         StatsData statsData;
@@ -261,7 +252,6 @@ public class StatsFragment extends Fragment {
     }
 
     private StatsData getWeekStatsData(int shiftOfDays, int index) {
-
         ArrayList<Integer> calendarWeekDays = new ArrayList<>(Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY,
                 Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
                 Calendar.SATURDAY, Calendar.SUNDAY));

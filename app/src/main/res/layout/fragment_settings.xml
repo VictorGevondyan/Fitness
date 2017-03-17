@@ -14,15 +14,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_spacing"
-                android:textSize="@dimen/normal_text_size"
-                android:textAllCaps="true"
-                android:layout_marginTop="@dimen/common_margin"
-                android:gravity="center"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

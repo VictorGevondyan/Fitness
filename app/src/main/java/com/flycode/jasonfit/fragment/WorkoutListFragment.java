@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.activeandroid.query.Select;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.WorkoutActivity;
 import com.flycode.jasonfit.adapter.WorkoutListAdapter;
@@ -17,6 +18,8 @@ import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,50 +62,49 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
     }
 
     private void fillWorkoutSetAdapter() {
-        ArrayList<Workout> todayWorkouts = new ArrayList<>();
+        List<Workout> todayWorkouts = new ArrayList<>();
+        List<Workout> otherWorkouts = new ArrayList<>();
+        List<Workout> allWorkouts = new Select()
+                .from(Workout.class)
+                .orderBy("id ASC")
+                .execute();
 
-        Workout hulk = new Workout();
-        hulk.setName("HULK HITS");
-        hulk.setId(1);
-        hulk.setPicture("hulk.jpg");
-        hulk.setSetTiming(new ArrayList<>(Arrays.asList("21:30", "1:01:30", "02: 40", "00 : 20")));
-        hulk.setSetName(new ArrayList<>(Arrays.asList("punching bag", "running", "sparring", "breath")));
-        hulk.setSetPicture(new ArrayList<>(Arrays.asList(R.drawable.hulk_bag)));
+        String todayString = null;
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        todayWorkouts.add(hulk);
+        switch (today) {
+            case Calendar.MONDAY:
+                todayString = "MO";
+                break;
+            case Calendar.THURSDAY:
+                todayString = "TH";
+                break;
+            case Calendar.WEDNESDAY:
+                todayString = "WE";
+                break;
+            case Calendar.TUESDAY:
+                todayString = "TU";
+                break;
+            case Calendar.FRIDAY:
+                todayString = "FR";
+                break;
+            case Calendar.SATURDAY:
+                todayString = "SA";
+                break;
+            case Calendar.SUNDAY:
+                todayString = "SU";
+                break;
+            default:
+                todayString = "NON_OF_THIS?";
+        }
 
-        Workout haunt = new Workout();
-        haunt.setName("THE HAUNT");
-        haunt.setId(2);
-        haunt.setPicture("haunt.jpg");
-        haunt.setSetTiming(new ArrayList<>(Arrays.asList("21:30", "01:35", "02: 40", ": 24")));
-        haunt.setSetName(new ArrayList<>(Arrays.asList("running", "chasing", "more running", "breath")));
-        haunt.setSetPicture(new ArrayList<>(Arrays.asList(R.drawable.haunt_run)));
-
-        todayWorkouts.add(haunt);
-
-        ArrayList<Workout> otherWorkouts = new ArrayList<>();
-
-        Workout gladiator = new Workout();
-        gladiator.setName("Gladiator CHASE");
-        gladiator.setId(1);
-        gladiator.setPicture("gladiator.jpg");
-        gladiator.setSetTiming(new ArrayList<>(Arrays.asList("21:30", "06:30", "02: 40", "00 : 00")));
-        gladiator.setSetName(new ArrayList<>(Arrays.asList("running in equipment", "sword practise", "sparring", "breath")));
-        gladiator.setSetPicture(new ArrayList<>(Arrays.asList(R.drawable.gladiator_run)));
-
-        otherWorkouts.add(gladiator);
-
-        Workout outpark = new Workout();
-        outpark.setName("OUTPARK WILD");
-        outpark.setId(2);
-        outpark.setPicture("outdoor.jpg");
-        outpark.setSetTiming(new ArrayList<>(Arrays.asList("0:6", "00:3", "00: 7", "00 : 5")));
-        outpark.setSetName(new ArrayList<>(Arrays.asList("climbing", "piss drinking", "in camel sleeping", "cliff jumping")));
-        outpark.setSetPicture(new ArrayList<>(Arrays.asList(R.drawable.outpark_climb, R.drawable.outpark_piss,
-                R.drawable.outpark_camel, R.drawable.outpark_cliff)));
-
-        otherWorkouts.add(outpark);
+        for (Workout workout : allWorkouts) {
+            if (workout.weekday.contains(todayString)) {
+                todayWorkouts.add(workout);
+            } else {
+                otherWorkouts.add(workout);
+            }
+        }
 
         workoutsRecycler.setAdapter(new WorkoutListAdapter(todayWorkouts, otherWorkouts, this));
         workoutsRecycler.setLayoutManager(new StickyHeaderLayoutManager());

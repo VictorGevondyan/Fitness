@@ -2,6 +2,10 @@ package com.flycode.jasonfit.model;
 
 import android.graphics.Color;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,77 +13,97 @@ import java.util.ArrayList;
  * Created - Schumakher on  3/9/17.
  */
 
-public class Workout implements Serializable {
-    private int id;
-    private String name;
-    private String picture;
-    private ArrayList<String> weekday;
-    private Color color;
-    private ArrayList<String> setName;
-    private ArrayList<Integer> setPicture;
-    private ArrayList<String> setTiming;
+@Table(name = "Workout", id = "activeId")
+public class Workout extends Model implements Serializable {
+    public static final String REST = "rest";
 
-    public int getId() {
-        return id;
+    @Column(name = "id")
+    public int id;
+
+    @Column(name = "name")
+    public String name;
+
+    @Column(name = "pic_id")
+    public String picture;
+
+    @Column(name = "weekday")
+    public String weekday;
+
+    @Column(name = "color")
+    public String color;
+
+    @Column(name = "set_name")
+    public String subNames;
+
+    @Column(name = "set_pic_id")
+    public String subPictures;
+
+    @Column(name = "set_timing")
+    public String subTiming;
+
+    public String[] getSubNames() {
+        int[] set = getSet();
+        String[] subNamesRawArray = subNames.split(",");
+        String[] subNamesFinalArray = new String[set.length];
+
+        for (int index = 0 ; index < set.length ; index++) {
+            if (set[index] < 0) {
+                subNamesFinalArray[index] = REST;
+            } else {
+                subNamesFinalArray[index] = subNamesRawArray[set[index]];
+            }
+        }
+
+        return subNamesFinalArray;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String[] getSubPictures() {
+        int[] set = getSet();
+        String[] subPicturesRawArray = subPictures.split(",");
+        String[] subPicturesFinalArray = new String[set.length];
+
+        for (int index = 0 ; index < set.length ; index++) {
+            if (set[index] < 0) {
+                subPicturesFinalArray[index] = REST;
+            } else {
+                subPicturesFinalArray[index] = subPicturesRawArray[set[index]];
+            }
+        }
+
+        return subPicturesFinalArray;
     }
 
-    public String getName() {
-        return name;
+    public int[] getSubTiming() {
+        String[] subTimingArray = subTiming.split(",");
+        int[] set = new int[subTimingArray.length];
+
+        for (int index = 0 ; index < subTimingArray.length ; index++) {
+            String timing = subTimingArray[index];
+            String[] components = timing.split(":");
+            String duration = components[1];
+
+            set[index] = Integer.valueOf(duration);
+        }
+
+        return set;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private int[] getSet() {
+        String[] subTimingArray = subTiming.split(",");
+        int[] set = new int[subTimingArray.length];
 
-    public String getPicture() {
-        return picture;
-    }
+        for (int index = 0 ; index < subTimingArray.length ; index++) {
+            String timing = subTimingArray[index];
+            String[] components = timing.split(":");
+            String id = components[0];
 
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
+            if (id.isEmpty() || id.equals("0")) {
+                set[index] = -1;
+            } else {
+                set[index] = Integer.valueOf(id) - 1;
+            }
+        }
 
-    public ArrayList<String> getWeekday() {
-        return weekday;
-    }
-
-    public void setWeekday(ArrayList<String> weekday) {
-        this.weekday = weekday;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public ArrayList<String> getSetName() {
-        return setName;
-    }
-
-    public void setSetName(ArrayList<String> setName) {
-        this.setName = setName;
-    }
-
-    public ArrayList<Integer> getSetPicture() {
-        return setPicture;
-    }
-
-    public void setSetPicture(ArrayList<Integer> setPicture) {
-        this.setPicture = setPicture;
-    }
-
-    public ArrayList<String> getSetTiming() {
-        return setTiming;
-    }
-
-    public void setSetTiming(ArrayList<String> setTiming) {
-        this.setTiming = setTiming;
+        return set;
     }
 }

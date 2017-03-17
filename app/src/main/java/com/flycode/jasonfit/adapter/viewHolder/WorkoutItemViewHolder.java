@@ -46,7 +46,7 @@ public class WorkoutItemViewHolder extends SectioningAdapter.ItemViewHolder {
     }
 
     public void setupItem(Workout workout) {
-        titleTextView.setText(workout.getName());
-        imageView.setImageBitmap(ImageUtil.getImageBitmap(imageView.getContext(), workout));
+        titleTextView.setText(workout.name);
+        imageView.setImageBitmap(ImageUtil.getImageBitmap(imageView.getContext(), workout.picture));
     }
 }

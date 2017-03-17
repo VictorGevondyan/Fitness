@@ -10,14 +10,15 @@ import com.flycode.jasonfit.model.Workout;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created - Schumakher on  3/9/17.
  */
 
 public class WorkoutListAdapter extends SectioningAdapter implements OnItemClickListener {
-    private ArrayList<Workout> todayWorkouts;
-    private ArrayList<Workout> otherWorkouts;
+    private List<Workout> todayWorkouts;
+    private List<Workout> otherWorkouts;
 
     public interface OnWorkoutItemClickListener {
         void onWorkoutItemClick(Workout workout);
@@ -25,7 +26,7 @@ public class WorkoutListAdapter extends SectioningAdapter implements OnItemClick
 
     private OnWorkoutItemClickListener listener;
 
-    public WorkoutListAdapter(ArrayList<Workout> todayWorkouts, ArrayList<Workout> otherWorkouts, OnWorkoutItemClickListener listener) {
+    public WorkoutListAdapter(List<Workout> todayWorkouts, List<Workout> otherWorkouts, OnWorkoutItemClickListener listener) {
         this.todayWorkouts = todayWorkouts;
         this.otherWorkouts = otherWorkouts;
         this.listener = listener;

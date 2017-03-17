@@ -36,9 +36,7 @@ WorkoutTimerService extends Service {
     private static final int NOTIFICATION_ID = 666;
 
     private Timer timer;
-
     private WorkoutTrackPreferences workoutTrackPreferences;
-
     private Notification.Builder builder;
     private NotificationManager notificationManager;
 
@@ -46,7 +44,6 @@ WorkoutTimerService extends Service {
     private boolean ttsIsReady = false;
 
     public void onCreate() {
-
         // Create TextToSpeech instance and set the listener. Listener onInit() method
         // will be called automatically after textToSpeech is successfully created
         textToSpeech = new TextToSpeech(this, onWorkoutTextInitListener);
@@ -61,17 +58,14 @@ WorkoutTimerService extends Service {
         showNotification();
 
         super.onCreate();
-
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
-
-                String totalWorkoutStatus = workoutTrackPreferences.getTotalWorkoutStatus();
+                String totalWorkoutStatus = workoutTrackPreferences.getStatus();
 
                 if (!ttsIsReady || totalWorkoutStatus.equals(WorkoutTrack.STATUS.PAUSED)) {
                     return;
@@ -79,7 +73,8 @@ WorkoutTimerService extends Service {
 
                 if (!totalWorkoutStatus.equals(WorkoutTrack.STATUS.FINISHED)) {
 
-                    workoutTrackPreferences.edit()
+                    workoutTrackPreferences
+                            .edit()
                             .putTotalWorkoutTime(workoutTrackPreferences.get().totalWorkoutTime() + 1000)
                             .putSubWorkoutTime(workoutTrackPreferences.get().subWorkoutTime() + 1000)
                             .apply();
@@ -88,12 +83,11 @@ WorkoutTimerService extends Service {
 
                 int currentSubWorkoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
                 int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
-                int maxCurrentWorkoutTime = workoutTrackPreferences.getCurrentWorkoutTimeArray().get(currentSubWorkoutNumber);
+                int maxCurrentWorkoutTime = workoutTrackPreferences.getTiming()[currentSubWorkoutNumber];
 
-                int workoutsCount = workoutTrackPreferences.getCurrentWorkoutTimeArray().size();
+                int workoutsCount = workoutTrackPreferences.getTiming().length;
 
                 if (currentWorkoutTime == maxCurrentWorkoutTime && currentSubWorkoutNumber < workoutsCount - 1) {
-
                     workoutTrackPreferences
                             .edit()
                             .putSubWorkoutTime(0)
@@ -148,7 +142,6 @@ WorkoutTimerService extends Service {
 
         @Override
         public void onInit(int status) {
-
             if (status == TextToSpeech.SUCCESS) {
                 speakSubWorkoutNames();
             } else {
@@ -158,12 +151,11 @@ WorkoutTimerService extends Service {
     };
 
     public void speakSubWorkoutNames() {
-
         ttsIsReady = false;
 
-        ArrayList<String> subworkoutNamesArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
+        String[] subWorkoutNamesArray = workoutTrackPreferences.getSubWorkoutNames();
         int subWorkoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        String subWorkoutName = subworkoutNamesArray.get(subWorkoutNumber);
+        String subWorkoutName = subWorkoutNamesArray[subWorkoutNumber];
 
         // If the 3d parameter of speak() is set to null, the UtteranceProgressListener will not be called.
         // So, if we need it will be called, we must use this HashMap
@@ -202,7 +194,7 @@ WorkoutTimerService extends Service {
             if( utteranceId.equals(getString(R.string.workout_end)) ){
                 workoutTrackPreferences
                         .edit()
-                        .putTotalWorkoutStatus(WorkoutTrack.STATUS.FINISHED)
+                        .putStatus(WorkoutTrack.STATUS.FINISHED)
                         .apply();
             }
         }
@@ -221,15 +213,10 @@ WorkoutTimerService extends Service {
 
         int estimatedTimeSecsFull = 0;
 
-        int setSize = workoutTrackPreferences
-                .getCurrentWorkoutTimeArray()
-                .size();
+        int setSize = workoutTrackPreferences.getTiming().length;
 
-        for (int i = 0; i <= setSize - 1; i++) {
-            estimatedTimeSecsFull += workoutTrackPreferences
-                    .get()
-                    .currentWorkoutTimeArray()
-                    .get(i);
+        for (int index = 0; index <= setSize - 1; index++) {
+            estimatedTimeSecsFull += workoutTrackPreferences.getTiming()[index];
         }
 
         if (totalWorkoutTime == estimatedTimeSecsFull) {
@@ -237,7 +224,7 @@ WorkoutTimerService extends Service {
             // so we set status "PREPARING_TO_FINISH" , until we speak.
             workoutTrackPreferences
                     .edit()
-                    .putTotalWorkoutStatus(WorkoutTrack.STATUS.PREPARING_TO_FINISH)
+                    .putStatus(WorkoutTrack.STATUS.PREPARING_TO_FINISH)
                     .apply();
 
             speakWorkoutEnd();
@@ -246,8 +233,8 @@ WorkoutTimerService extends Service {
 
     private void showNotification() {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
-        ArrayList<String> stringArray = workoutTrackPreferences.getCurrentWorkoutNameArray();
-        String currentWorkoutTitle = stringArray.get(workoutNumber);
+        String[] stringArray = workoutTrackPreferences.getSubWorkoutNames();
+        String currentWorkoutTitle = stringArray[workoutNumber];
         int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0, currentWorkoutTimeSecs);
 
@@ -280,7 +267,7 @@ WorkoutTimerService extends Service {
     private void updateNotification(int workoutNumber) {
 
         int currentWorkoutTime = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
-        String currentWorkoutTitle = workoutTrackPreferences.getCurrentWorkoutNameArray().get(workoutNumber);
+        String currentWorkoutTitle = workoutTrackPreferences.getSubWorkoutNames()[workoutNumber];
 
         builder.setContentText(StringUtil.getFormattedTime(0, 0 , currentWorkoutTime))
                 .setContentTitle(currentWorkoutTitle);
@@ -291,7 +278,6 @@ WorkoutTimerService extends Service {
         notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
         notificationManager.notify(NOTIFICATION_ID, notification);
-
     }
 }
 
