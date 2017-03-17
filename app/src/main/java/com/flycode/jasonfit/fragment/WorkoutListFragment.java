@@ -64,9 +64,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
     private void fillWorkoutSetAdapter() {
         List<Workout> todayWorkouts = new ArrayList<>();
         List<Workout> otherWorkouts = new ArrayList<>();
-        List<Workout> allWorkouts = new ArrayList<>();
-
-        allWorkouts = new Select()
+        List<Workout> allWorkouts = new Select()
                 .from(Workout.class)
                 .orderBy("id ASC")
                 .execute();
@@ -104,7 +102,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
             if (workout.weekday.contains(todayString)) {
                 todayWorkouts.add(workout);
             } else {
-                allWorkouts.add(workout);
+                otherWorkouts.add(workout);
             }
         }
 

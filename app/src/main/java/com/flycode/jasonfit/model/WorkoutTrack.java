@@ -17,7 +17,7 @@ import io.t28.shade.converter.Converter;
 /**
  * Created - Schumakher on  3/10/17.
  */
-@Preferences("com.flycode.jasonfit.workouttrack")
+@Preferences("com.flycode.jasonfit.workoutTrack")
 public abstract class WorkoutTrack {
 
     public static class STATUS {
@@ -49,14 +49,14 @@ public abstract class WorkoutTrack {
     @Property(key = "subWorkoutTime")
     public abstract long subWorkoutTime();
 
-    @Property(key = "totalWorkoutStatus", defValue = STATUS.IDLE)
-    public abstract String totalWorkoutStatus();
+    @Property(key = "status", defValue = STATUS.IDLE)
+    public abstract String status();
 
-    @Property(key = "currentWorkoutTimeArray", converter = IntegerSetConverter.class)
-    public abstract int[] currentWorkoutTimeArray();
+    @Property(key = "timing", converter = IntegerSetConverter.class)
+    public abstract int[] timing();
 
-    @Property(key = "currentWorkoutNameArray", converter = StringSetConverter.class)
-    public abstract String[] currentWorkoutNameArray();
+    @Property(key = "subWorkoutNames", converter = StringSetConverter.class)
+    public abstract String[] subWorkoutNames();
 
     public static class IntegerSetConverter implements Converter<int[], String> {
 
@@ -87,6 +87,7 @@ public abstract class WorkoutTrack {
                     stringBuilder.append(",");
                 }
             }
+
             return stringBuilder.toString();
         }
     }
@@ -116,7 +117,5 @@ public abstract class WorkoutTrack {
 
             return stringBuilder.toString();
         }
-
     }
-
 }

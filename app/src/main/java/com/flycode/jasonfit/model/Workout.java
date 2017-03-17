@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created - Schumakher on  3/9/17.
  */
 
-@Table(name = "")
+@Table(name = "Workout", id = "activeId")
 public class Workout extends Model implements Serializable {
     public static final String REST = "rest";
 
@@ -47,7 +47,7 @@ public class Workout extends Model implements Serializable {
         String[] subNamesFinalArray = new String[set.length];
 
         for (int index = 0 ; index < set.length ; index++) {
-            if (index < 0) {
+            if (set[index] < 0) {
                 subNamesFinalArray[index] = REST;
             } else {
                 subNamesFinalArray[index] = subNamesRawArray[set[index]];
@@ -63,7 +63,7 @@ public class Workout extends Model implements Serializable {
         String[] subPicturesFinalArray = new String[set.length];
 
         for (int index = 0 ; index < set.length ; index++) {
-            if (index < 0) {
+            if (set[index] < 0) {
                 subPicturesFinalArray[index] = REST;
             } else {
                 subPicturesFinalArray[index] = subPicturesRawArray[set[index]];

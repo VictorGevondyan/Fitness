@@ -24,14 +24,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -171,7 +168,7 @@ public class StatsFragment extends Fragment {
         StatsData statsData;
 
         for (int i = 0; i < 7; i++) {
-            statsData = getWeekStatsData(Calendar.DAY_OF_WEEK, i);
+            statsData = getWeekStatsData(0, i);
 
             if (statsData != null) {
                 weightArray.add(statsData.weight);
@@ -208,7 +205,7 @@ public class StatsFragment extends Fragment {
 
             TextView weight = (TextView) calendarItems.get(i).findViewById(R.id.calendar_weight);
 
-            statsData = getWeekStatsData(Calendar.DAY_OF_WEEK, i);
+            statsData = getWeekStatsData(0, i);
 
             if (statsData != null) {
                 multiplierString = String.valueOf(statsData.multiplier) + "x";
@@ -231,7 +228,7 @@ public class StatsFragment extends Fragment {
 
         for (int i = 0; i < 7; i++) {
 
-            statsData = getWeekStatsData(Calendar.DAY_OF_WEEK, i);
+            statsData = getWeekStatsData(0, i);
 
             if (statsData != null) {
                 burntCaloriesThisWeek += statsData.burntCalories;
@@ -249,19 +246,21 @@ public class StatsFragment extends Fragment {
 
         double burntCaloriesLastWeek = 0;
 
+        //noinspection UnusedAssignment
         statsData = null;
-        ArrayList<Double> burntCaloriesLastWeekArray = new ArrayList<>();
-
-        getPreviousWeek(-1);
 
         for (int i = 0; i < 7; i++) {
+            statsData = getWeekStatsData(-7, i);
 
-
-
+            if (statsData != null) {
+                burntCaloriesLastWeek += statsData.burntCalories;
+            }
         }
+
+        burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek));
     }
 
-    private StatsData getWeekStatsData(int dayOfWeek, int index) {
+    private StatsData getWeekStatsData(int shiftOfDays, int index) {
 
         ArrayList<Integer> calendarWeekDays = new ArrayList<>(Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY,
                 Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
@@ -273,7 +272,9 @@ public class StatsFragment extends Fragment {
 
         int currentYear = currentCalendar.get(Calendar.YEAR);
 
-        currentCalendar.set(dayOfWeek, calendarWeekDays.get(index));
+        currentCalendar.set(Calendar.DAY_OF_WEEK, calendarWeekDays.get(index));
+        //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
+        currentCalendar.add(Calendar.DAY_OF_YEAR, shiftOfDays);
         int currentDayOfYearInWeek = currentCalendar.get(Calendar.DAY_OF_YEAR);
 
         try {
@@ -287,23 +288,5 @@ public class StatsFragment extends Fragment {
         }
 
         return statsData;
-    }
-
-    private void getPreviousWeek(int num) {
-        Calendar c = Calendar.getInstance();
-        // Set the calendar to monday of the current week
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        c.add(Calendar.DATE, num * 7);
-        // Print dates of the current week starting on Monday
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        ArrayList<String> listDate = new ArrayList<String>();
-
-        for (int i = 0; i < 7; i++)
-        {
-            listDate.add(df.format(c.getTime()));
-            c.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        Log.i("TAGG", listDate.toString());
     }
 }

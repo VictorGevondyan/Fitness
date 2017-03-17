@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
                 this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        drawerToggle.setHomeAsUpIndicator(R.drawable.calendar_prev_arrow);
 
         sideMenuRecyclerView.setAdapter(new SideMenuAdapter(this));
         sideMenuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
