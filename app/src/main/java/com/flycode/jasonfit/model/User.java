@@ -25,8 +25,8 @@ public abstract class User {
     public static final class METRICS {
         public static final String CM = "cm";
         public static final String KG = "kg";
-        public static final String FOOT = "foor";
-        public static final String POUND = "pount";
+        public static final String FOOT = "foot";
+        public static final String POUND = "pound";
     }
 
     public static final class NUTRITION {

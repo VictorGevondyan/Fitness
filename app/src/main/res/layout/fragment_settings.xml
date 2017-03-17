@@ -242,31 +242,21 @@
                     android:gravity="center_vertical"
                     android:layout_gravity="center_vertical"/>
 
-                <EditText
-                    android:id="@+id/height_measurement"
+                <Spinner
+                    android:id="@+id/spinner_height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:entries="@array/spinner_height"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
-                <EditText
-                    android:id="@+id/weight_measurement"
+                <Spinner
+                    android:id="@+id/spinner_weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:entries="@array/spinner_weight"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             </LinearLayout>
 

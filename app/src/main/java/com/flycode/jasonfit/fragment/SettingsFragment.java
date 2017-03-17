@@ -11,7 +11,9 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -43,10 +45,10 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @BindView(R.id.birthday) EditText birthdayEditText;
     @BindView(R.id.gender) EditText genderEditText;
     @BindView(R.id.language) EditText languageEditText;
-    @BindView(R.id.height_measurement) EditText heightMeasurementEditText;
-    @BindView(R.id.weight_measurement) EditText weightMeasurementEditText;
     @BindView(R.id.height) EditText heightEditText;
     @BindView(R.id.weight) EditText weightEditText;
+    @BindView(R.id.spinner_weight) Spinner spinnerWeight;
+    @BindView(R.id.spinner_height) Spinner spinnerHeight;
 
     @BindView(R.id.settingsCoordinatorLayout) CoordinatorLayout settingsCoordinatorLayout;
 
@@ -70,8 +72,21 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         genderEditText.setText(formattedGender());
         nutritionEditText.setText(formattedNutrition());
         languageEditText.setText(formattedLanguage());
-        heightMeasurementEditText.setText(formattedHeightMeasurement());
-        weightMeasurementEditText.setText(formattedWeightMeasurement());
+
+        if (formattedWeightMeasurement().equals(User.METRICS.KG)) {
+            spinnerWeight.setSelection(0);
+        } else {
+            spinnerWeight.setSelection(1);
+        }
+        spinnerWeight.setOnItemSelectedListener(weightItemSelected);
+
+
+        if (formattedHeightMeasurement().equals(User.METRICS.CM)) {
+            spinnerHeight.setSelection(0);
+        } else {
+            spinnerHeight.setSelection(1);
+        }
+        spinnerHeight.setOnItemSelectedListener(heightItemSelected);
 
         return settingsView;
 
@@ -228,77 +243,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                     }
                 })
                 .show();
-    }
-
-    @OnClick(R.id.height_measurement)
-    public void onSetHeightMeasurement() {
-        int selectedIndex = userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? 0 : 1;
-
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-
-        materialDialogBuilder
-                .title(R.string.measurement)
-                .items(R.array.height_measurement)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        String heightMeasurement = which == 0 ? User.METRICS.CM : User.METRICS.FOOT;
-
-                        String previousHeightMeasurement = userPreferences.getHeightMeasurement();
-                        if( !previousHeightMeasurement.equals(heightMeasurement) ){
-                            mustShowSnackBar = true;
-                        }
-
-                        userPreferences
-                                .edit()
-                                .putHeightMeasurement(heightMeasurement)
-                                .apply();
-
-                        heightMeasurementEditText.setText(formattedHeightMeasurement());
-                        heightEditText.setText(formattedHeight());
-
-                        showSnackbar();
-
-                        return false;
-                    }
-                })
-                .show();
-    }
-
-    @OnClick(R.id.weight_measurement)
-    public void onSetWeightMeasurement() {
-        int selectedIndex = userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? 0 : 1;
-
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-
-        materialDialogBuilder
-                .title(R.string.measurement)
-                .items(R.array.weight_measurement)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        String weightMeasurement = which == 0 ? User.METRICS.KG : User.METRICS.POUND;
-
-                        String previousWeightMeasurement = userPreferences.getWeightMeasurement();
-                        if( !previousWeightMeasurement.equals(weightMeasurement) ){
-                            mustShowSnackBar = true;
-                        }
-
-                        userPreferences
-                                .edit()
-                                .putWeightMeasurement(weightMeasurement)
-                                .apply();
-
-                        weightMeasurementEditText.setText(formattedWeightMeasurement());
-                        weightEditText.setText(formattedWeight());
-
-                        showSnackbar();
-
-                        return false;
-                    }
-                })
-                .show();
-
     }
 
     @OnClick(R.id.height)
@@ -530,4 +474,60 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .append(formattedWeightMeasurement())
                 .toString();
     }
+
+    AdapterView.OnItemSelectedListener weightItemSelected = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            int selectedIndex = userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? 0 : 1;
+            String weightMeasurement = selectedIndex == 0 ? User.METRICS.KG : User.METRICS.POUND;
+
+            if( position != selectedIndex ){
+                mustShowSnackBar = true;
+                weightMeasurement = position == 0 ? User.METRICS.KG : User.METRICS.POUND;
+            }
+
+            userPreferences
+                    .edit()
+                    .putWeightMeasurement(weightMeasurement)
+                    .apply();
+
+            weightEditText.setText(formattedWeight());
+
+            showSnackbar();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    AdapterView.OnItemSelectedListener heightItemSelected = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            int selectedIndex = userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? 0 : 1;
+            String heightMeasurement = selectedIndex == 0 ? User.METRICS.CM : User.METRICS.FOOT;
+
+                            if( position != selectedIndex) {
+                                mustShowSnackBar = true;
+                                heightMeasurement = position == 0 ? User.METRICS.CM : User.METRICS.FOOT;
+                            }
+
+                            userPreferences
+                                    .edit()
+                                    .putHeightMeasurement(heightMeasurement)
+                                    .apply();
+
+                            heightEditText.setText(formattedHeight());
+
+                            showSnackbar();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 }
