@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.flycode.jasonfit.R;
+import com.flycode.jasonfit.activity.MainActivity;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
 import com.flycode.jasonfit.activity.WorkoutActivity;
@@ -232,13 +233,16 @@ WorkoutTimerService extends Service {
     }
 
     private void showNotification() {
+
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
         String[] stringArray = workoutTrackPreferences.getSubWorkoutNames();
         String currentWorkoutTitle = stringArray[workoutNumber];
         int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0, currentWorkoutTimeSecs);
 
-        Intent notificationIntent = new Intent(this, WorkoutActivity.class);
+        Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
+        notificationIntent.setClass(getApplicationContext(), MainActivity.class);
+        
         PendingIntent notificationContentIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -248,7 +252,7 @@ WorkoutTimerService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false)
 //                .setContentIntent(notificationContentIntent)
-//                .addAction(R.drawable.arrow_up, "Start activity" , notificationContentIntent)
+                .addAction(R.drawable.arrow_up, "Start activity" , notificationContentIntent)
                 .setContentText(currentWorkoutTimeFormatted);
 
         Notification notification = builder.build();
@@ -279,6 +283,7 @@ WorkoutTimerService extends Service {
 
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
+
 }
 
 

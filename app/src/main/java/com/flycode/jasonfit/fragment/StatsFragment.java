@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,22 +139,22 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupCalendarTitle() {
+
         Calendar currentCalendar = Calendar.getInstance();
 
+        String month = currentCalendar.getDisplayName( Calendar.MONTH, Calendar.LONG, Locale.getDefault() );
+
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        int yearMonday = currentCalendar.get(Calendar.YEAR);
-        int monthMonday = currentCalendar.get(Calendar.MONTH)+1;
         int dayMonday = currentCalendar.get(Calendar.DAY_OF_MONTH);
 
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        int yearSunday = currentCalendar.get(Calendar.YEAR);
-        int monthSunday = currentCalendar.get(Calendar.MONTH)+1;
         int daySunday = currentCalendar.get(Calendar.DAY_OF_MONTH);
 
-        String calendarTitleString = getResources().getString(R.string.week) +
-                yearMonday + "/" + monthMonday + "/" + dayMonday + " - " +
-                yearSunday + "/" +monthSunday + "/" + daySunday;
+        String calendarTitleString = getResources().getString(R.string.week)
+                + month + "/" + dayMonday
+                + " - " + month + "/" + daySunday;
         calendarTitle.setText(calendarTitleString);
+
     }
 
     private void setupOverWeight() {
@@ -179,6 +180,7 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupCalendarView() {
+
         String[] weekDays = this.getResources().getStringArray(R.array.week_days);
 
         StatsData statsData;
@@ -199,15 +201,27 @@ public class StatsFragment extends Fragment {
             statsData = getWeekStatsData(0, i);
 
             if (statsData != null) {
-                multiplierString = String.valueOf(statsData.multiplier) + "x";
+
+                int multiplierNumber = statsData.multiplier;
+                if( multiplierNumber == 0 ){
+                    multiplierString = "";
+                } else {
+                    multiplierString = String.valueOf(statsData.multiplier) + "x";
+                }
+
                 weight.setText(String.valueOf(statsData.weight));
+
             } else {
-                weight.setText("_");
+
+                weight.setText("");
                 multiplierString = "";
+
             }
 
             multiplier.setText(multiplierString);
+
         }
+
     }
 
     private void setupBurntCalories() {
@@ -279,4 +293,5 @@ public class StatsFragment extends Fragment {
 
         return statsData;
     }
+
 }
