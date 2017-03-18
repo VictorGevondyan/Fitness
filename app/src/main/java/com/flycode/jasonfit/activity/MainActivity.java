@@ -2,6 +2,7 @@ package com.flycode.jasonfit.activity;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import com.activeandroid.query.Select;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.adapter.SideMenuAdapter;
 import com.flycode.jasonfit.fragment.FoodListFragment;
@@ -21,6 +24,8 @@ import com.flycode.jasonfit.fragment.MealsFragment;
 import com.flycode.jasonfit.fragment.SettingsFragment;
 import com.flycode.jasonfit.fragment.StatsFragment;
 import com.flycode.jasonfit.fragment.WorkoutListFragment;
+import com.flycode.jasonfit.model.Workout;
+import com.flycode.jasonfit.service.WorkoutTimerService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -62,11 +68,16 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         sideMenuView.setLayoutParams(layoutParams);
         drawerLayout.openDrawer(GravityCompat.START, false);
 
-        if (getIntent().getBooleanExtra("FROM_WORKOUT", false)) {
+        Intent incomingIntent = getIntent();
+
+        processIncomingIntent(incomingIntent);
+
+        if (incomingIntent.getBooleanExtra("FROM_WORKOUT", false)) {
             currentMenuItem = SideMenuAdapter.SideMenuItem.STATS;
             settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
             drawerLayout.closeDrawer(GravityCompat.START);
         }
+
     }
 
     @Override
@@ -129,6 +140,29 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void processIncomingIntent(Intent incomingIntent){
+
+        if( incomingIntent.hasExtra(WorkoutTimerService.EXTRA_WORKOUT_ID) ){
+            int correspondWorkoutId = incomingIntent.getIntExtra(WorkoutTimerService.EXTRA_WORKOUT_ID,0);
+            openCorrespondingWorkout(correspondWorkoutId);
+            incomingIntent.removeExtra(WorkoutTimerService.EXTRA_WORKOUT_ID);
+        }
+
+    }
+
+    private  void openCorrespondingWorkout(int correspondWorkoutId ){
+
+        Workout correspondingWorkout = new Select()
+                .from(Workout.class)
+                .where( "id = ?", correspondWorkoutId )
+                .executeSingle();
+
+        Intent workoutOpenIntent = new Intent(this, WorkoutActivity.class);
+        workoutOpenIntent.putExtra(Constants.EXTRAS.CURRENT_WORKOUT, correspondingWorkout);
+        startActivity(workoutOpenIntent);
+
     }
 
 }
