@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -139,58 +140,82 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @OnClick(R.id.height)
     public void onSetHeight() {
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
+                .minValue(MetricConverter.convertHeight(135, userPreferences.getHeightMeasurement(), false))
+                .maxValue(MetricConverter.convertHeight(210, userPreferences.getHeightMeasurement(), false))
+                .defaultValue(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false))
+                .backgroundColor(getResources().getColor(R.color.colorWhite))
+                .separatorColor(getResources().getColor(R.color.colorBlack))
+                .textColor(getResources().getColor(R.color.colorBlack))
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
 
-        materialDialogBuilder
+        new MaterialDialog.Builder(getActivity())
                 .title(R.string.height)
-                .inputType(InputType.TYPE_CLASS_NUMBER)
-                .alwaysCallInputCallback()
-                .input("", String.valueOf(userPreferences.getHeight()), new MaterialDialog.InputCallback() {
-
-                    @SuppressWarnings("ConstantConditions")
+                .customView(numberPicker, false)
+                .positiveText(R.string.ok)
+                .onPositive(dataChangedButtonCallback)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if (input.length() == 0) {
-                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                            return;
-                        }
-
-                        try {
-                            int height = Integer.valueOf(input.toString());
-                            height = MetricConverter.convertHeight(height, userPreferences.getHeightMeasurement(), true);
-
-                            if (height < 135 || height > 210) {
-                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                                return;
-                            }
-
-                            int previousHeight = userPreferences.getHeight();
-
-                            if (previousHeight != height) {
-                                mustShowSnackBar = true;
-                            }
-
-                            userPreferences
-                                    .edit()
-                                    .putHeight(height)
-                                    .apply();
-
-                            heightEditText.setText(formattedHeight());
-
-                            dialog.getInputEditText().setError(null);
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                        } catch (NumberFormatException e) {
-                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                        }
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
+                        userPreferences
+                                .edit()
+                                .putHeight(MetricConverter.convertHeight(numberPicker.getValue(), userPreferences.getHeightMeasurement(), true))
+                                .apply();
+                        heightEditText.setText(formattedHeight());
                     }
+                })
+                .show();
 
-                }).show();
 
-        materialDialogBuilder.onPositive(dataChangedButtonCallback);
-
+//                .inputType(InputType.TYPE_CLASS_NUMBER)
+//                .alwaysCallInputCallback()
+//                .input("", String.valueOf(userPreferences.getHeight()), new MaterialDialog.InputCallback() {
+//
+//                    @SuppressWarnings("ConstantConditions")
+//                    @Override
+//                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+//                        if (input.length() == 0) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                            return;
+//                        }
+//
+//                        try {
+//                            int height = Integer.valueOf(input.toString());
+//                            height = MetricConverter.convertHeight(height, userPreferences.getHeightMeasurement(), true);
+//
+//                            if (height < 135 || height > 210) {
+//                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+//                                return;
+//                            }
+//
+//                            int previousHeight = userPreferences.getHeight();
+//
+//                            if (previousHeight != height) {
+//                                mustShowSnackBar = true;
+//                            }
+//
+//                            userPreferences
+//                                    .edit()
+//                                    .putHeight(height)
+//                                    .apply();
+//
+//                            heightEditText.setText(formattedHeight());
+//
+//                            dialog.getInputEditText().setError(null);
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+//                        } catch (NumberFormatException e) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                        }
+//                    }
+//
+//                }).show();
     }
 
     @OnClick(R.id.weight)
@@ -201,56 +226,86 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
             return;
         }
 
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
+                .minValue(MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false))
+                .maxValue(MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false))
+                .defaultValue(MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false))
+                .backgroundColor(getResources().getColor(R.color.colorWhite))
+                .separatorColor(getResources().getColor(R.color.colorBlack))
+                .textColor(getResources().getColor(R.color.colorBlack))
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
 
-        materialDialogBuilder
+        new MaterialDialog.Builder(getActivity())
                 .title(R.string.weight)
-                .inputType(InputType.TYPE_CLASS_NUMBER)
-                .alwaysCallInputCallback()
-                .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
-
-                    @SuppressWarnings("ConstantConditions")
+                .customView(numberPicker, false)
+                .positiveText(R.string.ok)
+                .onPositive(dataChangedButtonCallback)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if (input.length() == 0) {
-                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                            return;
-                        }
-
-                        try {
-                            int weight = Integer.valueOf(input.toString());
-                            weight = MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true);
-
-                            if ( weight < 20 || weight > 200) {
-                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                                return;
-                            }
-
-                            int previousWeight = userPreferences.getWeight();
-
-                            if (previousWeight != weight) {
-                                mustShowSnackBar = true;
-                            }
-
-                            userPreferences
-                                    .edit()
-                                    .putWeight(weight)
-                                    .apply();
-
-                            weightEditText.setText(formattedWeight());
-
-                            dialog.getInputEditText().setError(null);
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                        } catch (NumberFormatException e) {
-                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                        }
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
+                        userPreferences
+                                .edit()
+                                .putWeight(MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true))
+                                .apply();
+                        weightEditText.setText(formattedWeight());
                     }
+                })
+                .show();
 
-                }).show();
-        materialDialogBuilder.onPositive(dataChangedButtonCallback);
+//        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+//
+//        materialDialogBuilder
+//                .title(R.string.weight)
+//                .inputType(InputType.TYPE_CLASS_NUMBER)
+//                .alwaysCallInputCallback()
+//                .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
+//
+//                    @SuppressWarnings("ConstantConditions")
+//                    @Override
+//                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+//                        if (input.length() == 0) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                            return;
+//                        }
+//
+//                        try {
+//                            int weight = Integer.valueOf(input.toString());
+//                            weight = MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true);
+//
+//                            if ( weight < 20 || weight > 200) {
+//                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+//                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+//                                return;
+//                            }
+//
+//                            int previousWeight = userPreferences.getWeight();
+//
+//                            if (previousWeight != weight) {
+//                                mustShowSnackBar = true;
+//                            }
+//
+//                            userPreferences
+//                                    .edit()
+//                                    .putWeight(weight)
+//                                    .apply();
+//
+//                            weightEditText.setText(formattedWeight());
+//
+//                            dialog.getInputEditText().setError(null);
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+//                        } catch (NumberFormatException e) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                        }
+//                    }
+//
+//                }).show();
+//        materialDialogBuilder.onPositive(dataChangedButtonCallback);
 
     }
 

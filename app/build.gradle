@@ -38,6 +38,7 @@ dependencies {
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.sickmartian.calendarview:calendarview:1.0.0'
     compile 'me.relex:circleindicator:1.2.2@aar'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
     // Architecture
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
