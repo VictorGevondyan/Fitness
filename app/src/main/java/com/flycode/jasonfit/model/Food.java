@@ -15,6 +15,9 @@ public class Food extends Model implements Serializable {
     @Column(name = "food", unique = true)
     public String food;
 
+    @Column(name = "category", index = true)
+    public String category;
+
     @Column(name = "water")
     public double water;
 

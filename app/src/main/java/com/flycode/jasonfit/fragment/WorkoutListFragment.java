@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.activeandroid.query.Select;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.WorkoutActivity;
 import com.flycode.jasonfit.adapter.WorkoutListAdapter;
@@ -30,6 +31,8 @@ import butterknife.Unbinder;
  */
 
 public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.OnWorkoutItemClickListener {
+
+
     @BindView(R.id.workouts_recycler) RecyclerView workoutsRecycler;
 
     private Unbinder unbinder;
@@ -56,7 +59,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
     @Override
     public void onWorkoutItemClick(Workout workout) {
         Intent intent = new Intent(getActivity(), WorkoutActivity.class);
-        intent.putExtra("CURRENT_WORKOUT", workout);
+        intent.putExtra(Constants.EXTRAS.CURRENT_WORKOUT, workout );
 
         startActivity(intent);
     }
@@ -108,5 +111,8 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
 
         workoutsRecycler.setAdapter(new WorkoutListAdapter(todayWorkouts, otherWorkouts, this));
         workoutsRecycler.setLayoutManager(new StickyHeaderLayoutManager());
+
     }
+
 }
+
