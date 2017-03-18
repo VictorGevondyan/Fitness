@@ -2,6 +2,7 @@ package com.flycode.jasonfit.activity;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +13,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.Constants;
@@ -123,9 +127,34 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                try {
+                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                } catch (Exception ignored) {
+                }
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         drawerToggle.syncState();
         drawerToggle.setHomeAsUpIndicator(R.drawable.calendar_prev_arrow);
 
@@ -164,5 +193,4 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         startActivity(workoutOpenIntent);
 
     }
-
 }
