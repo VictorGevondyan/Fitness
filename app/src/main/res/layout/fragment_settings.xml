@@ -135,18 +135,13 @@
                     android:textColor="@color/colorBlack"
                     android:gravity="center_vertical"/>
 
-                <EditText
-                    android:id="@+id/gender"
+                <Spinner
+                    android:id="@+id/spinner_gender"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:entries="@array/gender"/>
 
             </LinearLayout>
 
@@ -171,18 +166,13 @@
                     android:textColor="@color/colorBlack"
                     android:gravity="center_vertical"/>
 
-                <EditText
-                    android:id="@+id/nutrition"
+                <Spinner
+                    android:id="@+id/spinner_nutrition"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:entries="@array/nutrition"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             </LinearLayout>
 
@@ -206,18 +196,14 @@
                     android:textColor="@color/colorBlack"
                     android:gravity="center_vertical"/>
 
-                <EditText
-                    android:id="@+id/language"
+                <Spinner
+                    android:id="@+id/spinner_language"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:entries="@array/language" />
+
 
             </LinearLayout>
 
@@ -247,7 +233,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:entries="@array/spinner_height"
+                    android:entries="@array/height_measurement"
                     style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
                 <Spinner
@@ -255,7 +241,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:entries="@array/spinner_weight"
+                    android:entries="@array/weight_measurement"
                     style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             </LinearLayout>

@@ -41,14 +41,14 @@ import butterknife.Unbinder;
  */
 
 public class SettingsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
-    @BindView(R.id.nutrition) EditText nutritionEditText;
     @BindView(R.id.birthday) EditText birthdayEditText;
-    @BindView(R.id.gender) EditText genderEditText;
-    @BindView(R.id.language) EditText languageEditText;
     @BindView(R.id.height) EditText heightEditText;
     @BindView(R.id.weight) EditText weightEditText;
     @BindView(R.id.spinner_weight) Spinner spinnerWeight;
     @BindView(R.id.spinner_height) Spinner spinnerHeight;
+    @BindView(R.id.spinner_language) Spinner spinnerLanguage;
+    @BindView(R.id.spinner_gender) Spinner spinnerGender;
+    @BindView(R.id.spinner_nutrition) Spinner spinnerNutrition;
 
     @BindView(R.id.settingsCoordinatorLayout) CoordinatorLayout settingsCoordinatorLayout;
 
@@ -69,11 +69,8 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         heightEditText.setText(formattedHeight());
         weightEditText.setText(formattedWeight());
         birthdayEditText.setText(formattedBirthday());
-        genderEditText.setText(formattedGender());
-        nutritionEditText.setText(formattedNutrition());
-        languageEditText.setText(formattedLanguage());
 
-        if (formattedWeightMeasurement().equals(User.METRICS.KG)) {
+        if (userPreferences.getWeightMeasurement().equals(User.METRICS.KG)) {
             spinnerWeight.setSelection(0);
         } else {
             spinnerWeight.setSelection(1);
@@ -81,12 +78,36 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         spinnerWeight.setOnItemSelectedListener(weightItemSelected);
 
 
-        if (formattedHeightMeasurement().equals(User.METRICS.CM)) {
+        if (userPreferences.getHeightMeasurement().equals(User.METRICS.CM)) {
             spinnerHeight.setSelection(0);
         } else {
             spinnerHeight.setSelection(1);
         }
         spinnerHeight.setOnItemSelectedListener(heightItemSelected);
+
+
+        if (userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH)) {
+            spinnerLanguage.setSelection(0);
+        } else {
+            spinnerLanguage.setSelection(1);
+        }
+        spinnerLanguage.setOnItemSelectedListener(languageItemClicked);
+
+        if (userPreferences.getGender().equals(User.GENDER.MALE)) {
+            spinnerGender.setSelection(0);
+        } else {
+            spinnerGender.setSelection(1);
+        }
+        spinnerGender.setOnItemSelectedListener(genderItemClicked);
+
+        if (userPreferences.getNutrition().equals(User.NUTRITION.ALL)) {
+            spinnerNutrition.setSelection(0);
+        } else if (userPreferences.getNutrition().equals(User.NUTRITION.VEGETARIAN)) {
+            spinnerNutrition.setSelection(1);
+        } else {
+            spinnerNutrition.setSelection(2);
+        }
+        spinnerNutrition.setOnItemSelectedListener(nutritionItemClicked);
 
         return settingsView;
 
@@ -114,135 +135,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         datePickerDialog.show(getFragmentManager(), "datePicker");
         datePickerDialog.setMaxDate(Calendar.getInstance());
 
-    }
-
-    @OnClick(R.id.gender)
-    public void onSetGender() {
-        int selectedIndex = userPreferences.getGender().equals(User.GENDER.MALE) ? 0 : 1;
-
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-
-        materialDialogBuilder
-                .title(R.string.gender)
-                .items(R.array.gender)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-
-                        String gender = which == 0 ? User.GENDER.MALE : User.GENDER.FEMALE;
-
-                        String previousGender = userPreferences.getGender();
-                        if( !previousGender.equals(gender) ){
-                            mustShowSnackBar = true;
-                        }
-
-                        userPreferences
-                                .edit()
-                                .putGender(gender)
-                                .apply();
-
-                        genderEditText.setText(formattedGender());
-
-                        showSnackbar();
-
-                        return false;
-                    }
-
-                })
-                .show();
-    }
-
-    @OnClick(R.id.nutrition)
-    public void onSetNutrition() {
-        String nutrition = userPreferences.getNutrition();
-        int selectedIndex = 0;
-
-        switch (nutrition) {
-            case User.NUTRITION.ALL:
-                selectedIndex = 0;
-                break;
-            case User.NUTRITION.VEGETARIAN:
-                selectedIndex = 1;
-                break;
-            case User.NUTRITION.VEGAN:
-                selectedIndex = 2;
-                break;
-        }
-
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-
-        materialDialogBuilder
-                .title(R.string.nutrition)
-                .items(R.array.nutrition)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        String nutrition = User.NUTRITION.ALL;
-
-                        if (which == 0) {
-                            nutrition = User.NUTRITION.ALL;
-                        } else if (which == 1) {
-                            nutrition = User.NUTRITION.VEGETARIAN;
-                        } else if (which == 2) {
-                            nutrition = User.NUTRITION.VEGAN;
-                        }
-
-                        String previousNutrition = userPreferences.getNutrition();
-                        if( !previousNutrition.equals(nutrition) ){
-                            mustShowSnackBar = true;
-                        }
-
-                        userPreferences
-                                .edit()
-                                .putNutrition(nutrition)
-                                .apply();
-
-                        nutritionEditText.setText(formattedNutrition());
-
-                        showSnackbar();
-
-                        return false;
-                    }
-
-                })
-                .show();
-    }
-
-    @OnClick(R.id.language)
-    public void onSetLanguage() {
-        int selectedIndex = userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? 0 : 1;
-
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-
-        materialDialogBuilder
-                .title(R.string.language)
-                .items(R.array.language)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        String language = which == 0 ? User.LANGUAGE.ENGLISH : User.LANGUAGE.DEUTSCH;
-
-                        String previousLanguage = userPreferences.getLanguage();
-                        if( !previousLanguage.equals(language) ){
-                            mustShowSnackBar = true;
-                        }
-
-
-                        userPreferences
-                                .edit()
-                                .putLanguage(language)
-                                .apply();
-
-                        languageEditText.setText(formattedLanguage());
-
-                        showSnackbar();
-
-                        return false;
-                    }
-                })
-                .show();
     }
 
     @OnClick(R.id.height)
@@ -475,6 +367,8 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .toString();
     }
 
+    //_______________WEIGHT___________________________-
+
     AdapterView.OnItemSelectedListener weightItemSelected = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -503,6 +397,8 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         }
     };
 
+    //________________HEIGHT__________________________-
+
     AdapterView.OnItemSelectedListener heightItemSelected = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -524,6 +420,120 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
                             showSnackbar();
         }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    //___________________LANGUAGE_______________________-
+
+    AdapterView.OnItemSelectedListener languageItemClicked = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            int selectedIndex = userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? 0 : 1;
+            String language = selectedIndex == 0 ? User.LANGUAGE.ENGLISH : User.LANGUAGE.DEUTSCH;
+
+
+
+                            if (position != selectedIndex ) {
+                                mustShowSnackBar = true;
+                                language = position == 0 ? User.LANGUAGE.ENGLISH : User.LANGUAGE.DEUTSCH;
+                            }
+
+
+                            userPreferences
+                                    .edit()
+                                    .putLanguage(language)
+                                    .apply();
+
+                            showSnackbar();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    //___________________GENDER_______________-
+
+    AdapterView.OnItemSelectedListener genderItemClicked = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            int selectedIndex = userPreferences.getGender().equals(User.GENDER.MALE) ? 0 : 1;
+            String gender = selectedIndex == 0 ? User.GENDER.MALE : User.GENDER.FEMALE;
+
+
+                            if( position != selectedIndex) {
+                                mustShowSnackBar = true;
+                                gender = position == 0 ? User.GENDER.MALE : User.GENDER.FEMALE;
+                            }
+
+                            userPreferences
+                                    .edit()
+                                    .putGender(gender)
+                                    .apply();
+
+                            showSnackbar();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    //_____________NUTRITION________________-
+
+    AdapterView.OnItemSelectedListener nutritionItemClicked = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String nutrition = userPreferences.getNutrition();
+            int selectedIndex = 0;
+
+            switch (nutrition) {
+                case User.NUTRITION.ALL:
+                    selectedIndex = 0;
+                    break;
+                case User.NUTRITION.VEGETARIAN:
+                    selectedIndex = 1;
+                    break;
+                case User.NUTRITION.VEGAN:
+                    selectedIndex = 2;
+                    break;
+            }
+
+
+                            switch (position) {
+                                case 0:
+                                    nutrition = User.NUTRITION.ALL;
+                                    break;
+                                case 1:
+                                    nutrition = User.NUTRITION.VEGETARIAN;
+                                    break;
+                                case 2:
+                                    nutrition = User.NUTRITION.VEGAN;
+                                    break;
+                            }
+
+
+                            if( position != selectedIndex) {
+                                mustShowSnackBar = true;
+                            }
+
+                            userPreferences
+                                    .edit()
+                                    .putNutrition(nutrition)
+                                    .apply();
+
+
+                            showSnackbar();
+
+                        }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
