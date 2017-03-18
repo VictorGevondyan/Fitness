@@ -10,7 +10,7 @@ import com.flycode.jasonfit.R;
 
 public class UserNormsUtil {
 
-    public static double getBMI (int weight, double height) {
+    public static double getBMI ( float weight, double height ) {
         double heightInMetrs = height / 100;
         double bMI = weight / Math.pow(heightInMetrs, 2);
 

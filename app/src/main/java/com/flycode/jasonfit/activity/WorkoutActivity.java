@@ -288,7 +288,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            saveWeight(MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
+                            saveWeight((int) MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
 
                             dialog.getInputEditText().setError(null);
                             dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,9 +142,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @OnClick(R.id.height)
     public void onSetHeight() {
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
-                .minValue(MetricConverter.convertHeight(135, userPreferences.getHeightMeasurement(), false))
-                .maxValue(MetricConverter.convertHeight(210, userPreferences.getHeightMeasurement(), false))
-                .defaultValue(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false))
+                .minValue( Math.round( MetricConverter.convertHeight(135, userPreferences.getHeightMeasurement(), false) ) )
+                .maxValue( Math.round( MetricConverter.convertHeight(210, userPreferences.getHeightMeasurement(), false) ) )
+                .defaultValue( Math.round( MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false) ) )
                 .backgroundColor(getResources().getColor(R.color.colorWhite))
                 .separatorColor(getResources().getColor(R.color.colorBlack))
                 .textColor(getResources().getColor(R.color.colorBlack))
@@ -163,7 +164,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                         MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
                         userPreferences
                                 .edit()
-                                .putHeight(MetricConverter.convertHeight(numberPicker.getValue(), userPreferences.getHeightMeasurement(), true))
+                                .putHeight( Math.round( MetricConverter.convertHeight(numberPicker.getValue(), userPreferences.getHeightMeasurement(), true) ) )
                                 .apply();
                         heightEditText.setText(formattedHeight());
                     }
@@ -227,9 +228,9 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         }
 
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
-                .minValue(MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false))
-                .maxValue(MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false))
-                .defaultValue(MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false))
+                .minValue( Math.round(MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false))   )
+                .maxValue( Math.round( MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false) ) )
+                .defaultValue( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) ) )
                 .backgroundColor(getResources().getColor(R.color.colorWhite))
                 .separatorColor(getResources().getColor(R.color.colorBlack))
                 .textColor(getResources().getColor(R.color.colorBlack))
@@ -249,7 +250,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                         MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
                         userPreferences
                                 .edit()
-                                .putWeight(MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true))
+                                .putWeight( Math.round( MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true) ) )
                                 .apply();
                         weightEditText.setText(formattedWeight());
                     }
@@ -407,7 +408,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @SuppressWarnings("StringBufferReplaceableByString")
     private String formattedHeight() {
         return new StringBuilder()
-                .append(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false))
+                .append( Math.round(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false)) )
                 .append(" ")
                 .append(formattedHeightMeasurement())
                 .toString();
@@ -416,7 +417,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     @SuppressWarnings("StringBufferReplaceableByString")
     private String formattedWeight() {
         return new StringBuilder()
-                .append(MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false))
+                .append( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) )  )
                 .append(" ")
                 .append(formattedWeightMeasurement())
                 .toString();
@@ -595,4 +596,5 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
         }
     };
+
 }

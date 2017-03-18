@@ -118,4 +118,5 @@ public abstract class WorkoutTrack {
             return stringBuilder.toString();
         }
     }
+
 }

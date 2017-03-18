@@ -46,11 +46,11 @@ public abstract class User {
         return userPreferences;
     }
 
-    @Property(key = "height", defValue = "160")
-    public abstract int height();
+    @Property(key = "height", defValue = "160.0")
+    public abstract float height();
 
-    @Property(key = "weight", defValue = "65")
-    public abstract int weight();
+    @Property(key = "weight", defValue = "65.0")
+    public abstract float weight();
 
     @Property(key = "birthday", defValue = "631137600000")
     public abstract long birthday();
@@ -69,4 +69,5 @@ public abstract class User {
 
     @Property(key = "weightMeasurement", defValue = METRICS.KG)
     public abstract String weightMeasurement();
+
 }

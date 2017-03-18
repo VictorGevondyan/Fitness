@@ -89,7 +89,7 @@ public class StatsFragment extends Fragment {
         List<Entry> entryList = new ArrayList<>();
 
         for (int index = 0; index <= statsData.size() - 1; index++) {
-            int weight = MetricConverter.convertWeight(statsData.get(index).weight, userPreferences.getWeightMeasurement(), false);
+            float weight = MetricConverter.convertWeight(statsData.get(index).weight, userPreferences.getWeightMeasurement(), false);
             entryList.add(new Entry(index, weight));
         }
 
@@ -156,7 +156,7 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupOverWeight() {
-        ArrayList<Integer> weightArray = new ArrayList<>();
+        ArrayList<Float> weightArray = new ArrayList<>();
         StatsData statsData;
 
         for (int index = 0; index < 7; index++) {
@@ -167,8 +167,8 @@ public class StatsFragment extends Fragment {
             }
         }
 
-        int lastWeight = userPreferences.getWeight();
-        int height = userPreferences.getHeight();
+        float lastWeight = userPreferences.getWeight();
+        float height = userPreferences.getHeight();
         double bMI = UserNormsUtil.getBMI(lastWeight, height);
         String overweightCategory = UserNormsUtil.getOverweightType(getActivity(), bMI);
 

@@ -38,14 +38,15 @@ public class StartActivity extends AppCompatActivity {
     @OnClick(R.id.try_for_free)
     public void onTryForFree() {
 
-        int weight = userPreferences.getWeight();
+        float weight = userPreferences.getWeight();
         Calendar calendar = Calendar.getInstance();
 
         int currentYear = calendar.get(Calendar.YEAR);
         int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
             StatsData statsData = new StatsData();
-            statsData.weight = weight;
+            // TODO: ask what to do here
+            statsData.weight = Math.round(weight);
             statsData.burntCalories = 0.0;
             statsData.year = currentYear;
             statsData.dayOfYear = currentDay;

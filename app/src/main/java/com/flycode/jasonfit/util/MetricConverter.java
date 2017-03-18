@@ -1,5 +1,6 @@
 package com.flycode.jasonfit.util;
 
+import android.icu.math.BigDecimal;
 import android.util.Log;
 
 import com.flycode.jasonfit.model.User;
@@ -9,25 +10,25 @@ import com.flycode.jasonfit.model.User;
  */
 
 public class MetricConverter {
-    private static int inchToCM(int inch) {
-        return (int) (inch * 2.54);
+    private static float inchToCM(float inch) {
+        return inch * 2.54f;
     }
 
-    private static int cmToInch(int cm) {
-        return (int) (cm * 0.393700787);
+    private static float cmToInch(float cm) {
+        return cm * 0.393700787f;
     }
 
-    private static int lbToKG(int lb) {
-        return (int) (lb * 0.45359237);
+    private static float lbToKG(float lb) {
+        return lb * 0.45359237f;
     }
 
-    private static int kgToLB(int kg) {
-        return (int) (kg * 2.20462262);
+    private static float kgToLB(float kg) {
+        return kg * 2.20462262f;
     }
 
-    public static int convertWeight(int weight, String metric, boolean isInput) {
+    public static float convertWeight(float weight, String metric, boolean isInput) {
         if (metric.equals(User.METRICS.KG)) {
-            return weight;
+            return Math.round(weight);
         } else {
             if (isInput) {
                 return lbToKG(weight);
@@ -37,14 +38,15 @@ public class MetricConverter {
         }
     }
 
-    public static int convertHeight(int height, String metric, boolean isInput) {
+    public static float convertHeight(float height, String metric, boolean isInput) {
         if (metric.equals(User.METRICS.CM)) {
-            return height;
+            return Math.round(height);
         } else {
             if (isInput) {
                 return inchToCM(height);
             } else {
                 return cmToInch(height);
+
             }
         }
     }
