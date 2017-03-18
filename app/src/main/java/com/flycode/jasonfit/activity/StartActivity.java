@@ -37,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
 
     @OnClick(R.id.try_for_free)
     public void onTryForFree() {
+
         int weight = userPreferences.getWeight();
         Calendar calendar = Calendar.getInstance();
 
@@ -52,5 +53,7 @@ public class StartActivity extends AppCompatActivity {
 
         Intent mainActivityIntent = new Intent(this,MainActivity.class);
         startActivity(mainActivityIntent);
+
     }
+
 }

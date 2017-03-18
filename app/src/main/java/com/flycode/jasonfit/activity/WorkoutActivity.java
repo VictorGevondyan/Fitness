@@ -4,9 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mbanje.kurt.fabbutton.FabButton;
+import me.zhanghai.android.materialprogressbar.HorizontalProgressDrawable;
 
 import static com.flycode.jasonfit.service.WorkoutTimerService.WORKOUT_BROADCAST_IDENTIFIER;
 
@@ -52,10 +56,12 @@ public class WorkoutActivity extends AppCompatActivity {
     @BindView(R.id.current_workout_progress) FabButton currentWorkoutProgress;
     @BindView(R.id.workout_progress) ProgressBar workoutProgress;
     @BindView(R.id.toolbar) Toolbar workoutToolbar;
+    @BindView(R.id.complete) TextView completeTextView;
+    @BindView(R.id.current) TextView currentTextView;
 
     private WorkoutTrackPreferences workoutTrackPreferences;
-    private IntentFilter intentFilter;
     private Workout workout;
+    private int lastWorkoutNumber = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +73,6 @@ public class WorkoutActivity extends AppCompatActivity {
         workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
 
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
-        intentFilter = new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER);
 
         workoutTrackPreferences
                 .edit()
@@ -79,6 +84,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 .apply();
 
         setupToolbar();
+        preRenderWorkoutData();
         renderWorkoutData();
     }
 
@@ -114,7 +120,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(WORKOUT_BROADCAST_IDENTIFIER));
         super.onResume();
     }
 
@@ -157,21 +163,45 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     };
 
+    private void preRenderWorkoutData() {
+        int estimatedTotalTimeSeconds = getTotalEstimatedTime();
+        int color = Color.parseColor(workout.color);
+
+        HorizontalProgressDrawable drawable = new HorizontalProgressDrawable(this);
+        drawable.setTint(color);
+        drawable.setUseIntrinsicPadding(false);
+        workoutProgress.setProgressDrawable(drawable);
+
+        workoutProgress.setMax(estimatedTotalTimeSeconds);
+        currentWorkoutProgress.showProgress(true);
+        currentWorkoutProgress.setIndeterminate(false);
+        currentWorkoutProgress.setProgressColor(color);
+
+        completeTextView.setTextColor(color);
+        currentTextView.setTextColor(color);
+
+        subWorkoutTitle.setBackgroundColor(color);
+    }
+
     private void renderWorkoutData() {
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
         int estimatedTotalTimeSeconds = getTotalEstimatedTime();
 
         // Render progress
-        currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber]);
+
+        if (lastWorkoutNumber != workoutNumber) {
+            currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber]);
+        }
+
         currentWorkoutProgress.setProgress((int) (workoutTrackPreferences.getSubWorkoutTime() / 1000));
-        currentWorkoutProgress.showProgress(true);
-        currentWorkoutProgress.setIndeterminate(false);
-        workoutProgress.setMax(estimatedTotalTimeSeconds);
         workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 1000));
 
         // Render title and picture
-        subWorkoutTitle.setText(workout.getSubNames()[workoutNumber]);
-        workoutImageView.setImageBitmap(ImageUtil.getImageBitmap(this, workout.getSubPictures()[workoutNumber]));
+
+        if (lastWorkoutNumber != workoutNumber) {
+            subWorkoutTitle.setText(workout.getSubNames()[workoutNumber]);
+            workoutImageView.setImageBitmap(ImageUtil.getImageBitmap(this, workout.getSubPictures()[workoutNumber]));
+        }
 
         // Render total time ticker
 
@@ -199,6 +229,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
             workoutTimeCurrent.setText(StringUtil.getFormattedTime(timeLeftHours, timeLeftMinutes, timeLeftSecs));
         }
+
+        lastWorkoutNumber = workoutNumber;
     }
 
     private void checkForWorkoutEnd() {

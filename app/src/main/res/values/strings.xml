@@ -51,9 +51,9 @@
 
     <!-- Strings for Stats fragment -->
 
-    <string name="current_body_mass_title">CURRENT BODY MASS INDEX"</string>
-    <string name="calories_burnt_title">CALORIES BURNT</string>
-    <string name="chart_title">weight from start to today</string>
+    <string name="current_body_mass_index">CURRENT BODY MASS INDEX"</string>
+    <string name="calories_burnt">CALORIES BURNT</string>
+    <string name="weight_from_start_to_today">weight from start to today</string>
 
     <string name="body_mass_overweight_title">Overweight</string>
     <string name="calories_burnt_this_week">This week</string>

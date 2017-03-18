@@ -154,11 +154,11 @@ public class ProgressRingView extends View implements FabUtil.OnFabValueCallback
         this.progress = currentProgress;
         // Reset the determinate animation to approach the new progress
         if(!indeterminate){
-//            if(progressAnimator != null && progressAnimator.isRunning()) {
-//                progressAnimator.cancel();
-//            }
-//            progressAnimator = FabUtil.createProgressAnimator(this,actualProgress,currentProgress,this);
-//            progressAnimator.start();
+            if(progressAnimator != null && progressAnimator.isRunning()) {
+                progressAnimator.cancel();
+            }
+            progressAnimator = FabUtil.createProgressAnimator(this,actualProgress,currentProgress,this);
+            progressAnimator.start();
         }
         invalidate();
 
@@ -199,9 +199,9 @@ public class ProgressRingView extends View implements FabUtil.OnFabValueCallback
 //        if(startAngleRotate != null && startAngleRotate.isRunning()) {
 //            startAngleRotate.cancel();
 //        }
-//        if(progressAnimator != null && progressAnimator.isRunning()) {
-//            progressAnimator.cancel();
-//        }
+        if(progressAnimator != null && progressAnimator.isRunning()) {
+            progressAnimator.cancel();
+        }
         if(indeterminateAnimator != null && indeterminateAnimator.isRunning()) {
             indeterminateAnimator.cancel();
         }
@@ -225,8 +225,8 @@ public class ProgressRingView extends View implements FabUtil.OnFabValueCallback
 //            startAngleRotate.start();
             // The linear animation shown when progress is updated
             actualProgress = 0f;
-//            progressAnimator = FabUtil.createProgressAnimator(this, actualProgress, progress, this);
-//            progressAnimator.start();
+            progressAnimator = FabUtil.createProgressAnimator(this, actualProgress, progress, this);
+            progressAnimator.start();
         }else  { // Indeterminate animation
             startAngle = -90f;
             indeterminateSweep = FabUtil.INDETERMINANT_MIN_SWEEP;

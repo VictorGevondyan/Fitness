@@ -10,10 +10,6 @@
 
     <dimen name="common_padding">16dp</dimen>
 
-    <!-- Dimens for Stats screen -->
-    <dimen name="pair_text_size">20sp</dimen>
-    <dimen name="section_header_text_size">22sp</dimen>
-
     <dimen name="tiny_margin">1dp</dimen>
     <dimen name="normal_margin">5dp</dimen>
 
