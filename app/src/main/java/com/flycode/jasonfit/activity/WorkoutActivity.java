@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.JasonFitApplication;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
@@ -70,12 +71,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        workout = (Workout) getIntent().getSerializableExtra("CURRENT_WORKOUT");
+        workout = (Workout) getIntent().getSerializableExtra(Constants.EXTRAS.CURRENT_WORKOUT);
 
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
 
         workoutTrackPreferences
                 .edit()
+                .putWorkoutId(workout.id)
                 .putTotalWorkoutTime(0)
                 .putSubWorkoutNumber(0)
                 .putSubWorkoutTime(0)

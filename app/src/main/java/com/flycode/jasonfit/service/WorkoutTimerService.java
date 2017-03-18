@@ -34,6 +34,8 @@ WorkoutTimerService extends Service {
 
     public static final String WORKOUT_BROADCAST_IDENTIFIER = "com.flycode.action.WORKOUT_BROADCAST_IDENTIFIER";
 
+    public final static String EXTRA_WORKOUT_ID = "workoutId";
+
     private static final int NOTIFICATION_ID = 666;
 
     private Timer timer;
@@ -234,15 +236,16 @@ WorkoutTimerService extends Service {
 
     private void showNotification() {
 
+        int workoutId = workoutTrackPreferences.getWorkoutId();
         int workoutNumber = workoutTrackPreferences.getSubWorkoutNumber();
         String[] stringArray = workoutTrackPreferences.getSubWorkoutNames();
         String currentWorkoutTitle = stringArray[workoutNumber];
         int currentWorkoutTimeSecs = (int) (workoutTrackPreferences.getSubWorkoutTime() / 1000);
         String currentWorkoutTimeFormatted = StringUtil.getFormattedTime(0, 0, currentWorkoutTimeSecs);
 
-        Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
-        notificationIntent.setClass(getApplicationContext(), MainActivity.class);
-        
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.putExtra( EXTRA_WORKOUT_ID,  workoutId);
+
         PendingIntent notificationContentIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -251,7 +254,7 @@ WorkoutTimerService extends Service {
                 .setContentTitle(currentWorkoutTitle)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false)
-//                .setContentIntent(notificationContentIntent)
+                .setContentIntent(notificationContentIntent)
                 .addAction(R.drawable.arrow_up, "Start activity" , notificationContentIntent)
                 .setContentText(currentWorkoutTimeFormatted);
 
@@ -261,6 +264,7 @@ WorkoutTimerService extends Service {
         notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
         notificationManager.notify(NOTIFICATION_ID, notification);
+
     }
 
     private void cancelNotification() {
