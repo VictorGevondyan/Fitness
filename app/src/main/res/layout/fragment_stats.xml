@@ -10,16 +10,45 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/calendar_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:textSize="@dimen/header_text_size"
-            android:gravity="center"/>
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/calendar_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/calendar_title"
+                android:background="@android:color/transparent"
+                android:src="@drawable/arrow_left"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/calendar_title"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/header_text_size"
+                android:gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/calendar_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/calendar_title"
+                android:background="@android:color/transparent"
+                android:src="@drawable/arrow_right"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/calendar"
@@ -49,9 +78,11 @@
             <TextView
                 android:id="@+id/body_mass_overweight"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorBlack"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="@dimen/common_padding"
@@ -60,13 +91,14 @@
                 tools:text="24"
                 tools:ignore="RtlSymmetry" />
 
-
             <TextView
                 android:id="@+id/body_mass_overweight_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorBlack"
                 android:gravity="start|center_vertical"
                 android:paddingStart="@dimen/common_padding"
@@ -101,6 +133,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorBlack"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="@dimen/common_padding"
@@ -114,6 +148,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorBlack"
                 android:gravity="start|center_vertical"
                 android:paddingStart="@dimen/common_padding"
@@ -137,6 +173,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorGrayDark"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="@dimen/common_padding"
@@ -150,6 +188,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorGrayDark"
                 android:gravity="start|center_vertical"
                 android:paddingStart="@dimen/common_padding"
@@ -173,6 +213,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorGrayDark"
                 android:gravity="end|center_vertical"
                 android:paddingEnd="@dimen/common_padding"
@@ -186,6 +228,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/tiny_margin"
                 android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 android:background="@color/colorGrayDark"
                 android:gravity="start|center_vertical"
                 android:paddingStart="@dimen/common_padding"

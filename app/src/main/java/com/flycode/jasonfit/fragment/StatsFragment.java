@@ -2,10 +2,10 @@ package com.flycode.jasonfit.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +14,7 @@ import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
 import com.flycode.jasonfit.model.UserPreferences;
+import com.flycode.jasonfit.util.MetricConverter;
 import com.flycode.jasonfit.util.UserNormsUtil;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,6 +35,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -42,15 +45,15 @@ import butterknife.Unbinder;
 public class StatsFragment extends Fragment {
 
     @BindView(R.id.chart) LineChart lineChart;
-
     @BindView(R.id.calendar) LinearLayout calendar;
-
     @BindView(R.id.calendar_title) TextView calendarTitle;
     @BindView(R.id.body_mass_overweight) TextView bodyMassOverweight;
     @BindView(R.id.body_mass_overweight_title) TextView bodyMassOverweightTitle;
     @BindView(R.id.calories_burnt_this_week) TextView burntThisWeek;
     @BindView(R.id.calories_burnt_last_week) TextView burntLastWeek;
     @BindView(R.id.calories_burnt_record_week) TextView burntRecordWeek;
+    @BindView(R.id.calendar_left) ImageButton calendarLeftButton;
+    @BindView(R.id.calendar_right) ImageButton calendarRightButton;
 
     private UserPreferences userPreferences;
 
@@ -85,9 +88,9 @@ public class StatsFragment extends Fragment {
 
         List<Entry> entryList = new ArrayList<>();
 
-        for (int i = 0; i <= statsData.size() - 1; i++) {
-            int weight = statsData.get(i).weight;
-            entryList.add(new Entry(i, weight));
+        for (int index = 0; index <= statsData.size() - 1; index++) {
+            int weight = MetricConverter.convertWeight(statsData.get(index).weight, userPreferences.getWeightMeasurement(), false);
+            entryList.add(new Entry(index, weight));
         }
 
         LineDataSet chartDataSet = new LineDataSet(entryList, "weight");
@@ -120,9 +123,7 @@ public class StatsFragment extends Fragment {
     }
 
     private void createCalendar( LayoutInflater layoutInflater ){
-
-        int index;
-        for( index = 0; index < 7; index++ ){
+        for(int index = 0; index < 7; index++ ){
             View itemCalendar = layoutInflater.inflate( R.layout.item_calendar, calendar, false);
             calendar.addView(itemCalendar);
             calendarItems.add(itemCalendar);
@@ -139,10 +140,9 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupCalendarTitle() {
-
         Calendar currentCalendar = Calendar.getInstance();
 
-        String month = currentCalendar.getDisplayName( Calendar.MONTH, Calendar.LONG, Locale.getDefault() );
+        String month = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
 
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         int dayMonday = currentCalendar.get(Calendar.DAY_OF_MONTH);
@@ -150,27 +150,24 @@ public class StatsFragment extends Fragment {
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         int daySunday = currentCalendar.get(Calendar.DAY_OF_MONTH);
 
-        String calendarTitleString = getResources().getString(R.string.week)
-                + month + "/" + dayMonday
-                + " - " + month + "/" + daySunday;
+        String calendarTitleString = month + " " + dayMonday
+                + " - " + month + " " + daySunday;
         calendarTitle.setText(calendarTitleString);
-
     }
 
     private void setupOverWeight() {
         ArrayList<Integer> weightArray = new ArrayList<>();
         StatsData statsData;
 
-        for (int i = 0; i < 7; i++) {
-            statsData = getWeekStatsData(0, i);
+        for (int index = 0; index < 7; index++) {
+            statsData = getWeekStatsData(0, index);
 
             if (statsData != null) {
-                weightArray.add(statsData.weight);
+                weightArray.add(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false));
             }
         }
 
-        int weightArraySize = weightArray.size();
-        int lastWeight = weightArray.get(weightArraySize - 1);
+        int lastWeight = userPreferences.getWeight();
         int height = userPreferences.getHeight();
         double bMI = UserNormsUtil.getBMI(lastWeight, height);
         String overweightCategory = UserNormsUtil.getOverweightType(getActivity(), bMI);
@@ -180,28 +177,23 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupCalendarView() {
-
         String[] weekDays = this.getResources().getStringArray(R.array.week_days);
 
         StatsData statsData;
 
-        for (int i = 0; i < 7; i++) {
+        for (int index = 0; index < 7; index++) {
+            TextView dayOfWeek = (TextView) calendarItems.get(index).findViewById(R.id.calendar_day_of_week);
+            dayOfWeek.setText(weekDays[index]);
 
-            TextView dayOfWeek = (TextView) calendarItems.get(i).findViewById(R.id.calendar_day_of_week);
-            dayOfWeek.setText(weekDays[i]);
-
-            TextView multiplier = (TextView) calendarItems.get(i).findViewById(R.id.calendar_multiplier);
+            TextView multiplier = (TextView) calendarItems.get(index).findViewById(R.id.calendar_multiplier);
             String multiplierString;
 
-            TextView metric = (TextView) calendarItems.get(i).findViewById(R.id.calendar_metric);
-            metric.setText(userPreferences.getWeightMeasurement());
+            TextView metric = (TextView) calendarItems.get(index).findViewById(R.id.calendar_metric);
+            TextView weight = (TextView) calendarItems.get(index).findViewById(R.id.calendar_weight);
 
-            TextView weight = (TextView) calendarItems.get(i).findViewById(R.id.calendar_weight);
-
-            statsData = getWeekStatsData(0, i);
+            statsData = getWeekStatsData(0, index);
 
             if (statsData != null) {
-
                 int multiplierNumber = statsData.multiplier;
                 if( multiplierNumber == 0 ){
                     multiplierString = "";
@@ -209,19 +201,16 @@ public class StatsFragment extends Fragment {
                     multiplierString = String.valueOf(statsData.multiplier) + "x";
                 }
 
-                weight.setText(String.valueOf(statsData.weight));
-
+                weight.setText(String.valueOf(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false)));
+                metric.setText(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
             } else {
-
                 weight.setText("");
                 multiplierString = "";
-
+                metric.setText("");
             }
 
             multiplier.setText(multiplierString);
-
         }
-
     }
 
     private void setupBurntCalories() {
@@ -262,7 +251,7 @@ public class StatsFragment extends Fragment {
             }
         }
 
-        burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek));
+        burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek) + kcal);
     }
 
     private StatsData getWeekStatsData(int shiftOfDays, int index) {
@@ -282,7 +271,6 @@ public class StatsFragment extends Fragment {
         int currentDayOfYearInWeek = currentCalendar.get(Calendar.DAY_OF_YEAR);
 
         try {
-
             statsData = new Select()
                     .from(StatsData.class)
                     .where("year = ?", currentYear)
@@ -294,4 +282,12 @@ public class StatsFragment extends Fragment {
         return statsData;
     }
 
+    @OnClick(R.id.calendar_left)
+    public void onCalendarNavigateBack() {
+
+    }
+
+    public void onCalendatNavigateForward() {
+
+    }
 }
