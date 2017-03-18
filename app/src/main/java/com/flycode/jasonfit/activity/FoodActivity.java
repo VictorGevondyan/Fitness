@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
 public class FoodActivity extends AppCompatActivity {
     private static final String EXPEND_SETTINGS = "expendSettings";
 
-    @BindView(R.id.food_info_container) LinearLayout foorInfoContainerLinearLayout;
+    @BindView(R.id.food_info_container) LinearLayout foodInfoContainerLinearLayout;
     @BindView(R.id.title) TextView foodNameTextView;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -63,9 +62,9 @@ public class FoodActivity extends AppCompatActivity {
         parameterContainers = new LinearLayout[descriptors.length];
 
         for (int descriptorIndex = 0 ; descriptorIndex < descriptors.length ; descriptorIndex++) {
-            View descriptorView = layoutInflater.inflate(R.layout.item_food_descriptor, foorInfoContainerLinearLayout, false);
+            View descriptorView = layoutInflater.inflate(R.layout.item_food_descriptor, foodInfoContainerLinearLayout, false);
             LinearLayout parameterContainerLinearLayout = (LinearLayout) descriptorView.findViewById(R.id.container);
-            foorInfoContainerLinearLayout.addView(descriptorView);
+            foodInfoContainerLinearLayout.addView(descriptorView);
 
             parameterContainers[descriptorIndex] = parameterContainerLinearLayout;
 
