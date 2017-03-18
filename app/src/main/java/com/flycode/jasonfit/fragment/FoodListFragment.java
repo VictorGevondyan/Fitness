@@ -22,6 +22,7 @@ import com.flycode.jasonfit.activity.FoodActivity;
 import com.flycode.jasonfit.adapter.FoodListAdapter;
 import com.flycode.jasonfit.model.Food;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -126,13 +127,18 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
                     category = "Spices";
                 }
 
+                List<Food> foodList = new ArrayList<>();
+
                 if (!category.isEmpty()) {
-                    query.where("category = ?", category);
+                    foodList = query.where("category = ?", category).execute();
                 }
 
-                List<Food> foodList = query
-                        .where("food LIKE ?", searchQuery)
-                        .execute();
+                if (!searchQuery.isEmpty()) {
+                    foodList = query
+                            .where("food LIKE ?", searchQuery)
+                            .execute();
+                }
+
                 foodListAdapter.setItems(foodList);
             }
 
