@@ -2,6 +2,7 @@ package com.flycode.jasonfit.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,12 +62,15 @@ public class StatsFragment extends Fragment {
 
     private  ArrayList<View> calendarItems;
 
+    private int weekShiftCounter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         calendarItems = new ArrayList<>();
         userPreferences = User.sharedPreferences(getActivity());
 
         View statsView = inflater.inflate(R.layout.fragment_stats, container, false);
+        weekShiftCounter = 0;
 
         unbinder = ButterKnife.bind(this, statsView);
 
@@ -133,25 +137,45 @@ public class StatsFragment extends Fragment {
     private void setupView(LayoutInflater inflater) {
         createChart();
         createCalendar(inflater);
-        setupCalendarTitle();
+        setupCalendarTitle(0);
         setupOverWeight();
-        setupCalendarView();
+        setupCalendarView(0);
         setupBurntCalories();
     }
 
-    private void setupCalendarTitle() {
+    private void setupCalendarTitle(int weekShiftCount) {
+
         Calendar currentCalendar = Calendar.getInstance();
 
-        String month = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
+        //___monday_____
 
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        int dayMonday = currentCalendar.get(Calendar.DAY_OF_MONTH);
+        //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
+        currentCalendar.add(Calendar.DAY_OF_YEAR, weekShiftCount * 7);
+        int currentDayOfYearInWeekMonday = currentCalendar.get(Calendar.DAY_OF_YEAR);
+
+        currentCalendar.set(Calendar.DAY_OF_YEAR, currentDayOfYearInWeekMonday);
+
+        String monthMonday = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
+        String dayMonday = new SimpleDateFormat("dd", Locale.US).format(currentCalendar.getTime());
+
+        //___sunday_____
+
+        currentCalendar.clear();
+        currentCalendar = Calendar.getInstance();
 
         currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        int daySunday = currentCalendar.get(Calendar.DAY_OF_MONTH);
+        //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
+        currentCalendar.add(Calendar.DAY_OF_YEAR, weekShiftCount * 7);
+        int currentDayOfYearInWeekSunday = currentCalendar.get(Calendar.DAY_OF_YEAR);
 
-        String calendarTitleString = month + " " + dayMonday
-                + " - " + month + " " + daySunday;
+        currentCalendar.set(Calendar.DAY_OF_YEAR, currentDayOfYearInWeekSunday);
+
+        String monthSunday = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
+        String daySunday = new SimpleDateFormat("dd", Locale.US).format(currentCalendar.getTime());
+
+        String calendarTitleString = monthMonday + " " + dayMonday +
+                " - " + monthSunday + " " + daySunday;
         calendarTitle.setText(calendarTitleString);
     }
 
@@ -176,7 +200,7 @@ public class StatsFragment extends Fragment {
         bodyMassOverweightTitle.setText(overweightCategory);
     }
 
-    private void setupCalendarView() {
+    private void setupCalendarView(int weekShiftCount) {
         String[] weekDays = this.getResources().getStringArray(R.array.week_days);
 
         StatsData statsData;
@@ -191,7 +215,7 @@ public class StatsFragment extends Fragment {
             TextView metric = (TextView) calendarItems.get(index).findViewById(R.id.calendar_metric);
             TextView weight = (TextView) calendarItems.get(index).findViewById(R.id.calendar_weight);
 
-            statsData = getWeekStatsData(0, index);
+            statsData = getWeekStatsData(weekShiftCount * 7, index);
 
             if (statsData != null) {
                 int multiplierNumber = statsData.multiplier;
@@ -243,8 +267,8 @@ public class StatsFragment extends Fragment {
         //noinspection UnusedAssignment
         statsData = null;
 
-        for (int i = 0; i < 7; i++) {
-            statsData = getWeekStatsData(-7, i);
+        for (int index = 0; index < 7; index++) {
+            statsData = getWeekStatsData(-7, index);
 
             if (statsData != null) {
                 burntCaloriesLastWeek += statsData.burntCalories;
@@ -284,10 +308,19 @@ public class StatsFragment extends Fragment {
 
     @OnClick(R.id.calendar_left)
     public void onCalendarNavigateBack() {
+        weekShiftCounter += -1;
 
+        setupCalendarView(weekShiftCounter);
+
+        setupCalendarTitle(weekShiftCounter);
     }
 
-    public void onCalendatNavigateForward() {
+    @OnClick(R.id.calendar_right)
+    public void onCalendarNavigateForward() {
+        weekShiftCounter += 1;
 
+        setupCalendarView(weekShiftCounter);
+
+        setupCalendarTitle(weekShiftCounter);
     }
 }
