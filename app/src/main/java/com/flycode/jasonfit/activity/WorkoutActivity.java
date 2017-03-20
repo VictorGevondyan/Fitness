@@ -109,7 +109,10 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putStatus(WorkoutTrack.STATUS.PAUSED)
                     .apply();
         } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE) || status.equals("")) {
-            startService(new Intent(this, WorkoutTimerService.class));
+            if (status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE)) {
+                startService(new Intent(this, WorkoutTimerService.class));
+            }
+
             workoutTrackPreferences
                     .edit()
                     .putStatus(WorkoutTrack.STATUS.RUNNING)
@@ -185,7 +188,7 @@ public class WorkoutActivity extends AppCompatActivity {
         drawable.setUseIntrinsicPadding(false);
         workoutProgress.setProgressDrawable(drawable);
 
-        workoutProgress.setMax(estimatedTotalTimeSeconds);
+        workoutProgress.setMax(estimatedTotalTimeSeconds * 100);
         currentWorkoutProgress.showProgress(true);
         currentWorkoutProgress.setIndeterminate(false);
         currentWorkoutProgress.setProgressColor(color);
@@ -203,11 +206,11 @@ public class WorkoutActivity extends AppCompatActivity {
         // Render progress
 
         if (lastWorkoutNumber != workoutNumber) {
-            currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber]);
+            currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber] * 100);
         }
 
-        currentWorkoutProgress.setProgress((int) (workoutTrackPreferences.getSubWorkoutTime() / 1000));
-        workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 1000));
+        currentWorkoutProgress.setProgress((int) (workoutTrackPreferences.getSubWorkoutTime() / 10));
+        workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 10));
 
         // Render title and picture
 
@@ -263,7 +266,6 @@ public class WorkoutActivity extends AppCompatActivity {
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
             showInputWeightDialog();
-
         }
 
     }
@@ -373,82 +375,7 @@ public class WorkoutActivity extends AppCompatActivity {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    private void showInputWeightDialog(){
-
-//        MaterialDialog materialDialog = new MaterialDialog.Builder(this)
-//                .content(getString(R.string.workout_congrats, formattedWeightMeasurement()))
-//                .inputType(InputType.TYPE_CLASS_NUMBER)
-//                .cancelable(false)
-//                .canceledOnTouchOutside(false)
-//                .alwaysCallInputCallback()
-//                .input("", "", new MaterialDialog.InputCallback() {
-//
-//                    @SuppressWarnings("ConstantConditions")
-//                    @Override
-//                    public void onInput(MaterialDialog dialog, CharSequence input) {
-//
-//                        if (input.length() == 0) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                            return;
-//                        }
-//
-//                        Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
-//                        goToStatsIntent.putExtra("FROM_WORKOUT", true);
-//                        startActivity(goToStatsIntent);
-//                        int weight;
-//
-//                        try {
-//                            weight = Integer.valueOf(input.toString());
-//                        } catch (NumberFormatException e) {
-//                            e.printStackTrace();
-//
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                            return;
-//                        }
-//
-//                        if ( weight < 20 || weight > 200) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                            return;
-//                        }
-//
-//                        saveWeight((int) MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
-//
-//                        dialog.getInputEditText().setError(null);
-//                        dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-//
-//                    }
-//
-//                })
-//                .onPositive(new MaterialDialog.SingleButtonCallback() {
-//
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//
-//                        workoutTrackPreferences
-//                                .edit()
-//                                .putStatus(WorkoutTrack.STATUS.IDLE)
-//                                .apply();
-//
-//                        onBackPressed();
-//                    }
-//                })
-//                .show();
-//
-//        materialDialog.getInputEditText().setError(null);
-//        materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-
-
-
-
-
-
-
-
-
-
+    private void showInputWeightDialog() {
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
                 .minValue( Math.round( MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false) ) )
                 .maxValue( Math.round( MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false) ) )
@@ -487,7 +414,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 })
                 .show();
-
     }
 
 }

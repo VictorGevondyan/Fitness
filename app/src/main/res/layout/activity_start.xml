@@ -31,16 +31,18 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
-        android:background="@drawable/rounded_outline_black"
+        android:background="@drawable/rounded_rect_black"
         android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/try_for_free"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/try_text_size"
             android:gravity="center_horizontal"/>
 
@@ -48,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/one_month"
-            android:textColor="@color/text_black_grey"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/one_month_text_size"
             android:gravity="center_horizontal"/>
 

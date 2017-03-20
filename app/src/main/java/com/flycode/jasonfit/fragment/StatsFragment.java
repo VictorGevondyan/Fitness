@@ -46,7 +46,7 @@ public class StatsFragment extends Fragment {
 
     @BindView(R.id.chart) LineChart lineChart;
     @BindView(R.id.calendar) LinearLayout calendarLayout;
-    @BindView(R.id.calendar_title) TextView calendarTitle;
+    @BindView(R.id.calendar_title) TextView calendarTitleTextView;
     @BindView(R.id.body_mass_overweight) TextView bodyMassOverweight;
     @BindView(R.id.body_mass_overweight_title) TextView bodyMassOverweightTitle;
     @BindView(R.id.calories_burnt_this_week) TextView burntThisWeek;
@@ -98,8 +98,11 @@ public class StatsFragment extends Fragment {
 
         LineDataSet chartDataSet = new LineDataSet(entryList, "weight");
         chartDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        chartDataSet.setColor(getResources().getColor(R.color.colorGrayDark));
-        chartDataSet.setLineWidth(3);
+        chartDataSet.setColor(getResources().getColor(R.color.colorBlack));
+        chartDataSet.setCircleColor(getResources().getColor(R.color.colorBlack));
+        chartDataSet.setDrawCircleHole(false);
+        chartDataSet.setCircleRadius(5f);
+        chartDataSet.setLineWidth(3f);
 
         LineData lineData = new LineData(chartDataSet);
         lineChart.setData(lineData);
@@ -144,38 +147,26 @@ public class StatsFragment extends Fragment {
 
     private void setupCalendarTitle(int weekShiftCount) {
 
-        Calendar currentCalendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
         //___monday_____
 
-        currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
-        currentCalendar.add(Calendar.DAY_OF_YEAR, weekShiftCount * 7);
-        int currentDayOfYearInWeekMonday = currentCalendar.get(Calendar.DAY_OF_YEAR);
+        calendar.add(Calendar.DAY_OF_YEAR, weekShiftCount * 7);
 
-        currentCalendar.set(Calendar.DAY_OF_YEAR, currentDayOfYearInWeekMonday);
-
-        String monthMonday = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
-        String dayMonday = new SimpleDateFormat("dd", Locale.US).format(currentCalendar.getTime());
+        String monthMonday = new SimpleDateFormat("MMM", Locale.US).format(calendar.getTime());
+        String dayMonday = new SimpleDateFormat("dd", Locale.US).format(calendar.getTime());
 
         //___sunday_____
 
-        currentCalendar.clear();
-        currentCalendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 6);
+        String monthSunday = new SimpleDateFormat("MMM", Locale.US).format(calendar.getTime());
+        String daySunday = new SimpleDateFormat("dd", Locale.US).format(calendar.getTime());
 
-        currentCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
-        currentCalendar.add(Calendar.DAY_OF_YEAR, weekShiftCount * 7);
-        int currentDayOfYearInWeekSunday = currentCalendar.get(Calendar.DAY_OF_YEAR);
-
-        currentCalendar.set(Calendar.DAY_OF_YEAR, currentDayOfYearInWeekSunday);
-
-        String monthSunday = new SimpleDateFormat("MMM", Locale.US).format(currentCalendar.getTime());
-        String daySunday = new SimpleDateFormat("dd", Locale.US).format(currentCalendar.getTime());
-
-        String calendarTitleString = monthMonday + " " + dayMonday +
+        String calendarTitle = monthMonday + " " + dayMonday +
                 " - " + monthSunday + " " + daySunday;
-        calendarTitle.setText(calendarTitleString);
+        calendarTitleTextView.setText(calendarTitle);
     }
 
     private void setupOverWeight() {
@@ -221,6 +212,8 @@ public class StatsFragment extends Fragment {
 
             if(todayCalendar.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR)){
                 dayOfWeekTextView.setAlpha(0.7f);
+            } else {
+                dayOfWeekTextView.setAlpha(1.0f);
             }
 
             if (statsData != null) {
@@ -231,7 +224,13 @@ public class StatsFragment extends Fragment {
                     multiplierString = String.valueOf(statsData.multiplier) + "x";
                 }
 
-                weight.setText(String.valueOf(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false)));
+                weight.setText(
+                        String.valueOf(
+                                Math.round(
+                                        MetricConverter.convertWeight(
+                                                statsData.weight,
+                                                userPreferences.getWeightMeasurement(),
+                                                false))));
                 metric.setText(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
             } else {
                 weight.setText("");
