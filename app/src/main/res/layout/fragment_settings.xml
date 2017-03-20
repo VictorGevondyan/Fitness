@@ -29,7 +29,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="2"
+                    android:layout_weight="1.8"
                     android:gravity="center_vertical"
                     android:text="@string/measurement"
                     android:textColor="@color/colorBlack"
@@ -40,7 +40,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:entries="@array/height_measurement" />
 
                 <Spinner
@@ -48,7 +48,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:entries="@array/weight_measurement" />
 
             </LinearLayout>
@@ -67,7 +67,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/current_weight"
                     android:textColor="@color/colorBlack"
@@ -77,7 +77,7 @@
                     android:id="@+id/weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -100,7 +100,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/height"
                     android:textColor="@color/colorBlack"
@@ -110,7 +110,7 @@
                     android:id="@+id/height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -133,7 +133,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/birthday"
                     android:textColor="@color/colorBlack"
@@ -143,7 +143,7 @@
                     android:id="@+id/birthday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -168,7 +168,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/gender"
                     android:textColor="@color/colorBlack"
@@ -179,7 +179,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:entries="@array/gender" />
 
             </LinearLayout>
@@ -199,7 +199,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/nutrition"
                     android:textColor="@color/colorBlack"
@@ -210,7 +210,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:entries="@array/nutrition" />
 
             </LinearLayout>
@@ -229,7 +229,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:gravity="center_vertical"
                     android:text="@string/language"
                     android:textColor="@color/colorBlack"
@@ -240,7 +240,7 @@
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:entries="@array/language" />
 
 
