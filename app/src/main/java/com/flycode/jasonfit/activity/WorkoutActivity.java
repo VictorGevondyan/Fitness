@@ -177,7 +177,7 @@ public class WorkoutActivity extends AppCompatActivity {
         drawable.setUseIntrinsicPadding(false);
         workoutProgress.setProgressDrawable(drawable);
 
-        workoutProgress.setMax(estimatedTotalTimeSeconds);
+        workoutProgress.setMax(estimatedTotalTimeSeconds * 100);
         currentWorkoutProgress.showProgress(true);
         currentWorkoutProgress.setIndeterminate(false);
         currentWorkoutProgress.setProgressColor(color);
@@ -195,11 +195,11 @@ public class WorkoutActivity extends AppCompatActivity {
         // Render progress
 
         if (lastWorkoutNumber != workoutNumber) {
-            currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber]);
+            currentWorkoutProgress.setMaxProgress(workoutTrackPreferences.getTiming()[workoutNumber] * 100);
         }
 
-        currentWorkoutProgress.setProgress((int) (workoutTrackPreferences.getSubWorkoutTime() / 1000));
-        workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 1000));
+        currentWorkoutProgress.setProgress((int) (workoutTrackPreferences.getSubWorkoutTime() / 10));
+        workoutProgress.setProgress((int) (workoutTrackPreferences.getTotalWorkoutTime() / 10));
 
         // Render title and picture
 

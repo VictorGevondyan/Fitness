@@ -78,8 +78,8 @@ WorkoutTimerService extends Service {
 
                     workoutTrackPreferences
                             .edit()
-                            .putTotalWorkoutTime(workoutTrackPreferences.get().totalWorkoutTime() + 1000)
-                            .putSubWorkoutTime(workoutTrackPreferences.get().subWorkoutTime() + 1000)
+                            .putTotalWorkoutTime(workoutTrackPreferences.get().totalWorkoutTime() + 100)
+                            .putSubWorkoutTime(workoutTrackPreferences.get().subWorkoutTime() + 100)
                             .apply();
 
                 }
@@ -109,7 +109,7 @@ WorkoutTimerService extends Service {
 
             }
 
-        }, 0, 1000);
+        }, 0, 100);
 
 
         return super.onStartCommand(intent, flags, startId);
@@ -289,7 +289,6 @@ WorkoutTimerService extends Service {
 
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
-
 }
 
 
