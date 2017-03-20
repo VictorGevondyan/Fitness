@@ -100,7 +100,10 @@ public class WorkoutActivity extends AppCompatActivity {
                     .putStatus(WorkoutTrack.STATUS.PAUSED)
                     .apply();
         } else if (status.equals(WorkoutTrack.STATUS.PAUSED) || status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE) || status.equals("")) {
-            startService(new Intent(this, WorkoutTimerService.class));
+            if (status.equals(WorkoutTrack.STATUS.FINISHED) || status.equals(WorkoutTrack.STATUS.IDLE)) {
+                startService(new Intent(this, WorkoutTimerService.class));
+            }
+
             workoutTrackPreferences
                     .edit()
                     .putStatus(WorkoutTrack.STATUS.RUNNING)
@@ -267,9 +270,6 @@ public class WorkoutActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
-                            goToStatsIntent.putExtra("FROM_WORKOUT", true);
-                            startActivity(goToStatsIntent);
                             int weight;
 
                             try {

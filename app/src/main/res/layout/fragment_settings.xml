@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settingsCoordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,77 +17,116 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="@string/measurement"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/normal_text_size" />
+
+                <Spinner
+                    android:id="@+id/spinner_height"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/height_measurement" />
+
+                <Spinner
+                    android:id="@+id/spinner_weight"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/weight_measurement" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
+                android:orientation="horizontal"
                 android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/current_weight"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <EditText
                     android:id="@+id/weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:gravity="center_horizontal"
+                    android:inputType="none" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
+                android:orientation="horizontal"
                 android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/height"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <EditText
                     android:id="@+id/height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:gravity="center_horizontal"
+                    android:inputType="none" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -95,34 +134,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/birthday"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <EditText
                     android:id="@+id/birthday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:gravity="center_horizontal"
-                    android:inputType="none"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:gravity="center_horizontal"
+                    android:inputType="none"
+                    android:textAllCaps="false"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -130,10 +169,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/gender"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <Spinner
                     android:id="@+id/spinner_gender"
@@ -141,19 +180,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:entries="@array/gender"/>
+                    android:entries="@array/gender" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginEnd="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
                 android:layout_marginBottom="@dimen/common_margin"
+                android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -161,29 +200,29 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/nutrition"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <Spinner
                     android:id="@+id/spinner_nutrition"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:entries="@array/nutrition"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
+                    android:entries="@array/nutrition" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginEnd="@dimen/common_margin"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginStart="@dimen/common_margin"
+                android:layout_marginTop="@dimen/common_margin"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -191,10 +230,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/language"
-                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"/>
+                    android:textSize="@dimen/normal_text_size" />
 
                 <Spinner
                     android:id="@+id/spinner_language"
@@ -204,45 +243,6 @@
                     android:layout_weight="1"
                     android:entries="@array/language" />
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:layout_marginStart="@dimen/common_margin"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginEnd="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/measurement"
-                    android:textSize="@dimen/normal_text_size"
-                    android:textColor="@color/colorBlack"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"/>
-
-                <Spinner
-                    android:id="@+id/spinner_height"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/height_measurement"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
-
-                <Spinner
-                    android:id="@+id/spinner_weight"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/weight_measurement"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             </LinearLayout>
 

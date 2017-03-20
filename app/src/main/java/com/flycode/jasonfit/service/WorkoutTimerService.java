@@ -231,6 +231,8 @@ WorkoutTimerService extends Service {
                     .apply();
 
             speakWorkoutEnd();
+
+            cancelNotification();
         }
     }
 

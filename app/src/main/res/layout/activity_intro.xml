@@ -44,11 +44,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingEnd="13dp"
+            android:paddingStart="13dp"
             android:text="@string/let_us_start"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
-            android:textColor="@color/colorBlack"
-            android:background="@drawable/rounded_outline_black"/>
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/rounded_rect_grey"/>
 
     </LinearLayout>
 

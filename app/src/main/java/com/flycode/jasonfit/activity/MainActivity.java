@@ -75,13 +75,6 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         Intent incomingIntent = getIntent();
 
         processIncomingIntent(incomingIntent);
-
-        if (incomingIntent.getBooleanExtra("FROM_WORKOUT", false)) {
-            currentMenuItem = SideMenuAdapter.SideMenuItem.STATS;
-            settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-
     }
 
     @Override

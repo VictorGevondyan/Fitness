@@ -100,7 +100,10 @@ public class StatsFragment extends Fragment {
         LineDataSet chartDataSet = new LineDataSet(entryList, "weight");
         chartDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         chartDataSet.setColor(getResources().getColor(R.color.colorGrayDark));
-        chartDataSet.setLineWidth(3);
+        chartDataSet.setCircleColor(R.color.colorBlack);
+        chartDataSet.setDrawCircleHole(false);
+        chartDataSet.setCircleRadius(5f);
+        chartDataSet.setLineWidth(3f);
 
         LineData lineData = new LineData(chartDataSet);
         lineChart.setData(lineData);
