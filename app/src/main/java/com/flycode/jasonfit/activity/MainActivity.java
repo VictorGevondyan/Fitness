@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements SideMenuAdapter.OnSideMenuClickListener {
+
     private static final String EXTRA_MENU_ITEM = "extraMenuItem";
 
     @BindView(R.id.side_menu_container) View sideMenuView;
@@ -61,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             currentMenuItem = SideMenuAdapter.SideMenuItem.valueOf(currentMenuItemName);
         }
 
-        FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
-        settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
-        settingsTransaction.commit();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
+        fragmentTransaction.commit();
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
         if (incomingIntent.getBooleanExtra("FROM_WORKOUT", false)) {
             currentMenuItem = SideMenuAdapter.SideMenuItem.STATS;
-            settingsTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
+            fragmentTransaction.replace(R.id.container, getFragmentForSideMenuItem(currentMenuItem));
             drawerLayout.closeDrawer(GravityCompat.START);
         }
 
@@ -93,15 +94,17 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
     @Override
     public void onSideMenuItemClick(SideMenuAdapter.SideMenuItem sideMenuItem) {
+
         currentMenuItem = sideMenuItem;
 
         Fragment fragment = getFragmentForSideMenuItem(sideMenuItem);
 
-        FragmentTransaction settingsTransaction = getFragmentManager().beginTransaction();
-        settingsTransaction.replace(R.id.container, fragment);
-        settingsTransaction.commit();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
 
         drawerLayout.closeDrawer(GravityCompat.START);
+
     }
 
     private Fragment getFragmentForSideMenuItem(SideMenuAdapter.SideMenuItem sideMenuItem) {
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
     }
 
     private void processDrawer() {
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -138,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             @Override
             public void onDrawerOpened(View drawerView) {
                 try {
-                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 } catch (Exception ignored) {
                 }
 
@@ -160,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
 
         sideMenuRecyclerView.setAdapter(new SideMenuAdapter(this));
         sideMenuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
+
     @Override
     public void onBackPressed() {
 
@@ -193,4 +199,5 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
         startActivity(workoutOpenIntent);
 
     }
+
 }

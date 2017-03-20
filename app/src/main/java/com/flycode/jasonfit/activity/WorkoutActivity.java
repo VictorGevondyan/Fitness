@@ -28,6 +28,7 @@ import com.flycode.jasonfit.JasonFitApplication;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
+import com.flycode.jasonfit.model.UserPreferences;
 import com.flycode.jasonfit.model.Workout;
 import com.flycode.jasonfit.model.WorkoutTrack;
 import com.flycode.jasonfit.model.WorkoutTrackPreferences;
@@ -38,6 +39,7 @@ import com.flycode.jasonfit.util.StringUtil;
 
 import java.util.Calendar;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,14 +66,20 @@ public class WorkoutActivity extends AppCompatActivity {
     private Workout workout;
     private int lastWorkoutNumber = -1;
 
+    private UserPreferences userPreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
         ButterKnife.bind(this);
 
         workout = (Workout) getIntent().getSerializableExtra(Constants.EXTRAS.CURRENT_WORKOUT);
+
+        userPreferences = User.sharedPreferences(JasonFitApplication.sharedApplication());
 
         workoutTrackPreferences = WorkoutTrack.sharedPreferences(this);
 
@@ -88,6 +96,7 @@ public class WorkoutActivity extends AppCompatActivity {
         setupToolbar();
         preRenderWorkoutData();
         renderWorkoutData();
+
     }
 
     @OnClick(R.id.pause_resume)
@@ -109,11 +118,13 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             renderWorkoutData();
             checkForWorkoutEnd();
         }
+
     };
 
     /**
@@ -251,76 +262,23 @@ public class WorkoutActivity extends AppCompatActivity {
 
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
-            MaterialDialog materialDialog = new MaterialDialog.Builder(this)
-                    .content(getString(R.string.workout_congrats, formattedWeightMeasurement()))
-                    .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .cancelable(false)
-                    .canceledOnTouchOutside(false)
-                    .alwaysCallInputCallback()
-                    .input("", "", new MaterialDialog.InputCallback() {
-                        @SuppressWarnings("ConstantConditions")
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            if (input.length() == 0) {
-                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                                return;
-                            }
+            showInputWeightDialog();
 
-                            Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
-                            goToStatsIntent.putExtra("FROM_WORKOUT", true);
-                            startActivity(goToStatsIntent);
-                            int weight;
-
-                            try {
-                                weight = Integer.valueOf(input.toString());
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-
-                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                                return;
-                            }
-
-                            if ( weight < 20 || weight > 200) {
-                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-                                return;
-                            }
-
-                            saveWeight((int) MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
-
-                            dialog.getInputEditText().setError(null);
-                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-                        }
-
-                    })
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            workoutTrackPreferences
-                                    .edit()
-                                    .putStatus(WorkoutTrack.STATUS.IDLE)
-                                    .apply();
-                            onBackPressed();
-                        }
-                    })
-                    .show();
-
-            materialDialog.getInputEditText().setError(null);
-            materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
         }
+
     }
 
     @Override
     public void onBackPressed() {
+
         if (!workoutTrackPreferences.getStatus().equals(WorkoutTrack.STATUS.IDLE)) {
+
             new MaterialDialog.Builder(this)
                     .content(R.string.sure_go_back)
                     .positiveText(R.string.yes)
                     .negativeText(R.string.no)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
+
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
@@ -338,12 +296,14 @@ public class WorkoutActivity extends AppCompatActivity {
                             WorkoutActivity.super.onBackPressed();
 
                         }
+
                     })
                     .show();
 
         } else {
             super.onBackPressed();
         }
+
     }
 
     private void saveWeight(int weight) {
@@ -384,6 +344,15 @@ public class WorkoutActivity extends AppCompatActivity {
         statsData.save();
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
+//    private String formattedWeight() {
+//        return new StringBuilder()
+//                .append( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) )  )
+//                .append(" ")
+//                .append(formattedWeightMeasurement())
+//                .toString();
+//    }
+
     private String formattedWeightMeasurement() {
         return getString(User.sharedPreferences(this).getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
@@ -402,6 +371,123 @@ public class WorkoutActivity extends AppCompatActivity {
         final float scale = this.getResources().getDisplayMetrics().density;
 
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    private void showInputWeightDialog(){
+
+//        MaterialDialog materialDialog = new MaterialDialog.Builder(this)
+//                .content(getString(R.string.workout_congrats, formattedWeightMeasurement()))
+//                .inputType(InputType.TYPE_CLASS_NUMBER)
+//                .cancelable(false)
+//                .canceledOnTouchOutside(false)
+//                .alwaysCallInputCallback()
+//                .input("", "", new MaterialDialog.InputCallback() {
+//
+//                    @SuppressWarnings("ConstantConditions")
+//                    @Override
+//                    public void onInput(MaterialDialog dialog, CharSequence input) {
+//
+//                        if (input.length() == 0) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                            return;
+//                        }
+//
+//                        Intent goToStatsIntent = new Intent(WorkoutActivity.this, MainActivity.class);
+//                        goToStatsIntent.putExtra("FROM_WORKOUT", true);
+//                        startActivity(goToStatsIntent);
+//                        int weight;
+//
+//                        try {
+//                            weight = Integer.valueOf(input.toString());
+//                        } catch (NumberFormatException e) {
+//                            e.printStackTrace();
+//
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                            return;
+//                        }
+//
+//                        if ( weight < 20 || weight > 200) {
+//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
+//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+//                            return;
+//                        }
+//
+//                        saveWeight((int) MetricConverter.convertWeight(weight, User.sharedPreferences(WorkoutActivity.this).getWeightMeasurement(), true));
+//
+//                        dialog.getInputEditText().setError(null);
+//                        dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+//
+//                    }
+//
+//                })
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//
+//                        workoutTrackPreferences
+//                                .edit()
+//                                .putStatus(WorkoutTrack.STATUS.IDLE)
+//                                .apply();
+//
+//                        onBackPressed();
+//                    }
+//                })
+//                .show();
+//
+//        materialDialog.getInputEditText().setError(null);
+//        materialDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+
+
+
+
+
+
+
+
+
+
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
+                .minValue( Math.round( MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false) ) )
+                .maxValue( Math.round( MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false) ) )
+                .defaultValue( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) ) )
+                .backgroundColor(getResources().getColor(R.color.colorWhite))
+                .separatorColor(getResources().getColor(R.color.colorBlack))
+                .textColor(getResources().getColor(R.color.colorBlack))
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.workout_congrats, formattedWeightMeasurement()))
+                .customView(numberPicker, false)
+                .positiveText(R.string.ok)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
+
+                        userPreferences
+                                .edit()
+                                .putWeight( Math.round( MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true) ) )
+                                .apply();
+
+                        workoutTrackPreferences
+                                .edit()
+                                .putStatus(WorkoutTrack.STATUS.IDLE)
+                                .apply();
+
+                        onBackPressed();
+
+                    }
+
+                })
+                .show();
+
     }
 
 }

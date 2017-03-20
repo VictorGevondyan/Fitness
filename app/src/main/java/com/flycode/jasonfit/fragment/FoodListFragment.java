@@ -100,6 +100,7 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
@@ -131,6 +132,8 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
 
                 if (!category.isEmpty()) {
                     foodList = query.where("category = ?", category).execute();
+                } else {
+                    foodList = query.execute();
                 }
 
                 if (!searchQuery.isEmpty()) {
@@ -151,7 +154,9 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+
         });
+
     }
 
     private class DividerDecoration extends RecyclerView.ItemDecoration {

@@ -50,7 +50,7 @@
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="@color/colorWhite"
-            tools:text="dolorem ipsum"/>
+            android:textAllCaps="true"/>
 
         <ImageView
             android:id="@+id/workout_image_view"

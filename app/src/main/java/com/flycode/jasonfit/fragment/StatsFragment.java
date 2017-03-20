@@ -2,7 +2,6 @@ package com.flycode.jasonfit.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ import butterknife.Unbinder;
 public class StatsFragment extends Fragment {
 
     @BindView(R.id.chart) LineChart lineChart;
-    @BindView(R.id.calendar) LinearLayout calendar;
+    @BindView(R.id.calendar) LinearLayout calendarLayout;
     @BindView(R.id.calendar_title) TextView calendarTitle;
     @BindView(R.id.body_mass_overweight) TextView bodyMassOverweight;
     @BindView(R.id.body_mass_overweight_title) TextView bodyMassOverweightTitle;
@@ -128,8 +127,8 @@ public class StatsFragment extends Fragment {
 
     private void createCalendar( LayoutInflater layoutInflater ){
         for(int index = 0; index < 7; index++ ){
-            View itemCalendar = layoutInflater.inflate( R.layout.item_calendar, calendar, false);
-            calendar.addView(itemCalendar);
+            View itemCalendar = layoutInflater.inflate( R.layout.item_calendar, calendarLayout, false);
+            calendarLayout.addView(itemCalendar);
             calendarItems.add(itemCalendar);
         }
     }
@@ -184,7 +183,8 @@ public class StatsFragment extends Fragment {
         StatsData statsData;
 
         for (int index = 0; index < 7; index++) {
-            statsData = getWeekStatsData(0, index);
+            Calendar calendar = getCalendarForWeek(0, index);
+            statsData = getStatsDataForCalendar(calendar);
 
             if (statsData != null) {
                 weightArray.add(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false));
@@ -204,10 +204,11 @@ public class StatsFragment extends Fragment {
         String[] weekDays = this.getResources().getStringArray(R.array.week_days);
 
         StatsData statsData;
+        Calendar todayCalendar = Calendar.getInstance();
 
         for (int index = 0; index < 7; index++) {
-            TextView dayOfWeek = (TextView) calendarItems.get(index).findViewById(R.id.calendar_day_of_week);
-            dayOfWeek.setText(weekDays[index]);
+            TextView dayOfWeekTextView = (TextView) calendarItems.get(index).findViewById(R.id.calendar_day_of_week);
+            dayOfWeekTextView.setText(weekDays[index]);
 
             TextView multiplier = (TextView) calendarItems.get(index).findViewById(R.id.calendar_multiplier);
             String multiplierString;
@@ -215,7 +216,12 @@ public class StatsFragment extends Fragment {
             TextView metric = (TextView) calendarItems.get(index).findViewById(R.id.calendar_metric);
             TextView weight = (TextView) calendarItems.get(index).findViewById(R.id.calendar_weight);
 
-            statsData = getWeekStatsData(weekShiftCount * 7, index);
+            Calendar calendar = getCalendarForWeek(weekShiftCount * 7, index);
+            statsData = getStatsDataForCalendar(calendar);
+
+            if(todayCalendar.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR)){
+                dayOfWeekTextView.setAlpha(0.7f);
+            }
 
             if (statsData != null) {
                 int multiplierNumber = statsData.multiplier;
@@ -238,6 +244,7 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupBurntCalories() {
+
         double burntCaloriesThisWeek = 0;
 
         StatsData statsData;
@@ -246,7 +253,8 @@ public class StatsFragment extends Fragment {
 
         for (int i = 0; i < 7; i++) {
 
-            statsData = getWeekStatsData(0, i);
+            Calendar calendar = getCalendarForWeek(0, i);
+            statsData = getStatsDataForCalendar(calendar);
 
             if (statsData != null) {
                 burntCaloriesThisWeek += statsData.burntCalories;
@@ -268,7 +276,8 @@ public class StatsFragment extends Fragment {
         statsData = null;
 
         for (int index = 0; index < 7; index++) {
-            statsData = getWeekStatsData(-7, index);
+            Calendar calendar = getCalendarForWeek(-7, index);
+            statsData = getStatsDataForCalendar(calendar);
 
             if (statsData != null) {
                 burntCaloriesLastWeek += statsData.burntCalories;
@@ -276,34 +285,36 @@ public class StatsFragment extends Fragment {
         }
 
         burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek) + kcal);
+
     }
 
-    private StatsData getWeekStatsData(int shiftOfDays, int index) {
+    private Calendar getCalendarForWeek(int weekShift, int dayOfWeek) {
         ArrayList<Integer> calendarWeekDays = new ArrayList<>(Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY,
                 Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
                 Calendar.SATURDAY, Calendar.SUNDAY));
 
-        StatsData statsData = null;
-
         Calendar currentCalendar = Calendar.getInstance();
 
-        int currentYear = currentCalendar.get(Calendar.YEAR);
-
-        currentCalendar.set(Calendar.DAY_OF_WEEK, calendarWeekDays.get(index));
+        currentCalendar.set(Calendar.DAY_OF_WEEK, calendarWeekDays.get(dayOfWeek));
         //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
-        currentCalendar.add(Calendar.DAY_OF_YEAR, shiftOfDays);
-        int currentDayOfYearInWeek = currentCalendar.get(Calendar.DAY_OF_YEAR);
+        currentCalendar.add(Calendar.DAY_OF_YEAR, weekShift);
+
+        return currentCalendar;
+    }
+
+    private StatsData getStatsDataForCalendar(Calendar calendar) {
+        int currentDayOfYearInWeek = calendar.get(Calendar.DAY_OF_YEAR);
+        int currentYear = calendar.get(Calendar.YEAR);
 
         try {
-            statsData = new Select()
+            return new Select()
                     .from(StatsData.class)
                     .where("year = ?", currentYear)
                     .where("dayOfYear = ?", currentDayOfYearInWeek)
                     .executeSingle();
         } catch (Exception ignored) {
+            return null;
         }
-
-        return statsData;
     }
 
     @OnClick(R.id.calendar_left)
