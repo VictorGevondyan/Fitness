@@ -290,17 +290,19 @@ public class StatsFragment extends Fragment {
 
         Calendar currentCalendar = Calendar.getInstance();
 
-        int currentYear = currentCalendar.get(Calendar.YEAR);
-
         currentCalendar.set(Calendar.DAY_OF_WEEK, calendarWeekDays.get(index));
         //shift of days means what we go back fot eg -7 days -> 1 week earlier, it is handy to de/incre ment it by  *7 steps
         currentCalendar.add(Calendar.DAY_OF_YEAR, shiftOfDays);
         int currentDayOfYearInWeek = currentCalendar.get(Calendar.DAY_OF_YEAR);
 
+        currentCalendar.set(Calendar.DAY_OF_YEAR, currentDayOfYearInWeek);
+
+        String yearOfDayInWeek = new SimpleDateFormat("yyyy", Locale.US).format(currentCalendar.getTime());
+
         try {
             statsData = new Select()
                     .from(StatsData.class)
-                    .where("year = ?", currentYear)
+                    .where("year = ?", yearOfDayInWeek)
                     .where("dayOfYear = ?", currentDayOfYearInWeek)
                     .executeSingle();
         } catch (Exception ignored) {
