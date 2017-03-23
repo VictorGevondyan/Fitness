@@ -14,7 +14,7 @@ import java.util.List;
 
 public class FoodListAdapter extends RecyclerView.Adapter<FoodItemViewHolder> implements OnItemClickListener {
     private List<Food> foodList;
-    private OnFoodItemClickListener listener;
+    private FoodListAdapter.OnFoodItemClickListener listener;
 
     public FoodListAdapter(List<Food> foodList, OnFoodItemClickListener listener) {
         this.foodList = foodList;

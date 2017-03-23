@@ -203,4 +203,12 @@
         <item>Caffeine</item>
     </string-array>
 
+    <string-array name="meal_types">
+        <item>Breakfast</item>
+        <item>Forenoon Snack</item>
+        <item>Lunch</item>
+        <item>Afternoon Snack</item>
+        <item>Dinner</item>
+    </string-array>
+
 </resources>
