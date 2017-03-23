@@ -13,8 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -24,7 +22,7 @@ import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.adapter.SideMenuAdapter;
 import com.flycode.jasonfit.fragment.FoodListFragment;
 import com.flycode.jasonfit.fragment.InfoFragment;
-import com.flycode.jasonfit.fragment.MealsFragment;
+import com.flycode.jasonfit.fragment.MealListFragment;
 import com.flycode.jasonfit.fragment.SettingsFragment;
 import com.flycode.jasonfit.fragment.StatsFragment;
 import com.flycode.jasonfit.fragment.WorkoutListFragment;
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             case WORKOUTS:
                 return new WorkoutListFragment();
             case MEALS:
-                return new MealsFragment();
+                return new MealListFragment();
             case STATS:
                 return new StatsFragment();
             case FOODS:
