@@ -34,6 +34,7 @@ import butterknife.Unbinder;
  */
 
 public class FoodListFragment extends Fragment implements FoodListAdapter.OnFoodItemClickListener {
+
     @BindView(R.id.food) RecyclerView foodRecyclerView;
     @BindView(R.id.tab_bar) TabLayout tabLayout;
 

@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FoodActivity extends AppCompatActivity {
+
     private static final String EXPEND_SETTINGS = "expendSettings";
 
     @BindView(R.id.food_info_container) LinearLayout foodInfoContainerLinearLayout;
@@ -29,8 +30,6 @@ public class FoodActivity extends AppCompatActivity {
             R.array.lipids,
             R.array.other
     };
-
-    private LinearLayout[] parameterContainers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +58,10 @@ public class FoodActivity extends AppCompatActivity {
         String[] descriptors = getResources().getStringArray(R.array.food_descriptors);
         double[][] values = Food.getValues(food);
 
-        parameterContainers = new LinearLayout[descriptors.length];
-
         for (int descriptorIndex = 0 ; descriptorIndex < descriptors.length ; descriptorIndex++) {
             View descriptorView = layoutInflater.inflate(R.layout.item_food_descriptor, foodInfoContainerLinearLayout, false);
             LinearLayout parameterContainerLinearLayout = (LinearLayout) descriptorView.findViewById(R.id.container);
             foodInfoContainerLinearLayout.addView(descriptorView);
-
-            parameterContainers[descriptorIndex] = parameterContainerLinearLayout;
 
             TextView descriptorName = (TextView) descriptorView.findViewById(R.id.title);
             descriptorName.setText(descriptors[descriptorIndex]);
@@ -90,4 +85,5 @@ public class FoodActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
 }

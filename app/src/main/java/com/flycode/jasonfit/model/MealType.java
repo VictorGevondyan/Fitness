@@ -8,13 +8,13 @@ import java.util.List;
  * Created by victor on 3/23/17.
  */
 
-public class MealsType implements Parent<Meal> {
+public class MealType implements Parent<Meal> {
 
     // Several Meals can be of the same type
     private List<Meal> meals;
     private String name;
 
-    public MealsType(String name, List<Meal> meals) {
+    public MealType(String name, List<Meal> meals) {
         this.name = name;
         this.meals = meals;
     }

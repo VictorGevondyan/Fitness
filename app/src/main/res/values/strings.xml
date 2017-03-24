@@ -120,6 +120,7 @@
     <string name="please_enter_valid_weight">Please, enter valid weight.</string>
     <string name="food">Food</string>
     <string name="let_us_start">LET\'S START!</string>
+    <string name="meal">Meal</string>
 
     <string-array name="gender">
         <item>Male</item>
@@ -209,6 +210,11 @@
         <item>Lunch</item>
         <item>Afternoon Snack</item>
         <item>Dinner</item>
+    </string-array>
+
+    <string-array name="meal_descriptors">
+        <item>Ingredients</item>
+        <item>Instructions</item>
     </string-array>
 
 </resources>

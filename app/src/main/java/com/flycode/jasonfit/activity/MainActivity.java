@@ -22,7 +22,7 @@ import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.adapter.SideMenuAdapter;
 import com.flycode.jasonfit.fragment.FoodListFragment;
 import com.flycode.jasonfit.fragment.InfoFragment;
-import com.flycode.jasonfit.fragment.MealListFragment;
+import com.flycode.jasonfit.fragment.MealTypesListFragment;
 import com.flycode.jasonfit.fragment.SettingsFragment;
 import com.flycode.jasonfit.fragment.StatsFragment;
 import com.flycode.jasonfit.fragment.WorkoutListFragment;
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
             case WORKOUTS:
                 return new WorkoutListFragment();
             case MEALS:
-                return new MealListFragment();
+                return new MealTypesListFragment();
             case STATS:
                 return new StatsFragment();
             case FOODS:

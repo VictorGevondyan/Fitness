@@ -2,6 +2,7 @@ package com.flycode.jasonfit.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.activeandroid.query.Select;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.adapter.MealsTypesListAdapter;
-import com.flycode.jasonfit.model.Food;
+import com.flycode.jasonfit.activity.MainActivity;
+import com.flycode.jasonfit.activity.MealActivity;
+import com.flycode.jasonfit.adapter.MealTypesListAdapter;
 import com.flycode.jasonfit.model.Meal;
-import com.flycode.jasonfit.model.MealsType;
+import com.flycode.jasonfit.model.MealType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,22 +32,42 @@ import butterknife.Unbinder;
  * Created by Schumakher on 3/7/17.
  */
 
-public class MealListFragment extends Fragment {
+public class MealTypesListFragment extends Fragment implements  MealTypesListAdapter.OnMealItemClickListener {
 
-    @BindView(R.id.meals_recycler) RecyclerView mealsRecyclerView;
+    @BindView(R.id.meal_types_recycler) RecyclerView mealsRecyclerView;
 
     private Unbinder unbinder;
-    private MealsTypesListAdapter mealsTypesListAdapter;
+
+    // This adapter is an ExpandableListAdapter.
+    private MealTypesListAdapter mealTypesListAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mealsView = inflater.inflate(R.layout.fragment_meal_list, container, false);
+    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
+
+        View mealsView = inflater.inflate(R.layout.fragment_meal_types_list, container, false);
 
         unbinder = ButterKnife.bind(this, mealsView);
 
+        mealTypesListAdapter = new MealTypesListAdapter(getActivity(), getMealTypesList(), this);
 
+        mealsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mealsRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
 
-        ArrayList<MealsType> mealTypesList = new ArrayList<>();
+        mealsRecyclerView.setAdapter(mealTypesListAdapter);
+
+        return mealsView;
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    private ArrayList<MealType> getMealTypesList(){
+
+        ArrayList<MealType> mealTypesList = new ArrayList<>();
 //        ArrayList<Meal> correspondingMeals = new ArrayList<>();
 
         String[] mealTypes = getResources().getStringArray(R.array.meal_types);
@@ -68,27 +91,22 @@ public class MealListFragment extends Fragment {
                     .where("type = ?", mealTypeName)
                     .execute();
 
-            mealTypesList.add( new MealsType(mealTypeName, correspondingMealsList) );
+            mealTypesList.add( new MealType(mealTypeName, correspondingMealsList) );
 
         }
 
+        return mealTypesList;
 
-
-
-        mealsTypesListAdapter = new MealsTypesListAdapter(getActivity(), mealTypesList);
-
-        mealsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mealsRecyclerView.addItemDecoration(new DividerDecoration(getActivity()));
-
-        mealsRecyclerView.setAdapter(mealsTypesListAdapter);
-
-        return mealsView;
     }
 
-    /*@Override
+    @Override
     public void onMealItemClick(Meal meal) {
-        String mealType = meal.type;
-    }*/
+
+        Intent mealActivityIntent = new Intent( getActivity(), MealActivity.class);
+        mealActivityIntent.putExtra(Constants.EXTRAS.MEAL, meal);
+        startActivity(mealActivityIntent);
+
+    }
 
     private class DividerDecoration extends RecyclerView.ItemDecoration {
         private Drawable divider;
