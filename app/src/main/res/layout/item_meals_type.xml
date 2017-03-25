@@ -13,6 +13,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_gravity="center_vertical"
-        android:textSize="20sp"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/title_text_size"/>
 
 </LinearLayout>

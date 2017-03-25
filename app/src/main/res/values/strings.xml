@@ -13,7 +13,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="workout_congrats">Congratulations! You finished your workout successfully. Please input your weight in %s.</string>
-    <string name="sure_go_back">Are You sure with proceeding with go back? Current workout will be canceled.</string>
+    <string name="sure_go_back">Are you sure you want to go back? Current workout will be canceled.</string>
 
     <string name="tts_failed">Text To Speech Initialization Failed!</string>
     <string name="tts_countdown">three two one</string>
@@ -106,7 +106,7 @@
     <string name="kg">kg</string>
     <string name="lbs">lbs</string>
 
-    <string name="snackbar_text">Your Data was changed</string>
+    <string name="snackbar_text">Your data was changed</string>
 
     <!-- End of strings for Settings screen -->
 
