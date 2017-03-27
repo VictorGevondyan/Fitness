@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.flycode.jasonfit.R;
@@ -16,7 +15,6 @@ import com.flycode.jasonfit.model.Meal;
 import com.flycode.jasonfit.model.MealType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by victor on 3/23/17.
@@ -40,16 +38,18 @@ public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Me
     }
 
     // onCreate ...
+    @NonNull
     @Override
     public MealTypeViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
         View mealTypeView = layoutInflater.inflate(R.layout.item_meals_type, parentViewGroup, false);
         return new MealTypeViewHolder(mealTypeView);
     }
 
+    @NonNull
     @Override
     public MealViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         View mealView = layoutInflater.inflate(R.layout.item_meal, childViewGroup, false);
-        return new MealViewHolder(mealView,this);
+        return new MealViewHolder(mealView);
     }
 
     // onBind ...
@@ -76,7 +76,6 @@ public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Me
     public interface OnMealItemClickListener {
         void onMealItemClick(Meal meal);
     }
-
 
 }
 
