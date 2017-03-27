@@ -4,16 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -265,6 +262,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
+            saveMultiplerCalories();
+
             showInputWeightDialog();
         }
 
@@ -308,7 +307,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    private void saveWeight(int weight) {
+    private void saveMultiplerCalories() {
         Calendar calendar = Calendar.getInstance();
 
         int currentYear = calendar.get(Calendar.YEAR);
@@ -335,13 +334,6 @@ public class WorkoutActivity extends AppCompatActivity {
             statsData.dayOfYear = currentDay;
             statsData.multiplier = 1;
         }
-
-        statsData.weight = weight;
-
-        User.sharedPreferences(JasonFitApplication.sharedApplication())
-                .edit()
-                .putWeight(statsData.weight)
-                .apply();
 
         statsData.save();
     }

@@ -31,12 +31,9 @@ import butterknife.ButterKnife;
 
 public class MealActivity extends AppCompatActivity {
 
-    @BindView(R.id.meal_info_container)
-    LinearLayout mealInfoContainerLinearLayout;
-    @BindView(R.id.title)
-    TextView mealNameTextView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.meal_info_container) LinearLayout mealInfoContainerLinearLayout;
+    @BindView(R.id.title) TextView mealNameTextView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
