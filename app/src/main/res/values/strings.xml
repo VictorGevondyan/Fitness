@@ -106,7 +106,8 @@
     <string name="kg">kg</string>
     <string name="lbs">lbs</string>
 
-    <string name="snackbar_text">Your data was changed</string>
+    <string name="snackbar_main">Your data was changed</string>
+    <string name="snackbar_weight">You weight can be changed after workout is done</string>
 
     <!-- End of strings for Settings screen -->
 

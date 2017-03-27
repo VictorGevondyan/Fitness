@@ -15,6 +15,7 @@ import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
 import com.flycode.jasonfit.model.UserPreferences;
 import com.flycode.jasonfit.util.MetricConverter;
+import com.flycode.jasonfit.util.StringUtil;
 import com.flycode.jasonfit.util.UserNormsUtil;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -204,8 +205,8 @@ public class StatsFragment extends Fragment {
             TextView multiplier = (TextView) calendarItems.get(index).findViewById(R.id.calendar_multiplier);
             String multiplierString;
 
-            TextView metric = (TextView) calendarItems.get(index).findViewById(R.id.calendar_metric);
-            TextView weight = (TextView) calendarItems.get(index).findViewById(R.id.calendar_weight);
+            TextView metricTextView = (TextView) calendarItems.get(index).findViewById(R.id.calendar_metric);
+            TextView weightTextView = (TextView) calendarItems.get(index).findViewById(R.id.calendar_weight);
 
             Calendar calendar = getCalendarForWeek(weekShiftCount * 7, index);
             statsData = getStatsDataForCalendar(calendar);
@@ -224,18 +225,16 @@ public class StatsFragment extends Fragment {
                     multiplierString = String.valueOf(statsData.multiplier) + "x";
                 }
 
-                weight.setText(
-                        String.valueOf(
-                                Math.round(
-                                        MetricConverter.convertWeight(
+                weightTextView.setText(
+                        String.valueOf(StringUtil.formattedDigitValue(MetricConverter.convertWeight(
                                                 statsData.weight,
                                                 userPreferences.getWeightMeasurement(),
                                                 false))));
-                metric.setText(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
+                metricTextView.setText(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
             } else {
-                weight.setText("");
+                weightTextView.setText("");
                 multiplierString = "";
-                metric.setText("");
+                metricTextView.setText("");
             }
 
             multiplier.setText(multiplierString);

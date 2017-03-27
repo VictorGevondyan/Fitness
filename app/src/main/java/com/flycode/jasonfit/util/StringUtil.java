@@ -40,4 +40,23 @@ public class StringUtil {
 
         return estimatedTimeString;
     }
+
+    public static String formattedDigitValue(float value) {
+        double temp = value;
+
+        if( Math.floor(temp) == temp ){
+            int tempInt = (int)temp;
+            return "" + tempInt;
+        }
+
+        return "" + formatToLastDigit((float)temp);
+    }
+
+    public static float formatToLastDigit(float value) {
+        value = value * 10;
+        value = Math.round(value);
+        value = value / 10;
+
+        return value;
+    }
 }

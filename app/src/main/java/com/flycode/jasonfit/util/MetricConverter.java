@@ -28,7 +28,7 @@ public class MetricConverter {
 
     public static float convertWeight(float weight, String metric, boolean isInput) {
         if (metric.equals(User.METRICS.KG)) {
-            return Math.round(weight);
+            return weight;
         } else {
             if (isInput) {
                 return lbToKG(weight);
@@ -38,7 +38,7 @@ public class MetricConverter {
         }
     }
 
-    public static float convertHeight(float height, String metric, boolean isInput) {
+        public static float convertHeight(float height, String metric, boolean isInput) {
         if (metric.equals(User.METRICS.CM)) {
             return Math.round(height);
         } else {

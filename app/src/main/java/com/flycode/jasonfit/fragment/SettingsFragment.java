@@ -7,13 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -24,6 +23,7 @@ import com.flycode.jasonfit.activity.MainActivity;
 import com.flycode.jasonfit.model.User;
 import com.flycode.jasonfit.model.UserPreferences;
 import com.flycode.jasonfit.util.MetricConverter;
+import com.flycode.jasonfit.util.StringUtil;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -58,6 +58,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
     private Unbinder unbinder;
 
     private boolean mustShowSnackBar = false;
+    private boolean weightClicked = false;
 
     @Nullable
     @Override
@@ -77,7 +78,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         } else {
             spinnerWeight.setSelection(1);
         }
-        spinnerWeight.setOnItemSelectedListener(weightItemSelected);
+        spinnerWeight.setOnItemSelectedListener(weightMetricItemSelected);
 
 
         if (userPreferences.getHeightMeasurement().equals(User.METRICS.CM)) {
@@ -85,7 +86,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         } else {
             spinnerHeight.setSelection(1);
         }
-        spinnerHeight.setOnItemSelectedListener(heightItemSelected);
+        spinnerHeight.setOnItemSelectedListener(heightMetricItemSelected);
 
 
         if (userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH)) {
@@ -141,6 +142,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @OnClick(R.id.height)
     public void onSetHeight() {
+
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
                 .minValue( Math.round( MetricConverter.convertHeight(135, userPreferences.getHeightMeasurement(), false) ) )
                 .maxValue( Math.round( MetricConverter.convertHeight(210, userPreferences.getHeightMeasurement(), false) ) )
@@ -170,53 +172,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                     }
                 })
                 .show();
-
-
-//                .inputType(InputType.TYPE_CLASS_NUMBER)
-//                .alwaysCallInputCallback()
-//                .input("", String.valueOf(userPreferences.getHeight()), new MaterialDialog.InputCallback() {
-//
-//                    @SuppressWarnings("ConstantConditions")
-//                    @Override
-//                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-//                        if (input.length() == 0) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                            return;
-//                        }
-//
-//                        try {
-//                            int height = Integer.valueOf(input.toString());
-//                            height = MetricConverter.convertHeight(height, userPreferences.getHeightMeasurement(), true);
-//
-//                            if (height < 135 || height > 210) {
-//                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-//                                return;
-//                            }
-//
-//                            int previousHeight = userPreferences.getHeight();
-//
-//                            if (previousHeight != height) {
-//                                mustShowSnackBar = true;
-//                            }
-//
-//                            userPreferences
-//                                    .edit()
-//                                    .putHeight(height)
-//                                    .apply();
-//
-//                            heightEditText.setText(formattedHeight());
-//
-//                            dialog.getInputEditText().setError(null);
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-//                        } catch (NumberFormatException e) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_height));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                        }
-//                    }
-//
-//                }).show();
     }
 
     @OnClick(R.id.weight)
@@ -224,13 +179,17 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
         Activity parentActivity = getActivity();
         if( parentActivity instanceof MainActivity ){
+            weightClicked = true;
+            mustShowSnackBar = true;
+            showSnackbar();
             return;
         }
 
+        // Multiply all values by 2. [20-200] with 0.5 step <-> 40-400 with 1 step
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
-                .minValue( Math.round(MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false))   )
-                .maxValue( Math.round( MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false) ) )
-                .defaultValue( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) ) )
+                .minValue(Math.round(MetricConverter.convertWeight(40, userPreferences.getWeightMeasurement(), false)))
+                .maxValue(Math.round(MetricConverter.convertWeight(400, userPreferences.getWeightMeasurement(), false)))
+                .defaultValue(Math.round(2 * MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false)))
                 .backgroundColor(getResources().getColor(R.color.colorWhite))
                 .separatorColor(getResources().getColor(R.color.colorBlack))
                 .textColor(getResources().getColor(R.color.colorBlack))
@@ -239,8 +198,11 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                 .wrapSelectorWheel(true)
                 .build();
 
+        numberPicker.setFormatter(weightPickerFormatter);
+
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.weight)
+                .tag(R.string.weight)
                 .customView(numberPicker, false)
                 .positiveText(R.string.ok)
                 .onPositive(dataChangedButtonCallback)
@@ -248,86 +210,56 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
+                        float weight = ((float) numberPicker.getValue()) / 2;
                         userPreferences
                                 .edit()
-                                .putWeight( Math.round( MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true) ) )
+                                .putWeight(MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true))
                                 .apply();
                         weightEditText.setText(formattedWeight());
                     }
+
                 })
                 .show();
-
-//        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-//
-//        materialDialogBuilder
-//                .title(R.string.weight)
-//                .inputType(InputType.TYPE_CLASS_NUMBER)
-//                .alwaysCallInputCallback()
-//                .input("", String.valueOf(userPreferences.getWeight()), new MaterialDialog.InputCallback() {
-//
-//                    @SuppressWarnings("ConstantConditions")
-//                    @Override
-//                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-//                        if (input.length() == 0) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                            return;
-//                        }
-//
-//                        try {
-//                            int weight = Integer.valueOf(input.toString());
-//                            weight = MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true);
-//
-//                            if ( weight < 20 || weight > 200) {
-//                                dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-//                                dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-//                                return;
-//                            }
-//
-//                            int previousWeight = userPreferences.getWeight();
-//
-//                            if (previousWeight != weight) {
-//                                mustShowSnackBar = true;
-//                            }
-//
-//                            userPreferences
-//                                    .edit()
-//                                    .putWeight(weight)
-//                                    .apply();
-//
-//                            weightEditText.setText(formattedWeight());
-//
-//                            dialog.getInputEditText().setError(null);
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
-//                        } catch (NumberFormatException e) {
-//                            dialog.getInputEditText().setError(getString(R.string.please_enter_valid_weight));
-//                            dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
-//                        }
-//                    }
-//
-//                }).show();
-//        materialDialogBuilder.onPositive(dataChangedButtonCallback);
-
     }
 
+    MaterialNumberPicker.Formatter weightPickerFormatter = new NumberPicker.Formatter() {
+
+        @Override
+        public String format(int value) {
+            return StringUtil.formattedDigitValue(value * 0.5f);
+        }
+
+    };
+
     MaterialDialog.SingleButtonCallback dataChangedButtonCallback = new MaterialDialog.SingleButtonCallback() {
+
         @Override
         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
             showSnackbar();
         }
+
     };
 
     public void showSnackbar(){
-        boolean showSnackbar = mustShowSnackBar && ( getActivity() instanceof MainActivity );
-        mustShowSnackBar = false;
 
-        if( !showSnackbar ) {
+        if( !mustShowSnackBar ) {
             return;
         }
 
+        int snackbarMessage;
+        boolean weightUnchangeMessage = getActivity() instanceof MainActivity && weightClicked;
+        if( weightUnchangeMessage ){
+            snackbarMessage = R.string.snackbar_weight;
+        } else {
+            snackbarMessage = R.string.snackbar_main;
+        }
+
         Snackbar
-                .make(settingsCoordinatorLayout, R.string.snackbar_text, Snackbar.LENGTH_LONG)
+                .make(settingsCoordinatorLayout, snackbarMessage, Snackbar.LENGTH_LONG)
                 .show();
+
+        mustShowSnackBar = false;
+        weightClicked = false;
 
     }
 
@@ -370,14 +302,6 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         return dateFormat.format(new Date(userPreferences.getBirthday()));
     }
 
-    private String formattedGender() {
-        return getString(userPreferences.getGender().equals(User.GENDER.MALE) ? R.string.male : R.string.female);
-    }
-
-    private String formattedLanguage() {
-        return getString(userPreferences.getLanguage().equals(User.LANGUAGE.ENGLISH) ? R.string.english : R.string.deutsch);
-    }
-
     private String formattedHeightMeasurement() {
         return getString(userPreferences.getHeightMeasurement().equals(User.METRICS.CM) ? R.string.cm : R.string.inch);
     }
@@ -386,29 +310,15 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
         return getString(userPreferences.getWeightMeasurement().equals(User.METRICS.KG) ? R.string.kg : R.string.lbs);
     }
 
-    private String formattedNutrition() {
-        String nutrition = userPreferences.getNutrition();
-        int selectedIndex = 0;
-
-        switch (nutrition) {
-            case User.NUTRITION.ALL:
-                selectedIndex = 0;
-                break;
-            case User.NUTRITION.VEGETARIAN:
-                selectedIndex = 1;
-                break;
-            case User.NUTRITION.VEGAN:
-                selectedIndex = 2;
-                break;
-        }
-
-        return getResources().getStringArray(R.array.nutrition)[selectedIndex];
-    }
-
     @SuppressWarnings("StringBufferReplaceableByString")
     private String formattedHeight() {
+        float convertedHeight = MetricConverter
+                .convertHeight(
+                        userPreferences.getHeight(),
+                        userPreferences.getHeightMeasurement(),
+                        false);
         return new StringBuilder()
-                .append( Math.round(MetricConverter.convertHeight(userPreferences.getHeight(), userPreferences.getHeightMeasurement(), false)) )
+                .append(Math.round(convertedHeight))
                 .append(" ")
                 .append(formattedHeightMeasurement())
                 .toString();
@@ -416,16 +326,26 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     @SuppressWarnings("StringBufferReplaceableByString")
     private String formattedWeight() {
+        float convertedWeight = MetricConverter
+                .convertWeight(
+                        userPreferences.getWeight(),
+                        userPreferences.getWeightMeasurement(),
+                        false);
+        // Round til 1 digit
+
+        convertedWeight = StringUtil.formatToLastDigit(convertedWeight);
+
         return new StringBuilder()
-                .append( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) )  )
+                .append(StringUtil.formattedDigitValue(convertedWeight))
                 .append(" ")
                 .append(formattedWeightMeasurement())
                 .toString();
+
     }
 
     //_______________WEIGHT___________________________-
 
-    AdapterView.OnItemSelectedListener weightItemSelected = new AdapterView.OnItemSelectedListener() {
+    AdapterView.OnItemSelectedListener weightMetricItemSelected = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -455,7 +375,7 @@ public class SettingsFragment extends Fragment implements DatePickerDialog.OnDat
 
     //________________HEIGHT__________________________-
 
-    AdapterView.OnItemSelectedListener heightItemSelected = new AdapterView.OnItemSelectedListener() {
+    AdapterView.OnItemSelectedListener heightMetricItemSelected = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 

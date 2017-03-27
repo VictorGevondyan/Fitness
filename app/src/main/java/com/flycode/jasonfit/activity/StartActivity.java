@@ -44,13 +44,13 @@ public class StartActivity extends AppCompatActivity {
         int currentYear = calendar.get(Calendar.YEAR);
         int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
-            StatsData statsData = new StatsData();
-            // TODO: ask what to do here
-            statsData.weight = Math.round(weight);
-            statsData.burntCalories = 0.0;
-            statsData.year = currentYear;
-            statsData.dayOfYear = currentDay;
-            statsData.save();
+        StatsData statsData = new StatsData();
+        // TODO: ask what to do here
+        statsData.weight = weight;
+        statsData.burntCalories = 0.0;
+        statsData.year = currentYear;
+        statsData.dayOfYear = currentDay;
+        statsData.save();
 
         Intent mainActivityIntent = new Intent(this,MainActivity.class);
         startActivity(mainActivityIntent);

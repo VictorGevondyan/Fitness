@@ -18,7 +18,7 @@ public class StatsData extends Model {
     public int year;
 
     @Column(name = "weight")
-    public int weight;
+    public float weight;
 
     @Column(name = "burntCalories")
     public Double burntCalories;
@@ -39,8 +39,8 @@ public class StatsData extends Model {
         };
     }
 
-    private static int[] getWeight(StatsData statsData) {
-        return new int[] {
+    private static float[] getWeight(StatsData statsData) {
+        return new float[] {
                 statsData.weight
         };
     }
