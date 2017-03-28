@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -262,7 +263,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             stopService(new Intent(WorkoutActivity.this, WorkoutTimerService.class));
 
-            saveMultiplerCalories();
+            saveCalories();
 
             showInputWeightDialog();
         }
@@ -307,7 +308,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    private void saveMultiplerCalories() {
+    private void saveCalories() {
         Calendar calendar = Calendar.getInstance();
 
         int currentYear = calendar.get(Calendar.YEAR);
@@ -368,16 +369,25 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void showInputWeightDialog() {
+        // Multiply all values by 2. [20-200] with 0.5 step <-> 40-400 with 1 step
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
-                .minValue( Math.round( MetricConverter.convertWeight(20, userPreferences.getWeightMeasurement(), false) ) )
-                .maxValue( Math.round( MetricConverter.convertWeight(200, userPreferences.getWeightMeasurement(), false) ) )
-                .defaultValue( Math.round( MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false) ) )
+                .minValue(Math.round(MetricConverter.convertWeight(40, userPreferences.getWeightMeasurement(), false)))
+                .maxValue(Math.round(MetricConverter.convertWeight(400, userPreferences.getWeightMeasurement(), false)))
+                .defaultValue(Math.round(2 * MetricConverter.convertWeight(userPreferences.getWeight(), userPreferences.getWeightMeasurement(), false)))
                 .backgroundColor(getResources().getColor(R.color.colorWhite))
                 .separatorColor(getResources().getColor(R.color.colorBlack))
                 .textColor(getResources().getColor(R.color.colorBlack))
                 .textSize(20)
                 .enableFocusability(false)
                 .wrapSelectorWheel(true)
+                .formatter(new NumberPicker.Formatter() {
+
+                    @Override
+                    public String format(int value) {
+                        return StringUtil.formattedDigitValue(value * 0.5f);
+                    }
+
+                })
                 .build();
 
         new MaterialDialog.Builder(this)
@@ -389,10 +399,12 @@ public class WorkoutActivity extends AppCompatActivity {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                         MaterialNumberPicker numberPicker = (MaterialNumberPicker) dialog.getCustomView();
+                        float weight = ((float) numberPicker.getValue()) / 2;
+                        weight = MetricConverter.convertWeight(weight, userPreferences.getWeightMeasurement(), true);
 
                         userPreferences
                                 .edit()
-                                .putWeight( Math.round( MetricConverter.convertWeight(numberPicker.getValue(), userPreferences.getWeightMeasurement(), true) ) )
+                                .putWeight(weight)
                                 .apply();
 
                         workoutTrackPreferences
@@ -400,10 +412,27 @@ public class WorkoutActivity extends AppCompatActivity {
                                 .putStatus(WorkoutTrack.STATUS.IDLE)
                                 .apply();
 
+                        Calendar calendar = Calendar.getInstance();
+
+                        int currentYear = calendar.get(Calendar.YEAR);
+                        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+                        StatsData statsData = null;
+
+                        try {
+                            statsData = new Select()
+                                    .from(StatsData.class)
+                                    .where("year = ?", currentYear)
+                                    .where("dayOfYear = ?", currentDay)
+                                    .executeSingle();
+                        } catch (Exception ignored) {
+                        }
+
+                        statsData.weight = weight;
+                        statsData.save();
+
                         onBackPressed();
-
                     }
-
                 })
                 .show();
     }
