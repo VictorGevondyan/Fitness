@@ -104,6 +104,7 @@ public class StatsFragment extends Fragment {
         chartDataSet.setDrawCircleHole(false);
         chartDataSet.setCircleRadius(5f);
         chartDataSet.setLineWidth(3f);
+        chartDataSet.setDrawValues(false);
 
         LineData lineData = new LineData(chartDataSet);
         lineChart.setData(lineData);
