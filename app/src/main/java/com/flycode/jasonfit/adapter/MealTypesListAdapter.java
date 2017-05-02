@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.adapter.viewHolder.MealTypeViewHolder;
+import com.flycode.jasonfit.adapter.viewHolder.MealHeaderViewHolder;
 import com.flycode.jasonfit.adapter.viewHolder.MealViewHolder;
 import com.flycode.jasonfit.model.Meal;
 import com.flycode.jasonfit.model.MealType;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 
 
-public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Meal, MealTypeViewHolder, MealViewHolder>
+public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Meal, MealHeaderViewHolder, MealViewHolder>
         implements OnItemClickListener{
 
     private ArrayList<MealType> mealsTypeList;
@@ -40,9 +40,9 @@ public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Me
     // onCreate ...
     @NonNull
     @Override
-    public MealTypeViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
-        View mealTypeView = layoutInflater.inflate(R.layout.item_meals_type, parentViewGroup, false);
-        return new MealTypeViewHolder(mealTypeView);
+    public MealHeaderViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
+        View mealTypeView = layoutInflater.inflate(R.layout.header_meal, parentViewGroup, false);
+        return new MealHeaderViewHolder(mealTypeView);
     }
 
     @NonNull
@@ -54,8 +54,8 @@ public class MealTypesListAdapter extends ExpandableRecyclerAdapter<MealType, Me
 
     // onBind ...
     @Override
-    public void onBindParentViewHolder(@NonNull MealTypeViewHolder mealTypeViewHolder, int parentPosition, @NonNull MealType mealsType) {
-        mealTypeViewHolder.bind(mealsType);
+    public void onBindParentViewHolder(@NonNull MealHeaderViewHolder mealHeaderViewHolder, int parentPosition, @NonNull MealType mealsType) {
+        mealHeaderViewHolder.bind(mealsType);
     }
 
     @Override

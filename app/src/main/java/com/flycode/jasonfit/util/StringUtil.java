@@ -1,10 +1,14 @@
 package com.flycode.jasonfit.util;
 
+import java.util.HashMap;
+
 /**
  * Created - Schumakher on  3/11/17.
  */
 
 public class StringUtil {
+    private static HashMap<String, String> translationMap = new HashMap<>();
+
     public static String getFormattedTime (int timeHours, int timeMins, int timeSecs) {
         String estimatedTimeString;
 

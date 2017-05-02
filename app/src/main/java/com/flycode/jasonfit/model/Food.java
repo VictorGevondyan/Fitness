@@ -1,5 +1,7 @@
 package com.flycode.jasonfit.model;
 
+import android.content.Context;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -14,6 +16,9 @@ import java.io.Serializable;
 public class Food extends Model implements Serializable {
     @Column(name = "food", unique = true)
     public String food;
+
+    @Column(name = "food_de", unique = true)
+    public String foodDe;
 
     @Column(name = "category", index = true)
     public String category;
@@ -183,5 +188,15 @@ public class Food extends Model implements Serializable {
         return new double[] {
                 food.caffeine
         };
+    }
+
+    public String getTranslatedName(Context context) {
+        if (User.sharedPreferences(context).getLanguage().equals(User.LANGUAGE.ENGLISH)) {
+            return food;
+        } else if (User.sharedPreferences(context).getLanguage().equals(User.LANGUAGE.DEUTSCH)) {
+            return foodDe;
+        }
+
+        return "";
     }
 }

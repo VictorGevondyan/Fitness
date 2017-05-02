@@ -122,6 +122,7 @@
     <string name="food">Food</string>
     <string name="let_us_start">LET\'S START!</string>
     <string name="meal">Meal</string>
+    <string name="split">:</string>
 
     <string-array name="gender">
         <item>Male</item>

@@ -26,7 +26,6 @@ public class StatsData extends Model {
     @Column(name = "multiplier")
     public int multiplier;
 
-
     private  static int[] getDate(StatsData statsData) {
         return  new int[] {
                 statsData.dayOfYear,

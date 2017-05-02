@@ -20,7 +20,7 @@ public class WorkoutHeaderViewHolder extends SectioningAdapter.HeaderViewHolder 
     @BindView(R.id.workout_header_title) TextView titleTextView;
 
     public static WorkoutHeaderViewHolder initialize (ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_workout, parent, false);
         return new WorkoutHeaderViewHolder(view);
     }
 

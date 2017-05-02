@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import com.activeandroid.query.Select;
 import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
-import com.flycode.jasonfit.activity.MainActivity;
 import com.flycode.jasonfit.activity.MealActivity;
 import com.flycode.jasonfit.adapter.MealTypesListAdapter;
 import com.flycode.jasonfit.model.Meal;
@@ -32,7 +31,7 @@ import butterknife.Unbinder;
  * Created by Schumakher on 3/7/17.
  */
 
-public class MealTypesListFragment extends Fragment implements  MealTypesListAdapter.OnMealItemClickListener {
+public class MealListFragment extends Fragment implements  MealTypesListAdapter.OnMealItemClickListener {
 
     @BindView(R.id.meal_types_recycler) RecyclerView mealsRecyclerView;
 
@@ -44,7 +43,7 @@ public class MealTypesListFragment extends Fragment implements  MealTypesListAda
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
 
-        View mealsView = inflater.inflate(R.layout.fragment_meal_types_list, container, false);
+        View mealsView = inflater.inflate(R.layout.fragment_meal_list, container, false);
 
         unbinder = ButterKnife.bind(this, mealsView);
 

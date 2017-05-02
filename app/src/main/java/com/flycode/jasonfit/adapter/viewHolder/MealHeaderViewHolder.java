@@ -7,6 +7,8 @@ import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.MealType;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -15,20 +17,19 @@ import butterknife.ButterKnife;
  */
 
 
-public class MealTypeViewHolder extends ParentViewHolder {
+public class MealHeaderViewHolder extends ParentViewHolder {
 
     @BindView(R.id.meal_type) TextView mealTypeTextView;
 
-    public MealTypeViewHolder(View itemView) {
+    public MealHeaderViewHolder(View itemView) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
     }
 
     public void bind(MealType mealsType) {
-        mealTypeTextView.setText(mealsType.getName());
+        mealTypeTextView.setText(mealsType.getName().toUpperCase(Locale.US));
     }
-
 }
 
 

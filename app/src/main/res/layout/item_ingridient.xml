@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@color/colorWhite"
+    android:weightSum="2">
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="@dimen/normal_text_size"
+        android:layout_gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="@dimen/normal_text_size"
+        android:layout_gravity="center_vertical"/>
+
+    <Button
+        android:id="@+id/food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"
+        android:padding="5dp"
+        android:textSize="@dimen/normal_text_size"
+        android:textColor="#000000"
+        android:alpha="0.54"
+        android:minHeight="0dp"
+        android:background="@drawable/meal_ingridient_underline"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

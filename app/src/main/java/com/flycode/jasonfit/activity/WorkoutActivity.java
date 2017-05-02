@@ -386,7 +386,6 @@ public class WorkoutActivity extends AppCompatActivity {
                     public String format(int value) {
                         return StringUtil.formattedDigitValue(value * 0.5f);
                     }
-
                 })
                 .build();
 
