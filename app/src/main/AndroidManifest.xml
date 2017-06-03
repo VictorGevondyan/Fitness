@@ -38,11 +38,11 @@
             android:name=".activity.FoodActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.MealActivity"/>
+
         <service
             android:name=".service.WorkoutTimerService"
             android:exported="false" />
-
-        <activity android:name=".activity.MealActivity"></activity>
     </application>
 
 </manifest>
