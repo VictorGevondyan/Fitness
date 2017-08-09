@@ -123,6 +123,8 @@
     <string name="let_us_start">LET\'S START!</string>
     <string name="meal">Meal</string>
     <string name="split">:</string>
+    <string name="sorry">Sorry</string>
+    <string name="something_goes_wrong_during_subscription">Sorry, something goes wrong during subscription. Please, try again later.</string>
 
     <string-array name="gender">
         <item>Male</item>

@@ -13,7 +13,9 @@ import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.vending.billing.IInAppBillingService;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.StatsData;
 import com.flycode.jasonfit.model.User;
@@ -31,13 +33,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class StartActivity extends AppCompatActivity {
-
     private UserPreferences userPreferences;
 
     private static final int BUY_REQUEST_CODE = 661;
 
-    IInAppBillingService inAppBillingService;
-    String premiumUpgradePrice;
+    private IInAppBillingService inAppBillingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,28 +78,7 @@ public class StartActivity extends AppCompatActivity {
         statsData.dayOfYear = currentDay;
         statsData.save();
 
-        try {
-            if (skuFromBillingRequest() == null) {
-                return;
-            }
-
-            if (checkForActiveSubscriptions()) {
-                Intent mainActivityIntent = new Intent(this,MainActivity.class);
-                startActivity(mainActivityIntent);
-                return;
-            }
-
-            buyItem(skuFromBillingRequest());
-
-            Log.i("TAGG", "error, no sku");
-
-        } catch (InterruptedException | JSONException | IntentSender.SendIntentException | RemoteException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-//        Intent mainActivityIntent = new Intent(this,MainActivity.class);
-//        startActivity(mainActivityIntent);
-
+        new SubscriptionTask().execute();
     }
 
     ServiceConnection serviceConnection = new ServiceConnection() {
@@ -114,76 +93,20 @@ public class StartActivity extends AppCompatActivity {
         }
     };
 
-    private String skuFromBillingRequest() throws InterruptedException, JSONException, ExecutionException {
-        ArrayList<String> skuList = new ArrayList<>();
-        skuList.add("monthlySubscription");
-
-        final Bundle querySkus = new Bundle();
-        querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
-
-        //Below We create new thread because as google says ->
-        // "calling this method triggers a network request that could block your main thread"
-
-        AsyncTask<Void, Integer, Bundle> task = new AsyncTask<Void, Integer, Bundle>() {
-            @Override
-            protected Bundle doInBackground(Void... params) {
-
-                try {
-                    Bundle skuDetails = inAppBillingService.getSkuDetails(3,
-                            getPackageName(),
-                            "subs",
-                            querySkus);
-
-                    return skuDetails;
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Bundle bundle) {
-                super.onPostExecute(bundle);
-            }
-        };
-
-        task.execute();
-        Bundle skuDetails = task.get();
-
-        //end of thread hardcore party
-
-        int response = skuDetails.getInt("RESPONSE_CODE");
-
-        if (response == 0) {
-            ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
-
-            for (String thisResponse : responseList) {
-                JSONObject object = new JSONObject(thisResponse);
-
-                String sku = object.getString("productId");
-                String price = object.getString("price");
-
-                if (sku.equals("monthlySubscription")) {
-                    premiumUpgradePrice = price;
-                    return sku;
-                }
-            }
-        }
-
-        return null;
-    }
-
     private void buyItem(String sku) throws IntentSender.SendIntentException, RemoteException {
-        Bundle buyIntentBundle = inAppBillingService.getBuyIntent(3, getPackageName(), sku, "subs", null /*developerPayload*/);
+        Bundle buyIntentBundle = inAppBillingService.getBuyIntent(3, getPackageName(), sku, Constants.IN_APP_PURCHASE.TYPE, null /*developerPayload*/);
 
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("RESPONSE_BUY_INTENT");
+        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+
+        if (pendingIntent == null) {
+            beSorryForSubscription();
+            return;
+        }
 
         startIntentSenderForResult(pendingIntent.getIntentSender(),
                 BUY_REQUEST_CODE,
                 new Intent(),
-                Integer.valueOf(0),
-                Integer.valueOf(0),
-                Integer.valueOf(0));
+                0, 0, 0);
     }
 
     @Override
@@ -193,21 +116,25 @@ public class StartActivity extends AppCompatActivity {
             return;
         }
 
-        int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
         String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
 
-        if (responseCode != RESULT_OK) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (purchaseData == null) {
+            beSorryForSubscription();
             return;
         }
 
         try {
             JSONObject jsonObject = new JSONObject(purchaseData);
-            String sku = jsonObject.getString("productID");
+            String sku = jsonObject.getString("productId");
             Log.i("TAGG", sku + "bought");
 
             Intent mainActivityIntent = new Intent(this,MainActivity.class);
             startActivity(mainActivityIntent);
-
+            finish();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -216,7 +143,7 @@ public class StartActivity extends AppCompatActivity {
 
     private boolean checkForActiveSubscriptions() throws RemoteException, JSONException, ExecutionException, InterruptedException {
 
-        Bundle activeSubscriptions = inAppBillingService.getPurchases(3, "com.flycode.jasonfit", "subs", null);
+        Bundle activeSubscriptions = inAppBillingService.getPurchases(3, "com.flycode.jasonfit", Constants.IN_APP_PURCHASE.TYPE, null);
 
         if (activeSubscriptions.getInt("RESPONSE_CODE") == 0) {
 
@@ -227,7 +154,7 @@ public class StartActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(purchaseData);
                 String productId = jsonObject.getString("productId");
 
-                if (productId.equals(skuFromBillingRequest())) {
+                if (productId.equals(Constants.IN_APP_PURCHASE.ID)) {
                     return true;
                 }
             }
@@ -235,5 +162,103 @@ public class StartActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private class SubscriptionTask extends AsyncTask<Void, Integer, Bundle> {
+        @Override
+        protected Bundle doInBackground(Void... params) {
+
+            try {
+                ArrayList<String> itemList = new ArrayList<>();
+                itemList.add(Constants.IN_APP_PURCHASE.ID);
+
+                final Bundle queryItems = new Bundle();
+                queryItems.putStringArrayList("ITEM_ID_LIST", itemList);
+
+                return inAppBillingService.getSkuDetails(3,
+                        getPackageName(),
+                        Constants.IN_APP_PURCHASE.TYPE,
+                        queryItems);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bundle result) {
+            if (result == null) {
+                beSorryForSubscription();
+                return;
+            }
+
+            int response = result.getInt("RESPONSE_CODE");
+
+            if (response != 0) {
+                beSorryForSubscription();
+                return;
+            }
+
+            ArrayList<String> responseList = result.getStringArrayList("DETAILS_LIST");
+
+            if (responseList == null) {
+                beSorryForSubscription();
+                return;
+            }
+
+            String sku = null;
+
+            for (String thisResponse : responseList) {
+                try {
+                    JSONObject object = new JSONObject(thisResponse);
+
+                    sku = object.getString("productId");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                    beSorryForSubscription();
+
+                    return;
+                }
+
+                if (!sku.equals(Constants.IN_APP_PURCHASE.ID)) {
+                    beSorryForSubscription();
+
+                    return;
+                }
+            }
+
+            boolean alreadySubscribed = false;
+
+            try {
+                alreadySubscribed = checkForActiveSubscriptions();
+            } catch (InterruptedException | JSONException | RemoteException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            if (alreadySubscribed) {
+                Intent mainActivityIntent = new Intent(StartActivity.this, MainActivity.class);
+                mainActivityIntent.putExtra(Constants.EXTRAS.ALREADY_SUBSCRIBED, true);
+                startActivity(mainActivityIntent);
+                finish();
+                return;
+            }
+
+            try {
+                buyItem(sku);
+            } catch (IntentSender.SendIntentException | RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void beSorryForSubscription() {
+        new MaterialDialog
+                .Builder(StartActivity.this)
+                .title(R.string.sorry)
+                .content(R.string.something_goes_wrong_during_subscription)
+                .positiveText(R.string.ok)
+                .show();
     }
 }
