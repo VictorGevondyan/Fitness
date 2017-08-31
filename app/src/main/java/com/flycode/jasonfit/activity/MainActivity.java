@@ -20,6 +20,7 @@ import com.activeandroid.query.Select;
 import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.adapter.SideMenuAdapter;
+import com.flycode.jasonfit.fragment.CoachListFragment;
 import com.flycode.jasonfit.fragment.FoodListFragment;
 import com.flycode.jasonfit.fragment.InfoFragment;
 import com.flycode.jasonfit.fragment.MealListFragment;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
                 return new StatsFragment();
             case FOODS:
                 return new FoodListFragment();
+            case COACHES:
+                return new CoachListFragment();
             case SETTINGS:
                 return new SettingsFragment();
             case INFO:

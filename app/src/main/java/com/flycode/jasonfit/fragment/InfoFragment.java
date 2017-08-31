@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.flycode.jasonfit.R;
 
 /**
- * Created by Schumakher on 3/7/17.
+ * Created - Schumakher on  3/7/17.
  */
 
 public class InfoFragment extends Fragment {

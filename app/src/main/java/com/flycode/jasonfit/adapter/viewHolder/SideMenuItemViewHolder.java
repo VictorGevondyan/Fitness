@@ -59,6 +59,10 @@ public class SideMenuItemViewHolder extends RecyclerView.ViewHolder {
                 titleTextView.setText(R.string.foods);
                 break;
 
+            case COACHES:
+                titleTextView.setText(R.string.coaches);
+                break;
+
             case SETTINGS:
                 titleTextView.setText(R.string.settings);
                 break;
