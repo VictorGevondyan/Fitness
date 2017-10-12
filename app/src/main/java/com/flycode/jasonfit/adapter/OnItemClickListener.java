@@ -3,7 +3,7 @@ package com.flycode.jasonfit.adapter;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * Created by Schumakher on 3/7/17.
+ * Created - Schumakher on  3/7/17.
  */
 
 public interface OnItemClickListener {

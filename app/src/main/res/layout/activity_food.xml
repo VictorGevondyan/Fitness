@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
@@ -19,13 +20,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/title"
+            <!-- very important to not to change id names of views below /Sch -->
+            <com.ms.square.android.expandabletextview.ExpandableTextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/expand_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:textSize="@dimen/title_text_size"/>
+                expandableTextView:maxCollapsedLines="3"
+                expandableTextView:animDuration="200">
+
+                <TextView
+                    android:id="@id/expandable_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_vertical_margin"
+                    android:textSize="@dimen/title_text_size"
+                    android:gravity="center_horizontal"
+                    android:textColor="#666666" />
+
+                <ImageButton
+                    android:id="@id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:layout_gravity="end|bottom"
+                    android:background="@android:color/transparent"
+                    tools:ignore="ContentDescription" />
+            </com.ms.square.android.expandabletextview.ExpandableTextView>
 
         </LinearLayout>
 

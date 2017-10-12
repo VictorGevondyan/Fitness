@@ -11,16 +11,15 @@ import android.widget.TextView;
 import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.Food;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FoodActivity extends AppCompatActivity {
 
-    private static final String EXPEND_SETTINGS = "expendSettings";
-
     @BindView(R.id.food_info_container) LinearLayout foodInfoContainerLinearLayout;
-    @BindView(R.id.title) TextView foodNameTextView;
+    @BindView(R.id.expand_text_view) ExpandableTextView foodNameTextView;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     private static final int[] DESCRIPTOR_NAMES = new int[] {
@@ -38,19 +37,10 @@ public class FoodActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle(R.string.food);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View view) {
-                onBackPressed();
-            }
-        });
+        processToolbar();
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+
         Food food = (Food) getIntent().getSerializableExtra(Constants.EXTRAS.FOOD);
 
         foodNameTextView.setText(food.food);
@@ -86,4 +76,17 @@ public class FoodActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    private void processToolbar() {
+        toolbar.setTitle(R.string.food);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                onBackPressed();
+            }
+        });
+    }
 }
