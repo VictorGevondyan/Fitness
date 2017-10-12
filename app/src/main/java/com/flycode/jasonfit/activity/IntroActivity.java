@@ -42,7 +42,9 @@ public class IntroActivity extends AppCompatActivity {
 
     @OnClick(R.id.proceed)
     public void onProceed() {
-        startActivity(new Intent(this, StartActivity.class));
+//        startActivity(new Intent(this, StartActivity.class));
+        startActivity(new Intent(this, MainActivity .class));
+        finish();
     }
 
     private class IntroPagerAdapter extends FragmentPagerAdapter {

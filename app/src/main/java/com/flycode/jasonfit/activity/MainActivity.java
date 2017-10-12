@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SideMenuAdapter.O
                 return new StatsFragment();
             case FOODS:
                 return new FoodListFragment();
-            case COACHES:
+            case COACHING:
                 return new CoachListFragment();
             case SETTINGS:
                 return new SettingsFragment();

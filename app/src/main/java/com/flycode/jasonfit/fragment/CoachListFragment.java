@@ -38,12 +38,12 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
 
         ArrayList<Coach> coaches = new ArrayList<>();
 
-//        Coach coach = new Coach();
-//        coach.setName("Vazgen Bagratuni");
-//        coach.setEmail("vazgen.bagratuni@yopmail.com");
-//
-//        coaches.add(coach);
-//
+        Coach coach = new Coach();
+        coach.setName("Vazgen Bagratuni");
+        coach.setEmail("vazgen.bagratuni@yopmail.com");
+
+        coaches.add(coach);
+
 //        Coach coach1 = new Coach();
 //        coach1.setName("Ashot II Bagratuni");
 //        coach1.setEmail("ashotBagratuni914@yopmail.com");
@@ -52,6 +52,10 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
 
         coachRecycler.setAdapter(new CoachListAdapter(coaches, this));
         coachRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if (coaches.size() == 1) {
+            onCoachItemClick(coaches.get(0));
+        }
 
         return view;
     }

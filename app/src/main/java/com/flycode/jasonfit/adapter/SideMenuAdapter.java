@@ -16,7 +16,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuItemViewHolder
     }
 
     public enum SideMenuItem {
-        WORKOUTS, MEALS, STATS, FOODS, COACHES, SETTINGS, INFO
+        WORKOUTS, MEALS, STATS, FOODS, COACHING, SETTINGS, INFO
     }
 
     private OnSideMenuClickListener listener;

@@ -46,6 +46,8 @@ public class CoachViewHolder extends RecyclerView.ViewHolder {
 
     public void setup(Coach coach) {
 
+        emailTextView.setVisibility(View.GONE);
+
         nameTextView.setText(coach.getName());
         emailTextView.setText(coach.getEmail());
     }
