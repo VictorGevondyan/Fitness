@@ -122,6 +122,9 @@ public class Food extends Model implements Serializable {
     @Column(name = "caffeine")
     public double caffeine;
 
+    @Column(name = "count")
+    public int count;
+
     public static double[][] getValues(Food food) {
         return new double[][] {
                 getProximities(food),

@@ -221,6 +221,10 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
     @OnClick(R.id.calculate_button)
     public void onCalculateButtonClickListener() {
 
+        if (addedFoods.size() == 0) {
+            return;
+        }
+
         Food food = new Food();
 
         for (int index = 0; index < addedFoods.size(); index++ ) {

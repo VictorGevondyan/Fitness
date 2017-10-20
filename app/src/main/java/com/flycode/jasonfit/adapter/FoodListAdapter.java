@@ -52,12 +52,23 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodItemViewHolder> im
 
     @Override
     public void onAddFoodClick(RecyclerView.ViewHolder viewHolder) {
+        foodList.get(viewHolder.getAdapterPosition()).count++;
+        notifyItemChanged(viewHolder.getAdapterPosition());
         onAddFoodItemClickListener.onAddFoodItemClickListener(foodList.get(viewHolder.getAdapterPosition()));
     }
 
     @Override
     public void onRemoveFoodClick(RecyclerView.ViewHolder viewHolder) {
-        onAddFoodItemClickListener.onRemoveFoodItemClickListener(foodList.get(viewHolder.getAdapterPosition()));
+
+        Food food = foodList.get(viewHolder.getAdapterPosition());
+
+        if (food.count == 0) {
+            return;
+        }
+
+        food.count--;
+        notifyItemChanged(viewHolder.getAdapterPosition());
+        onAddFoodItemClickListener.onRemoveFoodItemClickListener(food);
     }
 
     public interface OnFoodItemClickListener {
