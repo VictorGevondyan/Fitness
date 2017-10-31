@@ -225,5 +225,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="coaching">Coaching</string>
     <string name="calculate">Calculate</string>
+    <string name="meal_calculator_picker_hint">Input here food amount in grams</string>
 
 </resources>

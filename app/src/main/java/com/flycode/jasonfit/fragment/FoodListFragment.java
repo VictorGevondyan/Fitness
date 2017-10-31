@@ -169,7 +169,7 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         String count = String.valueOf(foodList.get(viewHolder.getAdapterPosition()).count);
 
         new MaterialDialog.Builder(getActivity())
-                .title("type here food count in gramms")
+                .title(R.string.meal_calculator_picker_hint)
                 .inputRangeRes(1, 9, android.R.color.holo_red_light)
                 .inputType(InputType.TYPE_CLASS_NUMBER)
                 .input(null, count, new MaterialDialog.InputCallback() {
