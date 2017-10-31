@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.flycode.jasonfit"
         minSdkVersion 18
@@ -35,10 +35,9 @@ dependencies {
     })
     compile project(path:':fabbutton')
 
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    compile 'com.android.support:cardview-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:cardview-v7:25.4.0'
     compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
     compile 'com.wdullaer:materialdatetimepicker:3.1.3'
     compile 'com.afollestad.material-dialogs:core:0.9.4.1'
@@ -49,12 +48,12 @@ dependencies {
     compile 'biz.kasual:materialnumberpicker:1.2.1'
     compile 'com.thoughtbot:expandablerecyclerview:1.3'
     compile 'com.bignerdranch.android:expandablerecyclerview:3.0.0-RC1'
-    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
     compile 'io.t28:shade:0.9.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-    compile 'com.android.support:support-v4:25.2.0'
+    compile 'com.android.support:support-v4:25.4.0'
     compile 'com.ms-square:expandableTextView:0.1.4'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'io.t28:shade-processor:0.9.0'
 }
