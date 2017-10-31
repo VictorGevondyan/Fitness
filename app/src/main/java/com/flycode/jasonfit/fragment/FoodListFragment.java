@@ -6,22 +6,24 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.activity.FoodActivity;
 import com.flycode.jasonfit.adapter.FoodListAdapter;
 import com.flycode.jasonfit.model.Food;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,7 +46,7 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
     private String searchQuery;
     private String category;
 
-    private ArrayList<Food> addedFoods = new ArrayList<>();
+    private List<Food> foodList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
         searchQuery = "";
         category = "";
 
-        List<Food> foodList = new Select().from(Food.class).execute();
+        foodList = new Select().from(Food.class).execute();
 
         foodListAdapter = new FoodListAdapter(foodList, this, this);
 
@@ -162,17 +164,125 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
     }
 
     @Override
-    public void onAddFoodItemClickListener(Food food) {
-        addedFoods.add(food);
+    public void onAddFoodItemClickListener(final RecyclerView.ViewHolder viewHolder) {
+
+        String count = String.valueOf(foodList.get(viewHolder.getAdapterPosition()).count);
+
+        new MaterialDialog.Builder(getActivity())
+                .title("type here food count in gramms")
+                .inputRangeRes(1, 9, android.R.color.holo_red_light)
+                .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input(null, count, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
+                        int inputInt = Integer.parseInt(input.toString());
+
+                        if (inputInt < 0) {
+                            return;
+                        }
+
+                        foodList.get(viewHolder.getAdapterPosition()).count = inputInt;
+                        foodListAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    }
+                }).show();
     }
 
     @Override
     public void onRemoveFoodItemClickListener(Food food) {
-        if (!addedFoods.contains(food)) {
+//        if (!addedFoods.contains(food)) {
+//            return;
+//        }
+//
+//        addedFoods.remove(food);
+    }
+
+
+    @OnTextChanged(R.id.search_edit_text)
+    public void onSearch(CharSequence charSequence) {
+        From query = new Select().from(Food.class);
+        searchQuery =  charSequence.toString();
+        searchQuery = "%" + searchQuery + "%";
+
+        if (!category.isEmpty()) {
+            query.where("category = ?", category);
+        }
+
+        List<Food> foodList = query
+                .where("food LIKE ?", searchQuery)
+                .orderBy("food ASC")
+                .execute();
+
+        foodListAdapter.setItems(foodList);
+    }
+
+    @OnClick(R.id.calculate_button)
+    public void onCalculateButtonClickListener() {
+
+        if (foodList.size() == 0) {
             return;
         }
 
-        addedFoods.remove(food);
+        Food food = new Food();
+
+        for (int index = 0; index < foodList.size(); index++ ) {
+
+            if (foodList.get(index).count == 0) {
+                continue;
+            }
+
+            if (food.food == null) {
+
+                food.food = foodList.get(index).food;
+                food.foodDe = foodList.get(index).foodDe;
+            } else {
+
+                food.food += ( ", " + foodList.get(index).food);
+                food.foodDe += ( ", " + foodList.get(index).foodDe);
+            }
+
+            food.water = roundedSum(food.water += foodList.get(index).water * foodList.get(index).count / 100);
+            food.energy = roundedSum(food.energy += foodList.get(index).energy * foodList.get(index).count / 100);
+            food.protein = roundedSum(food.protein += foodList.get(index).protein * foodList.get(index).count / 100);
+            food.fat = roundedSum(food.fat += foodList.get(index).fat * foodList.get(index).count / 100);
+            food.carbohydrate = roundedSum(food.carbohydrate += foodList.get(index).carbohydrate * foodList.get(index).count / 100);
+            food.fiber = roundedSum(food.fiber += foodList.get(index).fiber * foodList.get(index).count / 100);
+            food.sugars = roundedSum(food.sugars += foodList.get(index).sugars * foodList.get(index).count / 100);
+            food.calcium = roundedSum(food.calcium += foodList.get(index).calcium * foodList.get(index).count / 100);
+            food.iron = roundedSum(food.iron += foodList.get(index).iron * foodList.get(index).count / 100);
+            food.magnesium = roundedSum(food.magnesium += foodList.get(index).magnesium * foodList.get(index).count / 100);
+            food.phosphorus = roundedSum(food.phosphorus += foodList.get(index).phosphorus * foodList.get(index).count / 100);
+            food.potassium = roundedSum(food.potassium += foodList.get(index).potassium * foodList.get(index).count / 100);
+            food.sodium = roundedSum(food.sodium += foodList.get(index).sodium * foodList.get(index).count / 100);
+            food.zinc = roundedSum(food.zinc += foodList.get(index).zinc * foodList.get(index).count / 100);
+            food.vitaminC = roundedSum(food.vitaminC += foodList.get(index).vitaminC * foodList.get(index).count / 100);
+            food.thiamin = roundedSum(food.thiamin += foodList.get(index).thiamin * foodList.get(index).count / 100);
+            food.riboflavin = roundedSum(food.riboflavin += foodList.get(index).riboflavin * foodList.get(index).count / 100);
+            food.niacin = roundedSum(food.niacin += foodList.get(index).niacin * foodList.get(index).count / 100);
+            food.vitaminB6 = roundedSum(food.vitaminB6 += foodList.get(index).vitaminB6 * foodList.get(index).count / 100);
+            food.folateDFE = roundedSum(food.folateDFE += foodList.get(index).folateDFE * foodList.get(index).count / 100);
+            food.vitaminB12 = roundedSum(food.vitaminB12 += foodList.get(index).vitaminB12 * foodList.get(index).count / 100);
+            food.vitaminARAE = roundedSum(food.vitaminARAE += foodList.get(index).vitaminARAE * foodList.get(index).count / 100);
+            food.vitaminAIU = roundedSum(food.vitaminAIU += foodList.get(index).vitaminAIU * foodList.get(index).count / 100);
+            food.vitaminE = roundedSum(food.vitaminE += foodList.get(index).vitaminE * foodList.get(index).count / 100);
+            food.vitaminDD2D3 = roundedSum(food.vitaminDD2D3 += foodList.get(index).vitaminDD2D3 * foodList.get(index).count / 100);
+            food.vitaminD = roundedSum(food.vitaminD += foodList.get(index).vitaminD * foodList.get(index).count / 100);
+            food.vitaminK = roundedSum(food.vitaminK += foodList.get(index).vitaminK * foodList.get(index).count / 100);
+            food.fattyAcidsTotalSaturated = roundedSum(food.fattyAcidsTotalSaturated += foodList.get(index).fattyAcidsTotalSaturated * foodList.get(index).count / 100);
+            food.fattyAcidsTotalMonounsaturated = roundedSum(food.fattyAcidsTotalMonounsaturated += foodList.get(index).fattyAcidsTotalMonounsaturated * foodList.get(index).count / 100);
+            food.fattyAcidsTotalPolyunsaturated = roundedSum(food.fattyAcidsTotalPolyunsaturated += foodList.get(index).fattyAcidsTotalPolyunsaturated * foodList.get(index).count / 100);
+            food.fattyAcidsTotalTrans = roundedSum(food.fattyAcidsTotalTrans += foodList.get(index).fattyAcidsTotalTrans * foodList.get(index).count / 100);
+            food.cholesterol = roundedSum(food.cholesterol += foodList.get(index).cholesterol * foodList.get(index).count / 100);
+            food.caffeine = roundedSum(food.caffeine += foodList.get(index).caffeine * foodList.get(index).count / 100);
+        }
+
+        Intent intent = new Intent(getActivity(), FoodActivity.class)
+                .putExtra(Constants.EXTRAS.FOOD, food);
+        startActivity(intent);
+    }
+
+    private double roundedSum(double value) {
+        return (double) Math.round(value * Math.pow(10, 4)) / (long) Math.pow(10, 4);
     }
 
     private class DividerDecoration extends RecyclerView.ItemDecoration {
@@ -198,88 +308,5 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
                 divider.draw(c);
             }
         }
-    }
-
-    @OnTextChanged(R.id.search_edit_text)
-    public void onSearch(CharSequence charSequence) {
-        From query = new Select().from(Food.class);
-        searchQuery =  charSequence.toString();
-        searchQuery = "%" + searchQuery + "%";
-
-        if (!category.isEmpty()) {
-            query.where("category = ?", category);
-        }
-
-        List<Food> foodList = query
-                .where("food LIKE ?", searchQuery)
-                .orderBy("food ASC")
-                .execute();
-
-        foodListAdapter.setItems(foodList);
-    }
-
-    @OnClick(R.id.calculate_button)
-    public void onCalculateButtonClickListener() {
-
-        if (addedFoods.size() == 0) {
-            return;
-        }
-
-        Food food = new Food();
-
-        for (int index = 0; index < addedFoods.size(); index++ ) {
-
-            if (food.food == null) {
-
-                food.food = addedFoods.get(index).food;
-                food.foodDe = addedFoods.get(index).foodDe;
-            } else {
-
-                food.food += ( ", " + addedFoods.get(index).food);
-                food.foodDe += ( ", " + addedFoods.get(index).foodDe);
-            }
-
-            food.water = roundedSum(food.water += addedFoods.get(index).water);
-            food.energy = roundedSum(food.energy += addedFoods.get(index).energy);
-            food.protein = roundedSum(food.protein += addedFoods.get(index).protein);
-            food.fat = roundedSum(food.fat += addedFoods.get(index).fat);
-            food.carbohydrate = roundedSum(food.carbohydrate += addedFoods.get(index).carbohydrate);
-            food.fiber = roundedSum(food.fiber += addedFoods.get(index).fiber);
-            food.sugars = roundedSum(food.sugars += addedFoods.get(index).sugars);
-            food.calcium = roundedSum(food.calcium += addedFoods.get(index).calcium);
-            food.iron = roundedSum(food.iron += addedFoods.get(index).iron);
-            food.magnesium = roundedSum(food.magnesium += addedFoods.get(index).magnesium);
-            food.phosphorus = roundedSum(food.phosphorus += addedFoods.get(index).phosphorus);
-            food.potassium = roundedSum(food.potassium += addedFoods.get(index).potassium);
-            food.sodium = roundedSum(food.sodium += addedFoods.get(index).sodium);
-            food.zinc = roundedSum(food.zinc += addedFoods.get(index).zinc);
-            food.vitaminC = roundedSum(food.vitaminC += addedFoods.get(index).vitaminC);
-            food.thiamin = roundedSum(food.thiamin += addedFoods.get(index).thiamin);
-            food.riboflavin = roundedSum(food.riboflavin += addedFoods.get(index).riboflavin);
-            food.niacin = roundedSum(food.niacin += addedFoods.get(index).niacin);
-            food.vitaminB6 = roundedSum(food.vitaminB6 += addedFoods.get(index).vitaminB6);
-            food.folateDFE = roundedSum(food.folateDFE += addedFoods.get(index).folateDFE);
-            food.vitaminB12 = roundedSum(food.vitaminB12 += addedFoods.get(index).vitaminB12);
-            food.vitaminARAE = roundedSum(food.vitaminARAE += addedFoods.get(index).vitaminARAE);
-            food.vitaminAIU = roundedSum(food.vitaminAIU += addedFoods.get(index).vitaminAIU);
-            food.vitaminE = roundedSum(food.vitaminE += addedFoods.get(index).vitaminE);
-            food.vitaminDD2D3 = roundedSum(food.vitaminDD2D3 += addedFoods.get(index).vitaminDD2D3);
-            food.vitaminD = roundedSum(food.vitaminD += addedFoods.get(index).vitaminD);
-            food.vitaminK = roundedSum(food.vitaminK += addedFoods.get(index).vitaminK);
-            food.fattyAcidsTotalSaturated = roundedSum(food.fattyAcidsTotalSaturated += addedFoods.get(index).fattyAcidsTotalSaturated);
-            food.fattyAcidsTotalMonounsaturated = roundedSum(food.fattyAcidsTotalMonounsaturated += addedFoods.get(index).fattyAcidsTotalMonounsaturated);
-            food.fattyAcidsTotalPolyunsaturated = roundedSum(food.fattyAcidsTotalPolyunsaturated += addedFoods.get(index).fattyAcidsTotalPolyunsaturated);
-            food.fattyAcidsTotalTrans = roundedSum(food.fattyAcidsTotalTrans += addedFoods.get(index).fattyAcidsTotalTrans);
-            food.cholesterol = roundedSum(food.cholesterol += addedFoods.get(index).cholesterol);
-            food.caffeine = roundedSum(food.caffeine += addedFoods.get(index).caffeine);
-        }
-
-        Intent intent = new Intent(getActivity(), FoodActivity.class)
-                .putExtra(Constants.EXTRAS.FOOD, food);
-        startActivity(intent);
-    }
-
-    private double roundedSum(double value) {
-        return (double) Math.round(value * Math.pow(10, 4)) / (long) Math.pow(10, 4);
     }
 }

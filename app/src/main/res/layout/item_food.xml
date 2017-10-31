@@ -27,15 +27,9 @@
         android:orientation="horizontal"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
+        android:padding="5dp"
         android:gravity="center_vertical"
         android:layout_alignParentEnd="true">
-
-        <Button
-            android:id="@+id/remove_food_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="15dp"
-            android:background="@drawable/ic_remove"/>
 
         <TextView
             android:id="@+id/count_text_view"
@@ -47,13 +41,6 @@
             android:textColor="@color/text_grey"
             android:text="0"
             tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/add_food_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="15dp"
-            android:background="@drawable/ic_add"/>
 
     </LinearLayout>
 

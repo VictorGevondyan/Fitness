@@ -43,15 +43,20 @@ public class FoodItemViewHolder extends RecyclerView.ViewHolder {
         listener.onItemClick(this);
     }
 
-    @OnClick(R.id.add_food_button)
-    public void onAddButtonClickListener() {
+    @OnClick(R.id.add_food_layout)
+    public void onAddFoodLayoutClickListener() {
         onAddItemClickListener.onAddFoodClick(this);
     }
 
-    @OnClick(R.id.remove_food_button)
-    public void onRemoveFoodButtonClickListener() {
-        onAddItemClickListener.onRemoveFoodClick(this);
-    }
+//    @OnClick(R.id.add_food_button)
+//    public void onAddButtonClickListener() {
+//        onAddItemClickListener.onAddFoodClick(this);
+//    }
+//
+//    @OnClick(R.id.remove_food_button)
+//    public void onRemoveFoodButtonClickListener() {
+//        onAddItemClickListener.onRemoveFoodClick(this);
+//    }
 
     public void setup(Food food) {
         titleTextView.setText(food.food);

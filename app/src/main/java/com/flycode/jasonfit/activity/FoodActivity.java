@@ -13,6 +13,8 @@ import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.model.Food;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -64,7 +66,19 @@ public class FoodActivity extends AppCompatActivity {
                 TextView valueTextView = (TextView) parameterView.findViewById(R.id.value);
 
                 nameTextView.setText(parameters[parameterIndex]);
-                valueTextView.setText(String.valueOf(values[descriptorIndex][parameterIndex]));
+
+                String formattedString = String.format(Locale.US, "%.4f", values[descriptorIndex][parameterIndex]);
+
+                while (formattedString.endsWith("0")) {
+
+                    if (String.valueOf(formattedString.charAt(formattedString.length() - 2)).equals(".")) {
+                        break;
+                    }
+
+                    formattedString = formattedString.replaceAll("0$","");
+                }
+
+                valueTextView.setText(formattedString);
 
                 parameterContainerLinearLayout.addView(parameterView);
             }

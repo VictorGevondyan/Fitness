@@ -52,23 +52,23 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodItemViewHolder> im
 
     @Override
     public void onAddFoodClick(RecyclerView.ViewHolder viewHolder) {
-        foodList.get(viewHolder.getAdapterPosition()).count++;
-        notifyItemChanged(viewHolder.getAdapterPosition());
-        onAddFoodItemClickListener.onAddFoodItemClickListener(foodList.get(viewHolder.getAdapterPosition()));
+//        foodList.get(viewHolder.getAdapterPosition()).count++;
+//        notifyItemChanged(viewHolder.getAdapterPosition());
+        onAddFoodItemClickListener.onAddFoodItemClickListener(viewHolder);
     }
 
     @Override
     public void onRemoveFoodClick(RecyclerView.ViewHolder viewHolder) {
 
-        Food food = foodList.get(viewHolder.getAdapterPosition());
-
-        if (food.count == 0) {
-            return;
-        }
-
-        food.count--;
-        notifyItemChanged(viewHolder.getAdapterPosition());
-        onAddFoodItemClickListener.onRemoveFoodItemClickListener(food);
+//        Food food = foodList.get(viewHolder.getAdapterPosition());
+//
+//        if (food.count == 0) {
+//            return;
+//        }
+//
+//        food.count--;
+//        notifyItemChanged(viewHolder.getAdapterPosition());
+//        onAddFoodItemClickListener.onRemoveFoodItemClickListener(food);
     }
 
     public interface OnFoodItemClickListener {
@@ -76,7 +76,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodItemViewHolder> im
     }
 
     public interface OnAddFoodItemClickListener {
-        void onAddFoodItemClickListener(Food food);
+        void onAddFoodItemClickListener(RecyclerView.ViewHolder viewHolder);
         void onRemoveFoodItemClickListener(Food food);
     }
 }

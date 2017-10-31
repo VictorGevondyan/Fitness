@@ -1,5 +1,6 @@
 package com.flycode.jasonfit.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -172,17 +173,17 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupOverWeight() {
-        ArrayList<Float> weightArray = new ArrayList<>();
-        StatsData statsData;
+//        ArrayList<Float> weightArray = new ArrayList<>();
+//        StatsData statsData;
 
-        for (int index = 0; index < 7; index++) {
-            Calendar calendar = getCalendarForWeek(0, index);
-            statsData = getStatsDataForCalendar(calendar);
+//        for (int index = 0; index < 7; index++) {
+//            Calendar calendar = getCalendarForWeek(0, index);
+//            statsData = getStatsDataForCalendar(calendar);
 
-            if (statsData != null) {
-                weightArray.add(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false));
-            }
-        }
+//            if (statsData != null) {
+//                weightArray.add(MetricConverter.convertWeight(statsData.weight, userPreferences.getWeightMeasurement(), false));
+//            }
+//        }
 
         float lastWeight = userPreferences.getWeight();
         float height = userPreferences.getHeight();
@@ -242,13 +243,14 @@ public class StatsFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void setupBurntCalories() {
 
         double burntCaloriesThisWeek = 0;
 
         StatsData statsData;
         ArrayList<Double> burntCaloriesThisWeekArray = new ArrayList<>();
-        String kcal = getResources().getString(R.string.kcal);
+        String kcalString = getResources().getString(R.string.kcal);
 
         for (int i = 0; i < 7; i++) {
 
@@ -261,11 +263,17 @@ public class StatsFragment extends Fragment {
             }
         }
 
-        String burntThisWeekString = String.valueOf(burntCaloriesThisWeek) + kcal;
+        String burntThisWeekString = String.valueOf(burntCaloriesThisWeek) + kcalString;
         burntThisWeek.setText(burntThisWeekString);
 
-        String burntRecordWeekString = String .valueOf(Collections.max(burntCaloriesThisWeekArray)) + kcal;
-        burntRecordWeek.setText(burntRecordWeekString);
+        String burntRecordWeekString = "0.0";
+
+        if (burntCaloriesThisWeekArray.size() != 0) {
+
+            burntRecordWeekString = String.valueOf(Collections.max(burntCaloriesThisWeekArray));
+        }
+
+        burntRecordWeek.setText(burntRecordWeekString + kcalString);
 
         //_________burnt last week____________
 
@@ -283,7 +291,7 @@ public class StatsFragment extends Fragment {
             }
         }
 
-        burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek) + kcal);
+        burntLastWeek.setText(String.valueOf(burntCaloriesLastWeek) + kcalString);
 
     }
 
