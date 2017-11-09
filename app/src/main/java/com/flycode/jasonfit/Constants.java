@@ -6,8 +6,9 @@ package com.flycode.jasonfit;
 
 public class Constants {
     public static class IN_APP_PURCHASE {
-        public static String ID = "monthly_subscription";
-//        public static String ID = "android.test.item_unavailable";
+        public static String SUBSCRIPTION_ID = "monthly_subscription";
+        public static  String SUBSCRIPTION_COACHES_ID = "monthly_subscription_coaches";
+//        public static String SUBSCRIPTION_ID = "android.test.item_unavailable";
         public static String TYPE = "subs";
 //        public static String TYPE = "inapp";
     }

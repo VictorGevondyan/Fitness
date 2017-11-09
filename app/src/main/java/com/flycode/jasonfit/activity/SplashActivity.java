@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.flycode.jasonfit.Constants;
@@ -115,7 +114,7 @@ public class SplashActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(purchaseData);
                 String productId = jsonObject.getString("productId");
 
-                if (productId.equals(Constants.IN_APP_PURCHASE.ID)) {
+                if (productId.equals(Constants.IN_APP_PURCHASE.SUBSCRIPTION_ID)) {
                     return true;
                 }
             }

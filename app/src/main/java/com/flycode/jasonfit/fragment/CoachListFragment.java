@@ -2,33 +2,56 @@ package com.flycode.jasonfit.fragment;
 
 
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.vending.billing.IInAppBillingService;
+import com.flycode.jasonfit.Constants;
 import com.flycode.jasonfit.R;
 import com.flycode.jasonfit.adapter.CoachListAdapter;
 import com.flycode.jasonfit.model.Coach;
+import com.flycode.jasonfit.model.StatsData;
+import com.flycode.jasonfit.model.UserPreferences;
+import com.flycode.jasonfit.util.DialogUtil;
+import com.flycode.jasonfit.util.SubscriptionTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created - Schumakher on  8/31/17.
  */
-public class CoachListFragment extends Fragment implements CoachListAdapter.OnCoachItemClickListener {
+public class CoachListFragment extends Fragment implements CoachListAdapter.OnCoachItemClickListener, SubscriptionTask.OnSomethingWentWrongListener, SubscriptionTask.OnSubscriptionStatusResponseListener {
 
     @BindView(R.id.coach_recycler) RecyclerView coachRecycler;
 
     private Unbinder unbinder;
+    private static final int BUY_REQUEST_CODE = 661;
+
+    private IInAppBillingService inAppBillingService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,26 +59,9 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
 
         unbinder = ButterKnife.bind(this, view);
 
-        ArrayList<Coach> coaches = new ArrayList<>();
-
-        Coach coach = new Coach();
-        coach.setName("Vazgen Bagratuni");
-        coach.setEmail("vazgen.bagratuni@yopmail.com");
-
-        coaches.add(coach);
-
-//        Coach coach1 = new Coach();
-//        coach1.setName("Ashot II Bagratuni");
-//        coach1.setEmail("ashotBagratuni914@yopmail.com");
-//
-//        coaches.add(coach1);
-
-        coachRecycler.setAdapter(new CoachListAdapter(coaches, this));
-        coachRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        if (coaches.size() == 1) {
-            onCoachItemClick(coaches.get(0));
-        }
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        getActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         return view;
     }
@@ -65,6 +71,92 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
         super.onDestroy();
 
         unbinder.unbind();
+
+        if (inAppBillingService != null) {
+            getActivity().unbindService(serviceConnection);
+        }
+    }
+
+    private void subscriptionParty() {
+        float weight = new UserPreferences(getActivity()).getWeight();
+        Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        StatsData statsData = new StatsData();
+        statsData.weight = weight;
+        statsData.burntCalories = 0.0;
+        statsData.year = currentYear;
+        statsData.dayOfYear = currentDay;
+        statsData.save();
+
+        new SubscriptionTask(this,
+                this,
+                inAppBillingService,
+                getActivity().getPackageName(),
+                Constants.IN_APP_PURCHASE.SUBSCRIPTION_COACHES_ID)
+                .execute();
+    }
+
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            inAppBillingService = IInAppBillingService.Stub.asInterface(service);
+            subscriptionParty();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            inAppBillingService = null;
+        }
+    };
+
+    private void buyItem(String sku) throws IntentSender.SendIntentException, RemoteException {
+        Bundle buyIntentBundle = inAppBillingService.getBuyIntent(3, getActivity().getPackageName(), sku, Constants.IN_APP_PURCHASE.TYPE, null /*developerPayload*/);
+
+        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+
+        if (pendingIntent == null) {
+            DialogUtil.beSorryForSubscription(getActivity());
+            return;
+        }
+
+        getActivity().startIntentSenderForResult(pendingIntent.getIntentSender(),
+                BUY_REQUEST_CODE,
+                new Intent(),
+                0, 0, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode != BUY_REQUEST_CODE) {
+            return;
+        }
+
+        String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (purchaseData == null) {
+            DialogUtil.beSorryForSubscription(getActivity());
+            return;
+        }
+
+        try {
+            JSONObject jsonObject = new JSONObject(purchaseData);
+            String sku = jsonObject.getString("productId");
+            Log.i("TAGG", sku + "bought");
+
+            onAlreadySubscribed(true);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -76,5 +168,50 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, coach.getName());
 
         startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+    }
+
+    @Override
+    public void onSomethingWentWrong() {
+        DialogUtil.beSorryForSubscription(getActivity());
+    }
+
+    @Override
+    public void onBuyItem(String sku) {
+        try {
+            buyItem(sku);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAlreadySubscribed(boolean alreadySubscribed) {
+
+        if (!alreadySubscribed) {
+            return;
+        }
+
+        ArrayList<Coach> coaches = new ArrayList<>();
+
+        Coach coach = new Coach();
+        coach.setName("Vazgen Bagratuni");
+        coach.setEmail("vazgen.bagratuni@yopmail.com");
+
+        coaches.add(coach);
+
+        Coach coach1 = new Coach();
+        coach1.setName("Ashot II Bagratuni");
+        coach1.setEmail("ashotBagratuni914@yopmail.com");
+
+        coaches.add(coach1);
+
+        coachRecycler.setAdapter(new CoachListAdapter(coaches, this));
+        coachRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if (coaches.size() == 1) {
+            onCoachItemClick(coaches.get(0));
+        }
     }
 }
