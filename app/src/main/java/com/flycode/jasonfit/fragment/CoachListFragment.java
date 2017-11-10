@@ -4,7 +4,6 @@ package com.flycode.jasonfit.fragment;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
@@ -14,6 +13,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +32,18 @@ import com.flycode.jasonfit.util.SubscriptionTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,9 +69,11 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
 
         unbinder = ButterKnife.bind(this, view);
 
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        getActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+//        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+//        serviceIntent.setPackage("com.android.vending");
+//        getActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        onAlreadySubscribed(true);
 
         return view;
     }
@@ -166,6 +178,7 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
                 "mailto",coach.getEmail(), null));
 
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, coach.getName());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "\n\n\n\n\nDo not delete this." + "\n" + cryptography());
 
         startActivity(Intent.createChooser(emailIntent, "Send mail..."));
     }
@@ -213,5 +226,57 @@ public class CoachListFragment extends Fragment implements CoachListAdapter.OnCo
         if (coaches.size() == 1) {
             onCoachItemClick(coaches.get(0));
         }
+    }
+
+    private String cryptography() {
+
+        String encryptionString = "this copy of JasonFit application has permission for coaching";
+
+        //key generation
+
+        Key publicKey = null;
+        Key privateKey = null;
+
+        KeyPairGenerator generator = null;
+        try {
+            generator = KeyPairGenerator.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        generator.initialize(1024);
+
+        KeyPair keyPair = generator.genKeyPair();
+        publicKey = keyPair.getPublic();
+        privateKey = keyPair.getPrivate();
+
+
+
+        //encoding
+
+        byte[] encodedBytes = null;
+
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            encodedBytes = cipher.doFinal(encryptionString.getBytes());
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+
+        return Base64.encodeToString(encodedBytes, Base64.DEFAULT);
     }
 }

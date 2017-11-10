@@ -54,7 +54,7 @@ public class IntroActivity extends AppCompatActivity {
                 R.color.text_black_grey
         };
 
-        public IntroPagerAdapter(FragmentManager fragmentManager) {
+        IntroPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 

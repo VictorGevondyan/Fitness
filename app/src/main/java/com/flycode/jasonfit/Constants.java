@@ -1,7 +1,7 @@
 package com.flycode.jasonfit;
 
 /**
- * Created by acerkinght on 3/11/17.
+ * Created - acerkinght on  3/11/17.
  */
 
 public class Constants {
