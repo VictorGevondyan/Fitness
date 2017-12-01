@@ -8,6 +8,38 @@
         android:id="@+id/coach_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/coaching_subscription_linear"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_rect_black"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subscribe_for_coaching"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/try_text_size"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coaching_price"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/one_month_text_size"
+            android:gravity="center_horizontal"/>
+
+    </LinearLayout>
 
 </FrameLayout>

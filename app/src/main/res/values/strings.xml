@@ -222,9 +222,11 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="coaching">Coaching</string>
     <string name="calculate">Calculate</string>
     <string name="meal_calculator_picker_hint">Input here food amount in grams</string>
+
+    <string name="subscribe_for_coaching">SUBSCRIBE FOR\nCOACHING</string>
+    <string name="coaching_price">1 MONTH € 42,99</string>
 
 </resources>

@@ -113,16 +113,6 @@ public class SubscriptionTask extends AsyncTask<Void, Integer, Bundle> {
         subscriptionStatusListener.onBuyItem(sku);
     }
 
-    public interface OnSomethingWentWrongListener {
-        void onSomethingWentWrong();
-    }
-
-    public interface OnSubscriptionStatusResponseListener {
-        void onBuyItem(String sku);
-        @SuppressWarnings("SameParameterValue")
-        void onAlreadySubscribed(boolean alreadySubscribed);
-    }
-
     private boolean checkForActiveSubscriptions() throws RemoteException, JSONException, ExecutionException, InterruptedException {
 
         Bundle activeSubscriptions = inAppBillingService.getPurchases(3, "com.flycode.jasonfit", Constants.IN_APP_PURCHASE.TYPE, null);
@@ -148,5 +138,16 @@ public class SubscriptionTask extends AsyncTask<Void, Integer, Bundle> {
         }
 
         return false;
+    }
+
+    public interface OnSomethingWentWrongListener {
+        void onSomethingWentWrong();
+    }
+
+    public interface OnSubscriptionStatusResponseListener {
+        void onBuyItem(String sku);
+
+        @SuppressWarnings("SameParameterValue")
+        void onAlreadySubscribed(boolean alreadySubscribed);
     }
 }
