@@ -166,7 +166,9 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
     @Override
     public void onAddFoodItemClickListener(final RecyclerView.ViewHolder viewHolder) {
 
-        String count = String.valueOf(foodList.get(viewHolder.getAdapterPosition()).count);
+        final int position = viewHolder.getAdapterPosition();
+
+        String count = String.valueOf(foodList.get(position).count);
 
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.meal_calculator_picker_hint)
@@ -182,7 +184,7 @@ public class FoodListFragment extends Fragment implements FoodListAdapter.OnFood
                             return;
                         }
 
-                        foodList.get(viewHolder.getAdapterPosition()).count = inputInt;
+                        foodList.get(position).count = inputInt;
                         foodListAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
                     }
                 }).show();
