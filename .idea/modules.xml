@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/FitnessApp.iml" filepath="$PROJECT_DIR$/FitnessApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/JasonFit.iml" filepath="$PROJECT_DIR$/JasonFit.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fabbutton/fabbutton.iml" filepath="$PROJECT_DIR$/fabbutton/fabbutton.iml" />
       <module fileurl="file://$PROJECT_DIR$/fabbutton/fabbutton.iml" filepath="$PROJECT_DIR$/fabbutton/fabbutton.iml" />
     </modules>
   </component>
